@@ -1,13 +1,14 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   userData: {},
   categories: [],
   categoryProperties: [],
+  financeBreakDown: [],
 };
 
 const CommonSlice = createSlice({
-  name: "commonReducer",
+  name: 'commonReducer',
   initialState: initialState,
   reducers: {
     setCategoryProperties(state, action) {
@@ -24,6 +25,9 @@ const CommonSlice = createSlice({
     setServiceCategories(state, action) {
       state.categories = action?.payload;
     },
+    setFinanceBreakDown(state, action) {
+      state.financeBreakDown = action.payload;
+    },
   },
 });
 
@@ -32,6 +36,7 @@ export const {
   setUserLogOut,
   setServiceCategories,
   setCategoryProperties,
+  setFinanceBreakDown,
 } = CommonSlice.actions;
 
 export default CommonSlice.reducer;

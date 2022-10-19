@@ -7775,6 +7775,11 @@
     "paths-js" "^0.4.10"
     "point-in-polygon" "^1.0.1"
 
+"react-native-circular-chart@^1.0.8":
+  "integrity" "sha512-4aJb6jPgdshLNNIkRVfRI5BwAdWjDlJv3e9JyGyz+ck0orGSUiQesOPZ+GAm70E32s/OxGVc/fW6Mdljb8BFZA=="
+  "resolved" "https://registry.npmjs.org/react-native-circular-chart/-/react-native-circular-chart-1.0.8.tgz"
+  "version" "1.0.8"
+
 "react-native-codegen@^0.0.17":
   "integrity" "sha512-7GIEUmAemH9uWwB6iYXNNsPoPgH06pxzGRmdBzK98TgFBdYJZ7CBuZFPMe4jmHQTPOkQazKZ/w5O6/71JBixmw=="
   "resolved" "https://registry.npmjs.org/react-native-codegen/-/react-native-codegen-0.0.17.tgz"
@@ -7784,6 +7789,14 @@
     "flow-parser" "^0.121.0"
     "jscodeshift" "^0.13.1"
     "nullthrows" "^1.1.1"
+
+"react-native-color-picker@^0.6.0":
+  "integrity" "sha512-CptAssfTEGww97ev5GfaGTwu3IMBbBFi9ZDai1fgYRurQ7oQTcDp00lOoFIgLXr/acHNME2PjL7Ks/c+leVKFg=="
+  "resolved" "https://registry.npmjs.org/react-native-color-picker/-/react-native-color-picker-0.6.0.tgz"
+  "version" "0.6.0"
+  dependencies:
+    "prop-types" "^15.5.10"
+    "tinycolor2" "^1.4.1"
 
 "react-native-confirmation-code-field@^7.3.0":
   "integrity" "sha512-o/ByEXh0+9aEehboH/MJorlwELDWpsViedf6Putogsxx2493dzFsZ9P/R9m3qZJ6s2AnWWL9Ja4qjzO9WE5zVg=="
@@ -7972,7 +7985,7 @@
     "react-native-button" "^2.3.0"
     "react-native-vector-icons" "^4.5.0"
 
-"react-native-svg@*", "react-native-svg@^12.4.4", "react-native-svg@> 6.4.1":
+"react-native-svg@*", "react-native-svg@^12.4.4", "react-native-svg@> 6.4.1", "react-native-svg@>=9":
   "integrity" "sha512-LpcNlEVCURexqPAvQ9ne8KrPVfYz0wIDygwud8VMRmXLezysXzyQN/DTsjm1BO9lIfYp55WQsr3u3yW/vk6iiA=="
   "resolved" "https://registry.npmjs.org/react-native-svg/-/react-native-svg-12.4.4.tgz"
   "version" "12.4.4"
@@ -8025,7 +8038,7 @@
     "prop-types" "^15.6.0"
     "react-timer-mixin" "^0.13.4"
 
-"react-native@*", "react-native@^*", "react-native@^0.0.0-0 || 0.60 - 0.70 || 1000.0.0", "react-native@>= 0.30.0", "react-native@>= 0.50.0", "react-native@>= 0.59", "react-native@>=0.42.0", "react-native@>=0.47.1", "react-native@>=0.48.4", "react-native@>=0.50.0", "react-native@>=0.50.1", "react-native@>=0.57", "react-native@>=0.59", "react-native@>=0.61.3", "react-native@>=0.64.0", "react-native@>=0.65.0", "react-native@>0.57.0", "react-native@0.68.2":
+"react-native@*", "react-native@^*", "react-native@^0.0.0-0 || 0.60 - 0.70 || 1000.0.0", "react-native@>= 0.30.0", "react-native@>= 0.50.0", "react-native@>= 0.59", "react-native@>=0.42.0", "react-native@>=0.47.1", "react-native@>=0.48.4", "react-native@>=0.50.0", "react-native@>=0.50.1", "react-native@>=0.57", "react-native@>=0.59", "react-native@>=0.60.0", "react-native@>=0.61.3", "react-native@>=0.64.0", "react-native@>=0.65.0", "react-native@>0.57.0", "react-native@0.68.2":
   "integrity" "sha512-qNMz+mdIirCEmlrhapAtAG+SWVx6MAiSfCbFNhfHqiqu1xw1OKXdzIrjaBEPihRC2pcORCoCHduHGQe/Pz9Yuw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.68.2.tgz"
   "version" "0.68.2"
@@ -9065,7 +9078,7 @@
     "readable-stream" "~2.3.6"
     "xtend" "~4.0.1"
 
-"tinycolor2@^1.4.2":
+"tinycolor2@^1.4.1", "tinycolor2@^1.4.2":
   "integrity" "sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA=="
   "resolved" "https://registry.npmjs.org/tinycolor2/-/tinycolor2-1.4.2.tgz"
   "version" "1.4.2"

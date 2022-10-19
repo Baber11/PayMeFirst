@@ -21,6 +21,7 @@ import Color from './Assets/Utilities/Color';
 import {moderateScale} from 'react-native-size-matters';
 import Rewards from './Screens/Rewards';
 import TermsAndConditions from './Screens/TermsAndConditions';
+import FinancialBreakDown from './Screens/FinancialBreakDown';
 
 const AppNavigator = () => {
   // const isLogin = false;
@@ -71,6 +72,11 @@ const AppNavigator = () => {
           <RootNav.Screen name="SetGoals" component={SetGoals} />
           <RootNav.Screen name="SelectDate" component={SelectDate} />
           <RootNav.Screen name="Rewards" component={Rewards} />
+          <RootNav.Screen
+            name="FinancialBreakDown"
+            component={FinancialBreakDown}
+          />
+
           <RootNav.Screen
             name="TermsAndConditions"
             component={TermsAndConditions}

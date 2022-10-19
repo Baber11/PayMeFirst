@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { Dimensions, View } from "react-native";
-import { scale, moderateScale, ScaledSheet } from "react-native-size-matters";
-import SelectDropdown from "react-native-select-dropdown";
-import { Icon } from "native-base";
-import AntDesign from "react-native-vector-icons/AntDesign";
-import Color from "../Assets/Utilities/Color";
-import Entypo from "react-native-vector-icons/Entypo";
+import React, {useState, useEffect} from 'react';
+import {Dimensions, View} from 'react-native';
+import {scale, moderateScale, ScaledSheet} from 'react-native-size-matters';
+import SelectDropdown from 'react-native-select-dropdown';
+import {Icon} from 'native-base';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Color from '../Assets/Utilities/Color';
+import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {windowWidth} from '../Utillity/utils';
 
-const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height;
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
-const DropDownSingleSelect = (props) => {
+const DropDownSingleSelect = props => {
   const {
     array,
     item,
@@ -18,134 +21,159 @@ const DropDownSingleSelect = (props) => {
     placeholder,
     buttonTextAfterSelection,
     rowTextForSelection,
+    disabled,
+    backgroundColor,
+    width,
     iconName,
     iconType,
-    disabled,
-    width: ContainerWidth,
+    extreme,
+    inRow,
+    myJobs,
+    Colors,
+    dropdownStyle,
   } = props;
-  const diff = width * 0.9 - width * 0.75;
-  const InnerWidth = ContainerWidth - diff;
   return (
     <View
       style={[
-        styles.dropDownContainer,
-        disabled && { backgroundColor: `${Color.veryLightGray}90` },
-        ContainerWidth && {
-          width: ContainerWidth,
+        styles.main,
+        !iconName && {
+          paddingLeft: 0,
+          marginBottom: 10,
         },
-      ]}
-    >
+        myJobs && {
+          backgroundColor: Color.themeInputText,
+          width: width * 0.5,
+          marginTop: 0,
+          alignItems: 'center',
+          borderRadius: 10,
+
+          borderWidth: 0,
+        },
+
+        extreme && {
+          width: width * 1.13,
+        },
+        inRow && {
+          width: windowWidth * 0.35,
+          marginTop: 0,
+          // borderWidth: 0,
+        },
+        dropdownStyle,
+      ]}>
       {iconName && (
         <Icon
           name={iconName}
           as={iconType}
-          style={{
-            color: Color.themePurpleLevel4,
-            marginLeft: moderateScale(5, 0.3),
-          }}
-          size={moderateScale(18, 0.7)}
+          size={moderateScale(22, 0.3)}
+          style={[
+            styles.icon2,
+            backgroundColor && {color: Color.themeGray},
+            myJobs && {color: '#ffffff00'},
+          ]}
         />
       )}
-
       <SelectDropdown
         data={array}
         defaultValue={item}
-        buttonStyle={[
-          styles.dropDownBtn,
-          iconName && {
-            width: width * 0.8,
-          },
-          ContainerWidth && {
-            width: ContainerWidth,
-          },
-        ]}
-        buttonTextStyle={[
-          styles.dropDownBtnText,
-          item !== "" && { color: Color.black },
-          iconName && {
-            width: width * 0.7,
-          },
-          ContainerWidth && {
-            width: InnerWidth,
-          },
-        ]}
-        rowTextStyle={[
-          styles.dropDownRowText,
-          iconName && {
-            width: width * 0.7,
-          },
-          ContainerWidth && {
-            width: InnerWidth,
-          },
-        ]}
-        rowStyle={[styles.dropDownRow]}
-        dropdownStyle={[
-          {
-            width: width * 0.9,
-            margin: 0,
+        buttonStyle={{
+          ...styles.dropDownBtn,
+          width: width * 0.89,
+
+          ...(disabled && {backgroundColor: `${Color.veryLightGray}90`}),
+          ...(myJobs && {
+            backgroundColor: `${Color.themeInputText}`,
+            width: windowWidth * 0.35,
             borderRadius: 10,
-            marginTop: moderateScale(2, 0.3),
-          },
-          ContainerWidth && {
-            width: ContainerWidth,
-          },
-        ]}
+          }),
+          ...(backgroundColor && {
+            backgroundColor: `${Color.themeColor}`,
+          }),
+          ...(!iconName && {
+            width: width,
+          }),
+        }}
+        buttonTextStyle={{
+          ...styles.dropDownBtnText,
+          ...(item !== '' && {color: Colors ? Colors : Color.themeBlack}),
+          ...(backgroundColor && {
+            color: `${Color.white}`,
+            fontSize: moderateScale(18, 0.3),
+          }),
+        }}
+        dropdownStyle={{
+          width: width,
+          borderRadius: moderateScale(10, 0.3),
+          marginTop: -height * 0.06,
+
+          ...(iconName && {
+            position: 'absolute',
+            left: moderateScale(40, 0.6),
+          }),
+        }}
+        rowStyle={{...styles.dropDownRow}}
+        rowTextStyle={{
+          ...styles.dropDownRowText,
+        }}
+        selectedRowStyle={{
+          backgroundColor: Color.splashBGMiddle,
+        }}
         defaultButtonText={placeholder}
         renderDropdownIcon={() => {
           return (
-            <Icon name="chevron-small-down" as={Entypo} style={styles.icon} />
+            <>
+              <Icon
+                name="chevron-small-down"
+                as={Entypo}
+                size={moderateScale(27, 0.3)}
+                style={[
+                  styles.icon,
+                  extreme && {
+                    position: 'absolute',
+                    left: -8,
+                  },
+                  backgroundColor && {color: Color.themeGray},
+                ]}
+              />
+            </>
           );
         }}
-        // renderDropdownIcon={() => {
-        //   return (
-        //     <Icon
-        //       name={'caretdown'}
-        //       as={AntDesign}
-        //       style={{
-        // fontSize: moderateScale(20, 0.6),
-        // color: Color.gray,
-        //       }}
-        //     />
-        //   );
-        // }}
         onSelect={(selectedItem, index) => {
           setItem(selectedItem);
         }}
         buttonTextAfterSelection={buttonTextAfterSelection}
         rowTextForSelection={rowTextForSelection}
         disabled={disabled}
+        backgroundColor={backgroundColor}
       />
     </View>
   );
 };
-
 const styles = ScaledSheet.create({
-  dropDownContainer: {
-    width: width * 0.9,
-    color: "#ebd6ff",
-    borderWidth: scale(1),
-    borderColor: "lightgrey",
-    flexDirection: "row",
-    marginTop: height * 0.02,
-    borderRadius: scale(9),
-    justifyContent: "center",
-    borderWidth: 1,
-    alignItems: "center",
-    backgroundColor: "#EBEBEB",
-    alignSelf: "center",
-  },
-
   dropDownBtn: {
-    width: width * 0.9,
-    backgroundColor: "transparent",
-    height: height * 0.065,
+    backgroundColor: Color.themeInputText,
+    height: height * 0.057,
+    borderRadius: moderateScale(20, 0.3),
+  },
+  main: {
+    position: 'relative',
+    backgroundColor: Color.themeInputText,
+    height: height * 0.06,
+    borderBottomWidth: moderateScale(1, 0.3),
+    borderColor: 'lightgrey',
+    marginTop: moderateScale(6, 0.3),
+    // borderRadius: moderateScale(20, 0.3),
+    paddingLeft: moderateScale(32, 0.3),
+    width: width * 0.81,
   },
   dropDownBtnText: {
+    //////
+    // backgroundColor: "red",
     width: width * 0.75,
-    fontSize: moderateScale(18, 0.3),
-    // color: Color.lightGrey,
-    textAlign: "left",
-    textTransform: "capitalize",
+    // marginLeft: 38,
+    fontSize: moderateScale(15, 0.3),
+    color: Color.themeLightGray,
+    textAlign: 'left',
+    textTransform: 'capitalize',
   },
   dropDownRow: {
     backgroundColor: Color.white,
@@ -153,14 +181,20 @@ const styles = ScaledSheet.create({
   dropDownRowText: {
     width: width * 0.75,
     fontSize: moderateScale(16, 0.3),
-    color: "black",
-    textAlign: "left",
-    textTransform: "capitalize",
+    color: 'black',
+    textAlign: 'left',
+    textTransform: 'capitalize',
     marginLeft: moderateScale(15, 0.3),
   },
   icon: {
-    // fontSize: moderateScale(20, 0.6),
-    color: Color.gray,
+    marginTop: 3,
+    color: Color.themeBlack,
+  },
+  icon2: {
+    color: Color.themeColor,
+    position: 'absolute',
+    left: moderateScale(10, 0.3),
+    top: moderateScale(12, 0.3),
   },
 });
 

@@ -84,15 +84,7 @@ const SelectDate = props => {
       ? moment.duration(moment(dates[1]).diff(moment(dates[0]))).asDays()
       : 0;
 
-  daysdifference =
-    // selectedPlan == 'Weekly'
-    //   ? 7
-    //   : selectedPlan == 'Monthly'
-    //   ? 30
-    //   : selectedPlan == 'bi-weekly'
-    //   ? 14
-    // :
-    dateDifferenceInDays;
+  daysdifference = dateDifferenceInDays;
   const dateDifference =
     dates.length == 2
       ? moment.duration(moment(dates[1]).diff(moment(dates[0]))).asHours()
@@ -118,15 +110,6 @@ const SelectDate = props => {
   }, [betWeenDates]);
 
   useEffect(() => {
-    // if (dates.length == 1) {
-    //   for (let index = 1; index < daysdifference; index++) {
-    //     console.log('here', index);
-    //     setBetweenDates(x => [
-    //       ...x,
-    //       moment(dates[0]).add(index, 'days').format('YYYY-MM-DD'),
-    //     ]);
-    //   }
-    // }
     if (dates.length == 2) {
       for (let index = 1; index < daysdifference; index++) {
         console.log('here', index);

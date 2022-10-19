@@ -13,6 +13,8 @@ import {moderateScale} from 'react-native-size-matters';
 import CustomImage from '../Components/CustomImage';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 
@@ -51,12 +53,6 @@ const Profile = () => {
               paddingHorizontal: moderateScale(10, 0.3),
             }}
           >
-            {/* <Icon
-              name={'arrowleft'}
-              as={AntDesign}
-              color={Color.white}
-              size={moderateScale(25, 0.3)}
-            /> */}
             <View style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
               <CustomText isBold style={styles.text}>
                 Logout
@@ -147,6 +143,16 @@ const Profile = () => {
           icon2type={AntDesign}
           onPress={() => {
             navigationService.navigate('Rewards');
+          }}
+        />
+        <ProfileContainer
+          icon1Type={MaterialCommunityIcons}
+          icon1={'finance'}
+          title={'Financial Breakdown'}
+          icon2={'right'}
+          icon2type={AntDesign}
+          onPress={() => {
+            navigationService.navigate('FinancialBreakDown');
           }}
         />
       </ScrollView>
