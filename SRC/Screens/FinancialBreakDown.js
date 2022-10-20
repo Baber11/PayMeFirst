@@ -27,7 +27,7 @@ import {setFinanceBreakDown} from '../Store/slices/common';
 import {useDispatch, useSelector} from 'react-redux';
 import numeral from 'numeral';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import navigationService from '../navigationService';
+import Pie from 'react-native-pie';
 
 const Profile = ({navigation}) => {
   const dispatch = useDispatch();
@@ -43,7 +43,9 @@ const Profile = ({navigation}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [ChartData, setChartData] = useState(financeData);
   const [addSection, setAddSection] = useState(false);
-  //   console.log(ChartData);
+  const [forChart, setforChart] = useState([]);
+
+  console.log('pie chart data  data => ', forChart);
 
   const categoryData = [
     'food',
@@ -55,8 +57,14 @@ const Profile = ({navigation}) => {
     'donation',
     'others',
   ];
+  const DATA = [
+    {name: 'test1', value: 200, color: 'red'},
+    {name: 'test1', value: 200, color: 'blue'},
+    {name: 'test1', value: 200, color: 'green'},
+  ];
 
   useEffect(() => {
+    setTotal(0);
     ChartData.map(item => {
       return setTotal(x => parseInt(x) + parseInt(item.value));
     });
@@ -64,6 +72,18 @@ const Profile = ({navigation}) => {
       dispatch(setFinanceBreakDown(ChartData));
     }
   }, [ChartData]);
+
+  useEffect(() => {
+    if (total != 0) {
+      setforChart([]);
+      ChartData.map(item => {
+        return setforChart(x => [
+          ...x,
+          {percentage: (item?.value / total) * 100, color: item?.color},
+        ]);
+      });
+    }
+  }, [total]);
 
   return (
     <ScreenBoiler
@@ -108,21 +128,13 @@ const Profile = ({navigation}) => {
           }}
         >
           {ChartData.length > 0 ? (
-            <DonutChart
-              data={ChartData}
-              strokeWidth={20}
-              radius={90}
-              containerWidth={windowWidth * 0.6}
-              containerHeight={windowHeight * 0.3}
-              type="butt"
-              startAngle={0}
-              endAngle={360}
-              animationType="slide"
-              labelValueStyle={{fontSize: moderateScale(30, 0.3)}}
-              labelTitleStyle={{
-                fontSize: moderateScale(30, 0.3),
-                fontWeight: '700',
-              }}
+            //  <></>
+            <Pie
+              radius={80}
+              innerRadius={50}
+              sections={forChart}
+              // dividerSize={4}
+              // strokeCap={'round'}
             />
           ) : (
             <>
@@ -215,6 +227,7 @@ const Profile = ({navigation}) => {
                 backgroundColor={'#F5F5F5'}
                 borderRadius={moderateScale(10, 0.3)}
                 placeholderColor={Color.themeLightGray}
+                disable={true}
                 // color
               />
             )}
@@ -238,8 +251,9 @@ const Profile = ({navigation}) => {
                 }
                 setChartData(x => [
                   ...x,
-                  {name: category, color: color, value: amount},
+                  {name: category, value: amount, color: color},
                 ]);
+
                 setAddSection(false);
               }}
               bgColor={Color.green}
@@ -259,8 +273,25 @@ const Profile = ({navigation}) => {
             }}
             style={styles.list}
             renderItem={({item, index}) => {
+              return <DataCard data={item} total={total} />;
+            }}
+            ListFooterComponent={() => {
               return (
-                console.log(index), (<DataCard data={item} total={total} />)
+                <View
+                  style={{
+                    // backgroundColor: 'red',
+                    flexDirection: 'row',
+                    width: windowWidth * 0.7,
+                    alignSelf: 'center',
+                    justifyContent: 'space-between',
+                    paddingLeft: moderateScale(40, 0.3),
+                  }}
+                >
+                  <CustomText style={styles.text1}>Total</CustomText>
+                  <CustomText style={styles.text1}>
+                    {'       '}£{total}
+                  </CustomText>
+                </View>
               );
             }}
           />
