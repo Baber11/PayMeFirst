@@ -42,10 +42,12 @@ import CountryPicker, {DARK_THEME} from 'react-native-country-picker-modal';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const EnterPhone = () => {
+const EnterPhone = props => {
   const dispatch = useDispatch();
   const {fcmToken} = useSelector(state => state.commonReducer);
 
+  const fromForgot = props?.route?.params?.fromForgot;
+  console.log(fromForgot);
   const [phone, setPhone] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
@@ -117,7 +119,9 @@ const EnterPhone = () => {
         <CardContainer style={{paddingTop: moderateScale(30, 0.3)}}>
           <CustomText style={styles.txt2}>Your Phone</CustomText>
           <CustomText style={styles.txt3}>
-            Enter Your Mobile number to dd register an account
+            {fromForgot
+              ? 'Enter your mobile number to get verification code '
+              : 'Enter Your Mobile number to dd register an account'}
           </CustomText>
           <View style={styles.phoneView}>
             <TouchableOpacity
@@ -183,7 +187,11 @@ const EnterPhone = () => {
             height={windowHeight * 0.06}
             marginTop={moderateScale(20, 0.3)}
             onPress={() => {
-              navigationService.navigate('VerifyNumber');
+              fromForgot
+                ? navigationService.navigate('VerifyNumber', {
+                    fromForgot: fromForgot,
+                  })
+                : navigationService.navigate('VerifyNumber');
             }}
             bgColor={Color.green}
             borderColor={Color.white}

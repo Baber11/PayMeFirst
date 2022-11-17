@@ -22,6 +22,9 @@ import {moderateScale} from 'react-native-size-matters';
 import Rewards from './Screens/Rewards';
 import TermsAndConditions from './Screens/TermsAndConditions';
 import FinancialBreakDown from './Screens/FinancialBreakDown';
+import SignupScreen from './Screens/SignupScreen';
+import ResetPassword from './Screens/ResetPassword';
+import Wallet from './Screens/Wallet';
 
 const AppNavigator = () => {
   // const isLogin = false;
@@ -72,6 +75,9 @@ const AppNavigator = () => {
           <RootNav.Screen name="SetGoals" component={SetGoals} />
           <RootNav.Screen name="SelectDate" component={SelectDate} />
           <RootNav.Screen name="Rewards" component={Rewards} />
+          <RootNav.Screen name="SignupScreen" component={SignupScreen} />
+          <RootNav.Screen name="ResetPassword" component={ResetPassword} />
+
           <RootNav.Screen
             name="FinancialBreakDown"
             component={FinancialBreakDown}
@@ -110,8 +116,8 @@ export const TabNavigation = () => {
             iconName = focused ? 'stats-chart' : 'stats-chart-outline';
             color = focused ? Color.green : Color.themeLightGray;
             size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
-          } else if (route.name === 'MyFuture') {
-            iconName = focused ? 'ios-card' : 'ios-card-outline';
+          } else if (route.name === 'Wallet') {
+            iconName = focused ? 'ios-wallet' : 'ios-wallet-outline';
             color = focused ? Color.green : Color.themeLightGray;
             size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
           } else {
@@ -128,7 +134,7 @@ export const TabNavigation = () => {
     >
       <Tabs.Screen name={'HomeScreen'} component={HomeScreen} />
       <Tabs.Screen name={'Guide'} component={Guide} />
-      <Tabs.Screen name={'MyFuture'} component={MyFuture} />
+      <Tabs.Screen name={'Wallet'} component={Wallet} />
       <Tabs.Screen name={'Profile'} component={Profile} />
     </Tabs.Navigator>
   );

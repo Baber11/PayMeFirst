@@ -112,19 +112,32 @@ const Profile = ({navigation}) => {
             size={moderateScale(30, 0.3)}
             color={Color.white}
             style={{
-              marginTop: moderateScale(20, 0.3),
-              marginLeft: moderateScale(20, 0.3),
+              position: 'absolute',
+              // marginTop: moderateScale(20, 0.3),
+              // marginLeft: moderateScale(20, 0.3),
+              top: moderateScale(20, 0.3),
+              left: moderateScale(20, 0.3),
             }}
             onPress={() => {
               navigation.goBack();
             }}
           />
+          <CustomText
+            style={[
+              styles.text,
+              {alignSelf: 'center', marginTop: moderateScale(20, 0.3)},
+            ]}
+          >
+            Financial BreakDown
+          </CustomText>
         </ImageBackground>
         <View
           style={{
-            alignSelf: 'center',
+            alignItems: 'center',
             marginTop: moderateScale(-50, 0.3),
             paddingHorizontal: moderateScale(5, 0.3),
+            width: windowWidth,
+            // backgroundColor: 'red',
           }}
         >
           {ChartData.length > 0 ? (
@@ -150,6 +163,12 @@ const Profile = ({navigation}) => {
               <CustomText style={[styles.text]}>No Record Added Yet</CustomText>
             </>
           )}
+          <View
+            style={{flexDirection: 'row', marginTop: moderateScale(10, 0.3)}}
+          >
+            <CustomText style={styles.text}>Total Consumption : </CustomText>
+            <CustomText style={styles.text}>£{total}</CustomText>
+          </View>
         </View>
       </View>
       <ScrollView
@@ -289,7 +308,7 @@ const Profile = ({navigation}) => {
                 >
                   <CustomText style={styles.text1}>Total</CustomText>
                   <CustomText style={styles.text1}>
-                    {'       '}£{total}
+                    {'  '}£{total}
                   </CustomText>
                 </View>
               );
@@ -344,18 +363,18 @@ const styles = StyleSheet.create({
   list: {
     borderRadius: moderateScale(20, 0.3),
     width: windowWidth,
-    backgroundColor: 'white',
+    // backgroundColor: 'transparent',
     minHeight: windowHeight * 0.5,
     marginTop: moderateScale(20, 0.3),
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
+    // shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 12,
+    // },
+    // shadowOpacity: 0.58,
+    // shadowRadius: 16.0,
 
-    elevation: 24,
+    // elevation: 24,
   },
 
   headerModal: {

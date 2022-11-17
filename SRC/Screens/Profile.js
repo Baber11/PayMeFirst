@@ -24,8 +24,11 @@ import ToggleSwitch from 'toggle-switch-react-native';
 import {set} from 'immer/dist/internal';
 import {useState} from 'react';
 import navigationService from '../navigationService';
+import {setUserLogout} from '../Store/slices/auth';
+import {useDispatch} from 'react-redux';
 
 const Profile = () => {
+  const dispatch = useDispatch();
   return (
     <ScreenBoiler
       showHeader={false}
@@ -53,7 +56,13 @@ const Profile = () => {
               paddingHorizontal: moderateScale(10, 0.3),
             }}
           >
-            <View style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
+            <TouchableOpacity
+              onPress={() => {
+                dispatch(setUserLogout());
+              }}
+              activeOpacity={0.8}
+              style={{flexDirection: 'row', alignSelf: 'flex-end'}}
+            >
               <CustomText isBold style={styles.text}>
                 Logout
               </CustomText>
@@ -63,7 +72,7 @@ const Profile = () => {
                 color={Color.white}
                 size={moderateScale(25, 0.3)}
               />
-            </View>
+            </TouchableOpacity>
           </View>
         </ImageBackground>
         <View
@@ -129,6 +138,26 @@ const Profile = () => {
           icon1Type={FontAwesome}
           icon1={'file-text'}
           title={'Terms & Conditions'}
+          icon2={'right'}
+          icon2type={AntDesign}
+          onPress={() => {
+            navigationService.navigate('TermsAndConditions');
+          }}
+        />
+        <ProfileContainer
+          icon1Type={FontAwesome}
+          icon1={'lock'}
+          title={'change Password'}
+          icon2={'right'}
+          icon2type={AntDesign}
+          // onPress={() => {
+          //   navigationService.navigate('TermsAndConditions');
+          // }}
+        />
+        <ProfileContainer
+          icon1Type={AntDesign}
+          icon1={'creditcard'}
+          title={'Payment Method'}
           icon2={'right'}
           icon2type={AntDesign}
           onPress={() => {

@@ -30,6 +30,7 @@ import CardContainer from '../Components/CardContainer';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {LineChart} from 'react-native-chart-kit';
 import moment from 'moment';
+import * as Progress from 'react-native-progress';
 import {ExpenditureComponent} from '../Components/ExpenditureComponent';
 
 const width = Dimensions.get('window').width;
@@ -63,19 +64,46 @@ const HomeScreen = ({valueFormatter, data}) => {
         <CustomText style={styles.txt4}>Total Balance</CustomText>
         <View style={styles.row}>
           <CustomText style={styles.txt2}>$234,12</CustomText>
-          <View style={styles.absolute}>
+          {/* <View style={styles.absolute}>
             <Icon
               name="plus"
               as={AntDesign}
               color={Color.black}
               size={moderateScale(25, 0.3)}
             />
+          </View> */}
+        </View>
+        {/* <CustomText style={styles.txtContainer}>+$1,234,2</CustomText> */}
+        <View style={{width: windowWidth * 0.8}}>
+          <Progress.Bar
+            width={windowWidth * 0.8}
+            progress={0.4}
+            color={Color.green}
+            style={{
+              marginTop: moderateScale(20, 0.3),
+              backgroundColor: '#000',
+            }}
+            // showsText={true}
+            // textStyle={{color: 'red', backgroundColor: 'red'}}
+            // formatText={progress => {
+            //   <CustomText>{progress}</CustomText>;
+            // }}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              width: windowWidth * 0.8,
+              // backgroundColor: 'red',
+              justifyContent: 'space-between',
+            }}
+          >
+            <CustomText style={{color: Color.green}}>30%</CustomText>
+            <CustomText style={{color: Color.black}}>70%</CustomText>
           </View>
         </View>
-        <CustomText style={styles.txtContainer}>+$1,234,2</CustomText>
 
         <View style={styles.subcontainer}>
-          <View
+          {/* <View
             style={{
               //   backgroundColor: 'red',
               width: windowWidth,
@@ -97,10 +125,10 @@ const HomeScreen = ({valueFormatter, data}) => {
               text2={'expenditure'}
               icon={'minus'}
             />
-          </View>
+          </View> */}
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={{width: windowWidth}}
+            style={{width: windowWidth, overflow: 'hidden'}}
             contentContainerStyle={{
               alignItems: 'center',
               paddingBottom: moderateScale(100, 0.3),
@@ -242,6 +270,7 @@ const styles = ScaledSheet.create({
     backgroundColor: 'orange',
   },
   subcontainer: {
+    overflow: 'hidden',
     paddingBottom: moderateScale(20, 0.3),
     width: windowWidth,
     height: windowHeight * 0.6,

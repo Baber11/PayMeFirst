@@ -63,19 +63,19 @@ const MyFuture = ({valueFormatter, data}) => {
         <View style={[styles.row]}>
           <CustomText
             onPress={() => {
-              setSelected('My Wallet');
+              setSelected('Guide');
             }}
             style={[
               styles.textWithContainer,
-              selected == 'My Wallet' && {
+              selected == 'Guide' && {
                 backgroundColor: Color.green,
                 color: 'white',
               },
             ]}
           >
-            My Wallet
+            Guide
           </CustomText>
-          <CustomText
+          {/* <CustomText
             onPress={() => {
               setSelected('My Future');
             }}
@@ -88,8 +88,8 @@ const MyFuture = ({valueFormatter, data}) => {
             ]}
           >
             My Future
-          </CustomText>
-          <CustomText
+          </CustomText> */}
+          {/* <CustomText
             onPress={() => {
               setSelected('Add');
             }}
@@ -103,7 +103,7 @@ const MyFuture = ({valueFormatter, data}) => {
           >
             {' '}
             + Add
-          </CustomText>
+          </CustomText> */}
         </View>
 
         <>

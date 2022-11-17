@@ -43,29 +43,37 @@ export const ExpenditureComponent = ({
     >
       <View
         style={[
-          {
-            // position: 'relative',
-            // backgroundColor: 'white',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: moderateScale(40, 0.3),
-            height: moderateScale(40, 0.3),
-            borderRadius: moderateScale(20, 0.3),
-            borderWidth: 1,
-            borderColor: Color.purple,
-          },
-          fromGuide && {borderWidth: 0},
+          fromGuide
+            ? {
+                // position: 'relative',
+                // backgroundColor: 'white',
+                // justifyContent: 'center',
+                // alignItems: 'center',
+                width: moderateScale(80, 0.3),
+                height: moderateScale(80, 0.3),
+                borderRadius: moderateScale(20, 0.3),
+                borderWidth: 0,
+                // borderWidth: 1,
+                // borderColor: Color.purple,
+              }
+            : {
+                // justifyContent: 'center',
+                // alignItems: 'center',
+                width: moderateScale(40, 0.3),
+                height: moderateScale(40, 0.3),
+                borderRadius: moderateScale(20, 0.3),
+                // borderWidth: 1,
+                borderColor: Color.purple,
+              },
         ]}
       >
         <CustomImage
           source={image}
-          //   resizeMode={'stretch'}
-          style={
-            {
-              // width: '80%',
-              // height: '80%',
-            }
-          }
+          // resizeMode={'stretch'}
+          style={{
+            width: fromGuide ? '100%' : '80%',
+            height: fromGuide ? '100%' : '80%',
+          }}
         />
       </View>
       <View
@@ -75,10 +83,7 @@ export const ExpenditureComponent = ({
           marginLeft: moderateScale(25, 0.3),
         }}
       >
-        <CustomText
-          isBold
-          style={[styles.txt4, fromGuide && {color: Color.green}]}
-        >
+        <CustomText isBold style={[styles.txt4]}>
           {text1}
         </CustomText>
         {!fromGuide && <CustomText style={styles.txt3}>{text2}</CustomText>}
@@ -120,7 +125,7 @@ const styles = ScaledSheet.create({
   smallContainer: {
     paddingHorizontal: moderateScale(15, 0.3),
     width: windowWidth * 0.92,
-    height: windowHeight * 0.1,
+    height: windowHeight * 0.12,
     flexDirection: 'row',
     backgroundColor: 'white',
     alignItems: 'center',
@@ -215,7 +220,7 @@ const styles = ScaledSheet.create({
   },
   txt4: {
     color: Color.black,
-    fontSize: moderateScale(14, 0.6),
+    fontSize: moderateScale(18, 0.6),
   },
   txt5: {
     color: Color.black,

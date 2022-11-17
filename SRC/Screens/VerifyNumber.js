@@ -39,17 +39,18 @@ import {useEffect} from 'react';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const VerifyNumber = () => {
+const VerifyNumber = props => {
   const dispatch = useDispatch();
   const {fcmToken} = useSelector(state => state.commonReducer);
 
+  //params
+  const fromForgot = props?.route?.params?.fromForgot;
+
+  //states
   const [code, setCode] = useState('');
-
   const [isLoading, setIsLoading] = useState(false);
-
   const CELL_COUNT = 4;
   const ref = useBlurOnFulfill({code, cellCount: CELL_COUNT});
-
   const [abcd, getCellOnLayoutHandler] = useClearByFocusCell({
     code,
     setCode,
@@ -72,14 +73,10 @@ const VerifyNumber = () => {
 
   return (
     <ScreenBoiler
-      statusBarBackgroundColor={'transparent'}
-      statusBarContentStyle={'dark-content'}
+      statusBarBackgroundColor={Color.green}
+      statusBarContentStyle={'light-content'}
     >
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.sectionContainer}
-        contentContainerStyle={{paddingBottom: moderateScale(20, 0.3)}}
-      >
+      <View style={styles.sectionContainer}>
         <Image
           source={require('../Assets/Images/verify.png')}
           //   resizeMode={'contain'}
@@ -149,7 +146,9 @@ const VerifyNumber = () => {
             height={windowHeight * 0.06}
             marginTop={moderateScale(40, 0.3)}
             onPress={() => {
-              navigationService.navigate('AddCard');
+              fromForgot
+                ? navigationService.navigate('ResetPassword')
+                : navigationService.navigate('AddCard');
             }}
             bgColor={Color.green}
             borderColor={Color.white}
@@ -157,7 +156,7 @@ const VerifyNumber = () => {
             borderRadius={moderateScale(30, 0.3)}
           />
         </View>
-      </ScrollView>
+      </View>
     </ScreenBoiler>
   );
 };
@@ -245,6 +244,8 @@ const styles = ScaledSheet.create({
   },
 
   subcontainer: {
+    position: 'absolute',
+    bottom: 0,
     width: windowWidth,
     height: windowHeight * 0.6,
     backgroundColor: Color.white,

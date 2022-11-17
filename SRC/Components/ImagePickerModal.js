@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Dimensions,
@@ -12,27 +12,27 @@ import {
   Alert,
   // Modal,
   Button,
-} from "react-native";
-import { moderateScale, ScaledSheet } from "react-native-size-matters";
-import { Icon } from "native-base";
-import Modal from "react-native-modal";
-import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-import Entypo from "react-native-vector-icons/Entypo";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import CustomText from "../Components/CustomText";
-import { windowHeight, windowWidth } from "../Utillity/utils";
-import Color from "../Assets/Utilities/Color";
+} from 'react-native';
+import {moderateScale, ScaledSheet} from 'react-native-size-matters';
+import {Icon} from 'native-base';
+import Modal from 'react-native-modal';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import Entypo from 'react-native-vector-icons/Entypo';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import CustomText from '../Components/CustomText';
+import {windowHeight, windowWidth} from '../Utillity/utils';
+import Color from '../Assets/Utilities/Color';
 
 const requestCameraPermission = async () => {
   try {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.CAMERA,
       {
-        title: "Camera Permission",
+        title: 'Camera Permission',
         message:
-          "App needs access to your camera " +
-          "so you can take awesome pictures.",
-      }
+          'App needs access to your camera ' +
+          'so you can take awesome pictures.',
+      },
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
     } else {
@@ -42,19 +42,19 @@ const requestCameraPermission = async () => {
   }
 };
 
-const ImagePickerModal = (props) => {
-  let { show, setShow, setFileObject } = props;
+const ImagePickerModal = props => {
+  let {show, setShow, setFileObject, setMultiImages} = props;
 
   const openGallery = () => {
     let options = {
-      mediaType: "photo",
+      mediaType: 'photo',
       maxWidth: 500,
       maxHeight: 500,
       quailty: 0.9,
       saveToPhotos: true,
     };
-    launchImageLibrary(options, (response) => {
-      if (Platform.OS === "ios") {
+    launchImageLibrary(options, response => {
+      if (Platform.OS === 'ios') {
         setShow(false);
       }
       if (response.didCancel) {
@@ -62,31 +62,42 @@ const ImagePickerModal = (props) => {
       } else if (response.customButton) {
         alert(response.customButton);
       } else {
-        setFileObject({
-          uri: response?.assets[0]?.uri,
-          type: response?.assets[0]?.type,
-          name: response?.assets[0]?.fileName,
-        });
+        setFileObject &&
+          setFileObject({
+            uri: response?.assets[0]?.uri,
+            type: response?.assets[0]?.type,
+            name: response?.assets[0]?.fileName,
+          });
+
+        setMultiImages &&
+          setMultiImages(x => [
+            ...x,
+            {
+              uri: response?.assets[0]?.uri,
+              type: response?.assets[0]?.type,
+              name: response?.assets[0]?.fileName,
+            },
+          ]);
       }
     });
   };
 
   const openCamera = async () => {
     let options = {
-      mediaType: "photo",
+      mediaType: 'photo',
       maxWidth: 500,
       maxHeight: 500,
       quailty: 0.9,
       saveToPhotos: true,
     };
-    if (Platform.OS === "android") {
+    if (Platform.OS === 'android') {
       if (PermissionsAndroid.PERMISSIONS.CAMERA) {
       } else {
         await requestCameraPermission();
       }
     }
-    launchCamera(options, (response) => {
-      if (Platform.OS == "ios") {
+    launchCamera(options, response => {
+      if (Platform.OS == 'ios') {
         setShow(false);
       }
       // if (response.didCancel) {
@@ -95,11 +106,22 @@ const ImagePickerModal = (props) => {
       //   Alert.alert(response.customButton);
       // }
       else {
-        setFileObject({
-          uri: response?.assets[0]?.uri,
-          type: response?.assets[0]?.type,
-          name: response?.assets[0]?.fileName,
-        });
+        setFileObject &&
+          setFileObject({
+            uri: response?.assets[0]?.uri,
+            type: response?.assets[0]?.type,
+            name: response?.assets[0]?.fileName,
+          });
+
+        setMultiImages &&
+          setMultiImages(x => [
+            ...x,
+            {
+              uri: response?.assets[0]?.uri,
+              type: response?.assets[0]?.type,
+              name: response?.assets[0]?.fileName,
+            },
+          ]);
       }
     });
   };
@@ -109,8 +131,9 @@ const ImagePickerModal = (props) => {
       isVisible={show}
       swipeDirection="up"
       style={{
-        justifyContent: "center",
-        alignItems: "center",
+        justifyContent: 'center',
+        alignItems: 'center',
+        // backgroundColor: Color.white,
       }}
       onBackdropPress={() => {
         setShow(false);
@@ -119,18 +142,18 @@ const ImagePickerModal = (props) => {
       <View
         style={{
           backgroundColor: Color.white,
-          height: Dimensions.get("window").height * 0.33,
-          width: Dimensions.get("window").width * 0.8,
+          height: Dimensions.get('window').height * 0.33,
+          width: Dimensions.get('window').width * 0.8,
           paddingHorizontal: moderateScale(10, 0.3),
           paddingVertical: moderateScale(10, 0.3),
-          borderRadius: Dimensions.get("window").width * 0.02,
+          borderRadius: Dimensions.get('window').width * 0.02,
         }}
       >
         <CustomText style={styles.modalHead}>Upload picture</CustomText>
         <View style={styles.modalContentContianer}>
           <TouchableOpacity
             onPress={() => {
-              if (Platform.OS === "android") {
+              if (Platform.OS === 'android') {
                 setShow(false);
               }
               openGallery();
@@ -138,7 +161,7 @@ const ImagePickerModal = (props) => {
             style={styles.modalContentBtn}
           >
             <Icon
-              name={"folder-images"}
+              name={'folder-images'}
               as={Entypo}
               size={moderateScale(25, 0.3)}
               style={{
@@ -149,7 +172,7 @@ const ImagePickerModal = (props) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              if (Platform.OS === "android") {
+              if (Platform.OS === 'android') {
                 setShow(false);
               }
               openCamera();
@@ -157,7 +180,7 @@ const ImagePickerModal = (props) => {
             style={styles.modalContentBtn}
           >
             <Icon
-              name={"camera"}
+              name={'camera'}
               as={FontAwesome5}
               size={moderateScale(25, 0.3)}
               style={{
@@ -177,7 +200,7 @@ const ImagePickerModal = (props) => {
       {/* <View
         style={{
           // flex: 1,
-          backgroundColor: Color.white,
+          backgroundColor: Color.black,
           height: Dimensions.get("window").height * 0.33,
           width: Dimensions.get("window").width * 0.8,
           paddingHorizontal: moderateScale(10, 0.3),
@@ -201,7 +224,7 @@ const ImagePickerModal = (props) => {
               as={Entypo}
               size={moderateScale(25, 0.3)}
               style={{
-                color: Color.white,
+                color: Color.black,
               }}
             />
             <CustomText style={styles.modalBtnText}>Gallery</CustomText>
@@ -220,7 +243,7 @@ const ImagePickerModal = (props) => {
               as={FontAwesome5}
               size={moderateScale(25, 0.3)}
               style={{
-                color: Color.white,
+                color: Color.black,
               }}
             />
             <CustomText style={styles.modalBtnText}>Camera</CustomText>
@@ -240,38 +263,38 @@ const ImagePickerModal = (props) => {
 const styles = ScaledSheet.create({
   modalHead: {
     fontSize: moderateScale(15, 0.3),
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: moderateScale(7.5, 0.3),
   },
   modalContentContianer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    alignContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    alignContent: 'center',
     height: windowHeight * 0.21,
-    borderBottomColor: Color.themeColor,
+    borderBottomColor: Color.green,
     borderBottomWidth: 2,
-    borderTopColor: Color.themeColor,
+    borderTopColor: Color.green,
     borderTopWidth: 2,
   },
   modalContentBtn: {
-    backgroundColor: Color.themeColor,
-    alignItems: "center",
+    backgroundColor: Color.green,
+    alignItems: 'center',
     paddingHorizontal: windowWidth * 0.08,
     paddingVertical: windowHeight * 0.02,
     borderRadius: 15,
   },
   modalBtnText: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: Color.white,
     fontSize: moderateScale(15, 0.3),
   },
   modalCancelBtn: {
-    backgroundColor: Color.themeColor,
+    backgroundColor: Color.green,
     paddingVertical: windowHeight * 0.008,
     width: windowWidth * 0.25,
-    alignItems: "center",
-    alignSelf: "flex-end",
+    alignItems: 'center',
+    alignSelf: 'flex-end',
     marginTop: moderateScale(10, 0.3),
     borderRadius: moderateScale(5, 0.3),
   },

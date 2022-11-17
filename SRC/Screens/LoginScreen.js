@@ -92,11 +92,13 @@ const LoginScreen = () => {
       statusBarContentStyle={'dark-content'}
       headerType={1}
       title={'Sign in'}
-      showList={true}>
+      showList={true}
+    >
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.sectionContainer}
-        contentContainerStyle={{paddingBottom: moderateScale(20, 0.3)}}>
+        contentContainerStyle={{paddingBottom: moderateScale(20, 0.3)}}
+      >
         <Image
           source={require('../Assets/Images/login.png')}
           resizeMode={'contain'}
@@ -105,7 +107,7 @@ const LoginScreen = () => {
             marginTop: moderateScale(10, 0.3),
           }}
         />
-        <CardContainer >
+        <CardContainer>
           <TextInputWithTitle
             iconName="envelope"
             iconType={FontAwesome}
@@ -123,9 +125,9 @@ const LoginScreen = () => {
             marginTop={moderateScale(30, 0.3)}
             color={'#11A44C'}
             placeholderColor={Color.themeLightGray}
-            borderRadius={moderateScale(20,0.3)}
+            borderRadius={moderateScale(20, 0.3)}
           />
-           <TextInputWithTitle
+          <TextInputWithTitle
             iconName="lock"
             iconType={FontAwesome}
             titleText={'Email'}
@@ -142,42 +144,52 @@ const LoginScreen = () => {
             marginTop={moderateScale(10, 0.3)}
             color={'#11A44C'}
             placeholderColor={Color.themeLightGray}
-            borderRadius={moderateScale(20,0.3)}
-          
+            borderRadius={moderateScale(20, 0.3)}
           />
-            <CustomText style={styles.txt3}>{"Forgot Password ?"}</CustomText>
-            <View style={styles.iconContainer}>
-              <View style={[styles.cont,{backgroundColor : '#87CEEB' }]}>
-                <Icon
-                name='sc-facebook'
+          <CustomText
+            onPress={() => {
+              navigationService.navigate('EnterPhone', {fromForgot: true});
+            }}
+            style={styles.txt3}
+          >
+            {'Forgot Password ?'}
+          </CustomText>
+          {/* <View style={styles.iconContainer}>
+            <View style={[styles.cont, {backgroundColor: '#87CEEB'}]}>
+              <Icon
+                name="sc-facebook"
                 as={EvilIcons}
                 color={'#2196F3'}
-                size={moderateScale(20,0.3)}
-                />
-            <CustomText style={{fontSize : moderateScale(14,0.3) , color : '#2196F3'}} >facebook</CustomText>
-
-              </View>
-              <View style={[styles.cont,{backgroundColor : '#E94F09' }]}>
-           
-                <Icon
-                name='google'
+                size={moderateScale(20, 0.3)}
+              />
+              <CustomText
+                style={{fontSize: moderateScale(14, 0.3), color: '#2196F3'}}
+              >
+                facebook
+              </CustomText>
+            </View>
+            <View style={[styles.cont, {backgroundColor: '#E94F09'}]}>
+              <Icon
+                name="google"
                 as={AntDesign}
                 color={'#ffffff'}
-                size={moderateScale(18,0.3)}
-                style={{marginRight : moderateScale(5,0.3)}}
-                />
-            <CustomText style={{fontSize : moderateScale(14,0.3) , color : '#ffffff'}} >Google</CustomText>
-
-              </View>
-
+                size={moderateScale(18, 0.3)}
+                style={{marginRight: moderateScale(5, 0.3)}}
+              />
+              <CustomText
+                style={{fontSize: moderateScale(14, 0.3), color: '#ffffff'}}
+              >
+                Google
+              </CustomText>
             </View>
-            <CustomButton
+          </View> */}
+          <CustomButton
             // textTransform={"capitalize"}
             text={
               isLoading ? (
-                <ActivityIndicator color={"#000"} size={"small"} />
+                <ActivityIndicator color={'#000'} size={'small'} />
               ) : (
-                "Sign In"
+                'Sign In'
               )
             }
             isBold
@@ -185,24 +197,24 @@ const LoginScreen = () => {
             width={windowWidth * 0.75}
             height={windowHeight * 0.06}
             marginTop={moderateScale(20, 0.3)}
-            onPress={()=>{navigationService.navigate('EnterPhone')}}
+            onPress={() => {
+              navigationService.navigate('EnterPhone');
+            }}
             bgColor={Color.green}
             borderColor={Color.white}
             borderWidth={2}
             borderRadius={moderateScale(30, 0.3)}
           />
 
-          
-
           <View style={styles.container2}>
             <CustomText style={styles.txt5}>
               {"Don't have an account? "}
             </CustomText>
             <TouchableOpacity
-              style={{ marginLeft: width * 0.01 }}
-              onPress={() => navigationService.navigate("SignupScreen")}
+              style={{marginLeft: width * 0.01}}
+              onPress={() => navigationService.navigate('SignupScreen')}
             >
-              <CustomText style={styles.txt4}>{"Sign Up"}</CustomText>
+              <CustomText style={styles.txt4}>{'Sign Up'}</CustomText>
             </TouchableOpacity>
           </View>
         </CardContainer>
@@ -339,25 +351,23 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  iconContainer:{
-    width : windowWidth * 0.75,
+  iconContainer: {
+    width: windowWidth * 0.75,
     // backgroundColor : 'red',
-    paddingVertical : moderateScale(5,0.3),
-    flexDirection : 'row',
-    justifyContent : 'space-between',
-    paddingHorizontal : moderateScale(15,0.3),
-    marginTop : moderateScale(10,0.3)
-
+    paddingVertical: moderateScale(5, 0.3),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: moderateScale(15, 0.3),
+    marginTop: moderateScale(10, 0.3),
   },
-  cont :{
-    height : windowHeight * 0.05 ,
-    width : windowWidth * 0.3 ,
-    borderRadius : moderateScale(20,0.3),
-    opacity : 0.6,
-    justifyContent : 'center',
-    alignItems : 'center',
-    flexDirection  :'row',
-    
+  cont: {
+    height: windowHeight * 0.05,
+    width: windowWidth * 0.3,
+    borderRadius: moderateScale(20, 0.3),
+    opacity: 0.6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   imageContainer: {
     shadowColor: '#000',
@@ -387,9 +397,9 @@ const styles = ScaledSheet.create({
   txt3: {
     color: Color.lightGreen,
     fontSize: moderateScale(12, 0.6),
-    alignSelf : 'flex-end',
-    marginTop  :moderateScale(10,0.3),
-    marginRight : moderateScale(30,0.3),
+    alignSelf: 'flex-end',
+    marginTop: moderateScale(10, 0.3),
+    marginRight: moderateScale(30, 0.3),
   },
   txt4: {
     color: Color.lightGreen,

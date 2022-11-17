@@ -9,6 +9,8 @@ export default Color = {
   green: '#528C00',
   lightGreen: '#11A44C',
   themeGreen: '#72A131',
+  // themeRed: '#FFCCCB',
+
   purple: '#083955',
 
   // theme colors

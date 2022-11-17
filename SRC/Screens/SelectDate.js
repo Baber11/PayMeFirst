@@ -32,6 +32,8 @@ import CardContainer from '../Components/CardContainer';
 import {Calendar} from 'react-native-calendars';
 import {useEffect} from 'react';
 import moment from 'moment/moment';
+import numeral from 'numeral';
+import {round} from 'react-native-reanimated';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -41,11 +43,12 @@ let daysdifference = null;
 
 const SelectDate = props => {
   const dispatch = useDispatch();
-  const {selectedPlan} = props.route.params;
-  //   console.log(selectedPlan);
+  const {selectedPlan, amount, planName} = props.route.params;
+  console.log('selected Plan =>', selectedPlan);
 
   const [isLoading, setIsLoading] = useState(false);
   const [dates, setDates] = useState([]);
+  const [selectedPlanInNumber, setSelectedPlanInNumber] = useState(0);
   const [betWeenDates, setBetweenDates] = useState([]);
   console.log(betWeenDates);
   const [toDisable, setDisAble] = useState({});
@@ -92,6 +95,10 @@ const SelectDate = props => {
 
   console.log(daysdifference, dateDifferenceInDays, dates.length);
 
+  // const getRecommendations = () =>{
+
+  // }
+
   useEffect(() => {
     setDisAble([]);
     markedDay = {};
@@ -118,30 +125,35 @@ const SelectDate = props => {
           moment(dates[0]).add(index, 'days').format('YYYY-MM-DD'),
         ]);
       }
+      // getRecommendations();
     }
     // incrementCounter();
     if (dates.length == 2) {
-      dateDifference < 0 && (setBetweenDates([]), setDates([dates[1]]));
+      dateDifference < 0
+        ? (setBetweenDates([]), setDates([dates[1]]))
+        : selectedPlan == 'Weekly' && daysdifference < 7
+        ? (alert('There must be minimum 7 days according to your plan !'),
+          setBetweenDates([]),
+          setDates([dates[0]]))
+        : selectedPlan == 'bi-weekly' && daysdifference < 14
+        ? (alert('There must be minimum 14 days according to your plan !'),
+          setBetweenDates([]),
+          setDates([dates[0]]))
+        : selectedPlan == 'Monthly' && daysdifference < 30
+        ? (alert('There must be minimum 30 days according to your plan !'),
+          setBetweenDates([]),
+          setDates([dates[0]]))
+        : null;
     }
   }, [dates]);
 
-  // useEffect(() => {
-  //   // if (selectedPlan != 'Custom' && dates.length == 1) {
-  //   //   setDates(x => [
-  //   //     ...x,
-  //   //     moment(dates[0]).add(daysdifference, 'days').format('YYYY-MM-DD'),
-  //   //   ]);
-
-  //     if (dates.length == 1) {
-  //       Platform.OS == 'android'
-  //         ? ToastAndroid.show(
-  //             'end date is set acc to your plan',
-  //             ToastAndroid.SHORT,
-  //           )
-  //         : alert('end date is set acc to your plan');
-  //     }
-  //   }
-  // }, [selectedPlan, dates]);
+  useEffect(() => {
+    selectedPlan == 'Weekly'
+      ? setSelectedPlanInNumber(7)
+      : selectedPlan == 'bi-weekly'
+      ? setSelectedPlanInNumber(14)
+      : setSelectedPlanInNumber(30);
+  }, [selectedPlan]);
 
   const today = moment().format('DD MMM YYYY');
 
@@ -168,6 +180,53 @@ const SelectDate = props => {
             height: windowHeight * 0.3,
           }}
         />
+        {dates.length == 2 && (
+          <View style={styles.recommendationContainer}>
+            <CustomText style={styles.txt2}>Summary</CustomText>
+            <CustomText style={styles.subHeading}>
+              Goal Name <CustomText style={styles.text}>{planName}</CustomText>
+            </CustomText>
+            <CustomText style={styles.subHeading}>
+              Amount to save{' '}
+              <CustomText style={styles.text}>{amount}</CustomText>
+            </CustomText>
+            <CustomText style={styles.subHeading}>
+              Selected Plan{' '}
+              <CustomText style={styles.text}>{selectedPlan}</CustomText>
+            </CustomText>
+            <CustomText style={styles.subHeading}>
+              Duration{' '}
+              <CustomText style={styles.text}>
+                {dateDifferenceInDays}
+              </CustomText>
+            </CustomText>
+
+            <CustomText style={styles.subHeading}>
+              No of deductions{' '}
+              <CustomText style={styles.text}>
+                {Math.round(dateDifferenceInDays / selectedPlanInNumber)}
+              </CustomText>
+            </CustomText>
+            <CustomText style={styles.subHeading}>
+              Amount per deduction{' '}
+              <CustomText style={styles.text}>
+                {numeral(
+                  amount /
+                    Math.round(dateDifferenceInDays / selectedPlanInNumber),
+                ).format('$0,0.00')}
+              </CustomText>
+            </CustomText>
+            <CustomText
+              style={[styles.subHeading, {marginTop: moderateScale(10, 0.3)}]}
+            >
+              recommendation{' '}
+              <CustomText style={styles.text}>
+                abouve stats are according to your setted Goal and it can be
+                change with the variation in setting goal{' '}
+              </CustomText>
+            </CustomText>
+          </View>
+        )}
         <CardContainer
           style={{
             height: windowHeight * 0.7,
@@ -248,7 +307,14 @@ const SelectDate = props => {
             height={windowHeight * 0.06}
             marginTop={moderateScale(20, 0.3)}
             onPress={() => {
-              dispatch(setUserToken({token: true}));
+              dates.length == 2
+                ? dispatch(setUserToken({token: true}))
+                : Platform.OS == 'android'
+                ? ToastAndroid.show(
+                    'Please Complete Duration',
+                    ToastAndroid.SHORT,
+                  )
+                : alert('Please Complete Duration');
             }}
             bgColor={Color.green}
             borderColor={Color.white}
@@ -267,27 +333,7 @@ const styles = ScaledSheet.create({
     height: windowHeight,
     paddingTop: moderateScale(5, 0.3),
   },
-  Txt: {
-    marginTop: moderateScale(10, 0.3),
-    color: Color.themeBlack,
-    fontSize: moderateScale(22, 0.6),
-    textAlign: 'center',
-  },
-  tou: {
-    marginTop: height * 0.03,
-    width: width * 0.9,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconContainer: {
-    width: windowWidth * 0.75,
-    // backgroundColor : 'red',
-    paddingVertical: moderateScale(5, 0.3),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: moderateScale(15, 0.3),
-    marginTop: moderateScale(10, 0.3),
-  },
+
   cont: {
     height: windowHeight * 0.05,
     width: windowWidth * 0.3,
@@ -297,27 +343,7 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
-  imageContainer: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
-    elevation: 6,
-    backgroundColor: Color.white,
-    borderRadius: moderateScale(30, 0.3),
-    paddingHorizontal: moderateScale(25, 0.3),
-    paddingVertical: moderateScale(15, 0.3),
-    marginVertical: moderateScale(40, 0.3),
-  },
-  img: {height: windowHeight * 0.26},
-  Tou: {
-    width: width * 0.9,
-    height: height * 0.055,
-    marginTop: height * 0.03,
-  },
+
   txt2: {
     color: Color.green,
     fontSize: moderateScale(20, 0.6),
@@ -326,48 +352,25 @@ const styles = ScaledSheet.create({
     alignSelf: 'flex-start',
     marginLeft: moderateScale(10, 0.3),
   },
-  txt3: {
-    color: Color.themeLightGray,
-    fontSize: moderateScale(12, 0.6),
-    textAlign: 'center',
-    width: '60%',
-    marginTop: moderateScale(5, 0.3),
-    lineHeight: moderateScale(17, 0.3),
+  recommendationContainer: {
+    width: windowWidth * 0.9,
+    // backgroundColor: 'red',
+    paddingVertical: moderateScale(10, 0.3),
+    alignSelf: 'center',
+    marginVertical: moderateScale(10, 0.3),
+    borderRadius: moderateScale(10, 0.3),
+    borderColor: Color.green,
+    borderWidth: 1,
   },
-  txt4: {
-    color: Color.lightGreen,
-    fontSize: moderateScale(14, 0.6),
-    borderBottomWidth: 1,
-    borderColor: Color.white,
-  },
-  txt5: {
+  subHeading: {
+    fontSize: moderateScale(16, 0.3),
+    fontWeight: '700',
     color: Color.black,
-
-    fontSize: moderateScale(12, 0.6),
+    marginLeft: moderateScale(10, 0.3),
   },
-  container2: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: width * 0.9,
-    // marginTop: moderateScale(10,0.3),
-  },
-  phoneView: {
-    width: '80%',
-    paddingVertical: moderateScale(5, 0.3),
-    flexDirection: 'row',
-    // justifyContent: 'space-around',
-    marginTop: moderateScale(20, 0.3),
-  },
-  countryCode: {
-    borderRadius: moderateScale(17, 0.3),
-    color: Color.themeLightGray,
-    height: height * 0.047,
-    paddingHorizontal: moderateScale(10, 0.3),
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: moderateScale(10, 0.3),
-    backgroundColor: '#EAEAEA',
+  text: {
+    fontSize: moderateScale(14, 0.3),
+    color: Color.black,
   },
 });
 

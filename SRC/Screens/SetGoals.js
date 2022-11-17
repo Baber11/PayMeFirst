@@ -31,6 +31,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Icon} from 'native-base';
 import numeral from 'numeral';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import TextInputWithTitle from '../Components/TextInputWithTitle';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -42,6 +43,7 @@ const SetGoals = () => {
   const [price1, setPrice1] = useState(0);
   const [price2, setPrice2] = useState(2000);
   const [plan, setPlan] = useState('');
+  const [name, setName] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -116,7 +118,7 @@ const SetGoals = () => {
 
         <CardContainer
           style={{
-            height: windowHeight * 0.6,
+            height: windowHeight * 0.7,
             paddingTop: moderateScale(30, 0.3),
           }}
         >
@@ -132,7 +134,7 @@ const SetGoals = () => {
             sliderLength={windowWidth * 0.75}
             customLabel={'baber'}
             min={0}
-            max={2000}
+            max={100002}
             // enabledOne={true}
             markerStyle={{backgroundColor: Color.green}}
             step={2}
@@ -160,6 +162,37 @@ const SetGoals = () => {
               {alignSelf: 'flex-start', marginLeft: moderateScale(20, 0.3)},
             ]}
           >
+            Set a name of your Goal
+          </CustomText>
+          <TextInputWithTitle
+            titleText={'Goal Name'}
+            secureText={false}
+            placeholder={'Goal Name'}
+            setText={setName}
+            value={name}
+            viewHeight={0.06}
+            viewWidth={0.8}
+            inputWidth={0.7}
+            // inputHeight={0.0}
+            border={1}
+            marginTop={moderateScale(10, 0.3)}
+            borderColor={Color.themeLightGray}
+            backgroundColor={'#F5F5F5'}
+            borderRadius={moderateScale(10, 0.3)}
+            placeholderColor={Color.themeLightGray}
+            // disable={true}
+            color
+          />
+          <CustomText
+            style={[
+              styles.txt3,
+              {
+                alignSelf: 'flex-start',
+                marginLeft: moderateScale(20, 0.3),
+                marginTop: moderateScale(10, 0.3),
+              },
+            ]}
+          >
             Saving Plans
           </CustomText>
           <View
@@ -167,7 +200,7 @@ const SetGoals = () => {
               flexDirection: 'row',
               width: windowWidth * 0.8,
               flexWrap: 'wrap',
-              //   marginTop: moderateScale(10, 0.3),
+
               //   backgroundColor: 'red',
             }}
           >
@@ -219,7 +252,7 @@ const SetGoals = () => {
                 Monthly
               </CustomText>
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => {
                 setPlan('Custom');
               }}
@@ -234,7 +267,7 @@ const SetGoals = () => {
               >
                 Custom
               </CustomText>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <CustomButton
             // textTransform={"capitalize"}
@@ -252,7 +285,11 @@ const SetGoals = () => {
             marginTop={moderateScale(20, 0.3)}
             onPress={() => {
               plan && price1 != 0
-                ? navigationService.navigate('SelectDate', {selectedPlan: plan})
+                ? navigationService.navigate('SelectDate', {
+                    selectedPlan: plan,
+                    amount: price1,
+                    planName: name,
+                  })
                 : Platform.OS == 'android'
                 ? ToastAndroid.show(
                     'Please Select Plan and Amont',

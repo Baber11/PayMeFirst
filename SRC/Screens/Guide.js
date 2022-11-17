@@ -33,7 +33,7 @@ import {ExpenditureComponent} from '../Components/ExpenditureComponent';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const Guide = () => {
+const Guide = ({valueFormatter, data}) => {
   const [state, setState] = useState(null);
   const dispatch = useDispatch();
 
@@ -45,20 +45,20 @@ const Guide = () => {
   const Header = apiHeader();
   const dummyData = [
     {
-      image: require('../Assets/Images/img1.png'),
-      title: 'Insurance',
+      image: require('../Assets/Images/ebay.png'),
+      title: 'Ebay',
     },
     {
-      image: require('../Assets/Images/img2.png'),
-      title: 'Commodities',
+      image: require('../Assets/Images/amazon.png'),
+      title: 'amazon',
     },
     {
-      image: require('../Assets/Images/img3.png'),
-      title: 'Credit',
+      image: require('../Assets/Images/ebay.png'),
+      title: 'Ebay',
     },
     {
-      image: require('../Assets/Images/img4.png'),
-      title: 'Vault',
+      image: require('../Assets/Images/amazon.png'),
+      title: 'amazon',
     },
   ];
 
@@ -78,7 +78,7 @@ const Guide = () => {
       >
         {/* <CustomText style={styles.txt4}>Total Balance</CustomText> */}
         <View style={[styles.row]}>
-          <CustomText
+          {/* <CustomText
             onPress={() => {
               setSelected('My Wallet');
             }}
@@ -91,8 +91,8 @@ const Guide = () => {
             ]}
           >
             My Wallet
-          </CustomText>
-          <CustomText
+          </CustomText> */}
+          {/* <CustomText
             onPress={() => {
               setSelected('My Future');
             }}
@@ -105,13 +105,14 @@ const Guide = () => {
             ]}
           >
             My Future
-          </CustomText>
+          </CustomText> */}
           <CustomText
             onPress={() => {
               setSelected('Guide');
             }}
             style={[
               styles.textWithContainer,
+              {fontSize: moderateScale(20, 0.3)},
               selected == 'Guide' && {
                 backgroundColor: Color.green,
                 color: 'white',
@@ -121,64 +122,89 @@ const Guide = () => {
             {' '}
             Guide
           </CustomText>
-        </View>
-        <View
-          style={{
-            // backgroundColor: 'red',
-            alignSelf: 'flex-start',
-            marginTop: moderateScale(20, 0.3),
-            width: windowWidth,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: windowWidth * 0.95,
+          <CustomText
+            onPress={() => {
+              setSelected('My Profile');
             }}
+            style={[
+              styles.textWithContainer,
+              {fontSize: moderateScale(20, 0.3)},
+              selected == 'My Profile' && {
+                backgroundColor: Color.green,
+                color: 'white',
+              },
+            ]}
           >
-            <CustomText style={[styles.textWithContainer]}>Account</CustomText>
-            <CustomText isBold>...</CustomText>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: windowWidth * 0.95,
+            {' '}
+            My Profile
+          </CustomText>
+          <CustomText
+            onPress={() => {
+              setSelected('Stores');
             }}
+            style={[
+              styles.textWithContainer,
+              {fontSize: moderateScale(20, 0.3)},
+              selected == 'Stores' && {
+                backgroundColor: Color.green,
+                color: 'white',
+              },
+            ]}
           >
-            <CustomText style={[styles.textWithContainer]}>
-              Other Services
-            </CustomText>
-            <CustomText isBold>...</CustomText>
-          </View>
+            {' '}
+            Stores
+          </CustomText>
         </View>
 
-        <View style={styles.subcontainer}>
-          {/* <View
-            style={{
-              width: windowWidth,
-            
-              height: windowHeight * 0.5,
-            }}
-          > */}
-          <FlatList
-            style={{marginTop: moderateScale(20, 0.3)}}
-            contentContainerStyle={{alignItems: 'center'}}
-            data={dummyData}
-            renderItem={({item, index}) => {
-              return (
-                <ExpenditureComponent
-                  image={item.image}
-                  text1={item.title}
-                  fromGuide={true}
-                  index={index == dummyData.length - 1}
-                />
-              );
-            }}
-          />
-          {/* </View> */}
-        </View>
+        <ScrollView
+          nestedScrollEnabled={true}
+          style={styles.subcontainer}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingBottom: moderateScale(200, 0.3),
+          }}
+        >
+          {selected == 'Guide' && (
+            <>
+              <CustomText style={styles.Txt}>What is Lorem Ipsum?</CustomText>
+              <CustomText style={styles.txt4}>
+                {
+                  'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
+                }
+              </CustomText>
+              <CustomText style={styles.Txt}>What is Lorem Ipsum?</CustomText>
+              <CustomText style={styles.txt4}>
+                {
+                  'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
+                }
+              </CustomText>
+              <CustomText style={styles.Txt}>What is Lorem Ipsum?</CustomText>
+              <CustomText style={styles.txt4}>
+                {
+                  'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
+                }
+              </CustomText>
+            </>
+          )}
+
+          {selected == 'Stores' && (
+            <FlatList
+              style={{marginTop: moderateScale(20, 0.3)}}
+              contentContainerStyle={{alignItems: 'center'}}
+              data={dummyData}
+              renderItem={({item, index}) => {
+                return (
+                  <ExpenditureComponent
+                    image={item.image}
+                    text1={item.title}
+                    fromGuide={true}
+                    index={index == dummyData.length - 1}
+                  />
+                );
+              }}
+            />
+          )}
+        </ScrollView>
       </View>
     </ScreenBoiler>
   );
@@ -193,11 +219,12 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
     width: windowWidth,
   },
+
   Txt: {
-    marginTop: moderateScale(10, 0.3),
+    margin: moderateScale(20, 0.3),
     color: Color.themeBlack,
     fontSize: moderateScale(22, 0.6),
-    textAlign: 'center',
+    // textAlign: 'center',
   },
   tou: {
     marginTop: height * 0.03,
@@ -216,15 +243,15 @@ const styles = ScaledSheet.create({
     backgroundColor: 'orange',
   },
   subcontainer: {
-    paddingBottom: moderateScale(20, 0.3),
     width: windowWidth,
-    height: windowHeight * 0.6,
-    alignItems: 'center',
-    justifyContent: 'center',
+    minHeight: windowHeight * 0.6,
+    // alignItems: 'center',
+    // justifyContent: 'center',
     backgroundColor: Color.white,
-    borderTopLeftRadius: moderateScale(45, 0.3),
-    borderTopRightRadius: moderateScale(45, 0.3),
-    marginTop: moderateScale(40, 0.3),
+    // backgroundColor: 'red',
+    borderTopLeftRadius: moderateScale(25, 0.3),
+    borderTopRightRadius: moderateScale(25, 0.3),
+    marginTop: moderateScale(30, 0.3),
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -234,6 +261,7 @@ const styles = ScaledSheet.create({
     shadowRadius: 16.0,
 
     elevation: 24,
+    overflow: 'hidden',
   },
 
   cont: {
@@ -262,7 +290,7 @@ const styles = ScaledSheet.create({
     borderRadius: moderateScale(5, 0.3),
     backgroundColor: '#F6F6F6',
     marginLeft: moderateScale(15, 0.3),
-    fontWeight: '400',
+    fontWeight: '700',
   },
 
   txt2: {
@@ -281,6 +309,7 @@ const styles = ScaledSheet.create({
   txt4: {
     color: Color.black,
     fontSize: moderateScale(14, 0.6),
+    marginLeft: moderateScale(10, 0.3),
     // fontWeight: 'bold',
     // borderBottomWidth: 1,
     // borderColor: Color.white,
@@ -293,3 +322,102 @@ const styles = ScaledSheet.create({
 });
 
 export default Guide;
+const Tooltip = ({x, y, textX, textY, stroke, pointStroke, position}) => {
+  let tipW = 50,
+    tipH = 30,
+    tipX = 5,
+    tipY = -9,
+    tipTxtX = 12,
+    tipTxtY = 6;
+  const posY = y;
+  const posX = x;
+
+  if (posX > windowWidth - tipW) {
+    tipX = -(tipX + tipW);
+    tipTxtX = tipTxtX - tipW - 6;
+  }
+
+  const boxPosX = position === 'left' ? posX - tipW - 10 : posX;
+
+  return (
+    <G>
+      <Circle
+        cx={posX}
+        cy={posY}
+        r={4}
+        stroke={pointStroke}
+        strokeWidth={2}
+        fill={'orange'}
+      />
+      <G x={boxPosX < 40 ? 40 : boxPosX} y={posY}>
+        {/* <Rect
+          x={tipX + 1}
+          y={tipY - 1}
+          width={tipW - 2}
+          height={tipH - 2}
+          fill={'rgba(255, 255, 255, 0.9)'}
+          rx={2}
+          ry={2}
+        /> */}
+        <Rect
+          x={tipX}
+          y={tipY}
+          width={tipW}
+          height={tipH}
+          rx={2}
+          ry={2}
+          fill={'white'}
+          stroke={stroke}
+        />
+
+        <Text
+          fill={Color.green}
+          x={tipTxtX}
+          y={tipTxtY + 5}
+          fontSize="12"
+          textAnchor="start"
+        >
+          ${textY}
+        </Text>
+      </G>
+    </G>
+  );
+};
+
+Tooltip.propTypes = {
+  x: PropTypes.func.isRequired,
+  y: PropTypes.func.isRequired,
+  height: PropTypes.number,
+  stroke: PropTypes.string,
+  pointStroke: PropTypes.string,
+  textX: PropTypes.string,
+  textY: PropTypes.string,
+  position: PropTypes.string,
+};
+
+Tooltip.defaultProps = {
+  position: 'rigth',
+};
+
+const tooltipDecorators = (state, data, valueFormatter) => () => {
+  if (state === null) {
+    return null;
+  }
+
+  const {index, value, x, y} = state;
+  const textX = data?.labels[index];
+  console.log(data?.labels);
+  const position = data?.labels.length === index + 1 ? 'left' : 'right';
+
+  return (
+    <Tooltip
+      textX={String(textX)}
+      textY={String(value)}
+      x={x}
+      y={y}
+      stroke={Color.white}
+      pointStroke={'orange'}
+      position={position}
+    />
+  );
+};

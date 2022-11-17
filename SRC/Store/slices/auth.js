@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   token: null,
@@ -9,12 +9,12 @@ const initialState = {
 };
 
 const AuthSlice = createSlice({
-  name: "authReducer",
+  name: 'authReducer',
   initialState: initialState,
   reducers: {
     setUserToken(state, action) {
       state.token = action?.payload?.token;
-      console.log("TOKEN", state.token);
+      console.log('TOKEN', state.token);
     },
     SetFCMToken(state, action) {
       state.fcmToken = action?.payload?.fcmToken;
@@ -24,15 +24,13 @@ const AuthSlice = createSlice({
     },
     setIsVerified(state, action) {
       state.isVerified = action?.payload;
-      console.log("isVerified", state.isVerified);
+      console.log('isVerified', state.isVerified);
     },
     setUserLogout(state, action) {
-      state.isVerified = false;
       state.token = null;
       state.fcmToken = null;
     },
     setWalkThrough(state, action) {
-     
       state.userWalkThrough = true;
     },
   },
