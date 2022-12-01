@@ -45,6 +45,9 @@ const VerifyNumber = props => {
 
   //params
   const fromForgot = props?.route?.params?.fromForgot;
+  const phoneNumber = props?.route?.params?.phoneNumber;
+
+    // console.log(phoneNumber)
 
   //states
   const [code, setCode] = useState('');
@@ -67,9 +70,42 @@ const VerifyNumber = props => {
     time == 0 && (settimerLabel('Resend Code '), settime(''));
   };
 
+  const sendOTP = async()=>{
+    const url = "password/email"
+    setIsLoading(true);
+    const response = await Post(url ,{email : 'syedbaber115@gmail.com'} , apiHeader());
+    setIsLoading(false);
+    if(response != undefined){
+      Platform.OS == 'android' ?
+      ToastAndroid.show(`OTP sent to syedbaber115@gmail.com` , ToastAndroid.SHORT) :
+      alert(`OTP sent to syedbaber115@gmail.com`)
+    }
+  }
+
+  const VerifyOTP = async()=>{
+    const url = "verify";
+    setIsLoading(true);
+    console.log(code);
+    const response = await Post(url ,{email_code : code} , apiHeader());
+    setIsLoading(false);
+    if(response != undefined){
+      Platform.OS == 'android' ?
+      ToastAndroid.show(`otp verified` , ToastAndroid.SHORT) :
+      alert(`otp verified`)
+
+      navigationService.navigate('ResetPassword',{phoneNumber : phoneNumber})
+    }
+    
+  }
+
   useEffect(() => {
     label();
   }, [time]);
+  
+  // useEffect(()=>{
+  //   if(timerLabel == )
+  //   sendOTP();
+  // },[timerLabel])
 
   return (
     <ScreenBoiler
@@ -91,7 +127,7 @@ const VerifyNumber = props => {
           <CustomText style={styles.txt2}>Verify Account</CustomText>
           <CustomText style={styles.txt3}>
             Enter four digit code we have sent to{' '}
-            {<CustomText style={{color: Color.black}}>+92-11111111</CustomText>}
+            {<CustomText style={{color: Color.black}}>{phoneNumber}</CustomText>}
           </CustomText>
           <CodeField
             placeholder={'0'}
@@ -122,6 +158,7 @@ const VerifyNumber = props => {
               <TouchableOpacity
                 disabled={timerLabel == 'Resend Code ' ? false : true}
                 onPress={() => {
+                  sendOTP(),
                   settimerLabel('ReSend in '), settime(120);
                 }}
               >
@@ -145,11 +182,7 @@ const VerifyNumber = props => {
             width={windowWidth * 0.75}
             height={windowHeight * 0.06}
             marginTop={moderateScale(40, 0.3)}
-            onPress={() => {
-              fromForgot
-                ? navigationService.navigate('ResetPassword')
-                : navigationService.navigate('AddCard');
-            }}
+            onPress={VerifyOTP}
             bgColor={Color.green}
             borderColor={Color.white}
             borderWidth={2}

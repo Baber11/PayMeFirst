@@ -10,7 +10,7 @@ import { baseUrl } from "../Config";
  */
 
 const URL = (link) => {
-  return `${baseUrl}/api/v1/${link}`;
+  return `${baseUrl}/api/${link}`;
 };
 
 let Get = async (route, token, showAlert = true) => {
@@ -72,6 +72,8 @@ let Get = async (route, token, showAlert = true) => {
 
 let Post = async (route, data, headers, showAlert = true) => {
   const apiUrl = URL(route);
+  console.log(apiUrl);
+
   try {
     return await axios.post(apiUrl, data, headers);
   } catch (error) {

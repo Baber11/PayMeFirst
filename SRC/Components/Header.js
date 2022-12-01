@@ -24,12 +24,12 @@ const Header = props => {
     headerColor,
     titleColor,
     close,
-
     navigateTO,
     headerType,
   } = props;
   const [searchText, setSearchText] = useState('');
   const user = useSelector(state => state.commonReducer.userData);
+  // console.log(JSON.stringify(user , null ,2));
   const token = useSelector(state => state.authReducer.token);
   return headerType == 1 ? (
     <View

@@ -29,7 +29,7 @@ import CustomText from '../Components/CustomText';
 import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import CustomButton from '../Components/CustomButton';
-import {setIsVerified, setUserToken} from '../Store/slices/auth';
+import {setGoalCreated, setIsVerified, setUserToken} from '../Store/slices/auth';
 import {validateEmail} from '../Config';
 import {ActivityIndicator} from 'react-native';
 import {Post} from '../Axios/AxiosInterceptorFunction';
@@ -46,6 +46,7 @@ const LoginScreen = () => {
   const {fcmToken} = useSelector(state => state.commonReducer);
 
   const [email, setEmail] = useState('');
+  // console.log(email.toLowerCase())
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -58,9 +59,11 @@ const LoginScreen = () => {
 
   const Login = async () => {
     const params = {
-      email: email?.trim(),
+      email: email?.trim().toLowerCase(),
       password: password,
     };
+    console.log(params);
+    
     if (email == '' || password == '') {
       return Platform.OS == 'android'
         ? ToastAndroid.show('Required field is empty', ToastAndroid.SHORT)
@@ -71,16 +74,17 @@ const LoginScreen = () => {
         ? ToastAndroid.show('email is not validate', ToastAndroid.SHORT)
         : Alert.alert('email is not validate');
     }
-    const url = 'users/login';
+    const url = 'login';
     setIsLoading(true);
     const response = await Post(url, params, apiHeader());
     setIsLoading(false);
 
     if (response != undefined) {
-      // console.log("response?.data?.data?.user", response?.data);
-      dispatch(setIsVerified(response?.data?.data?.user?.isActive));
-      dispatch(setUserData(response?.data?.data?.user));
+      console.log("response?.data?.data?.user", response?.data);
+    
+      dispatch(setUserData(response?.data?.user_info));
       dispatch(setUserToken(response?.data));
+      dispatch(setGoalCreated(response.data?.user_info?.is_goal))
     }
   };
 
@@ -184,10 +188,10 @@ const LoginScreen = () => {
             </View>
           </View> */}
           <CustomButton
-            // textTransform={"capitalize"}
+       
             text={
               isLoading ? (
-                <ActivityIndicator color={'#000'} size={'small'} />
+                <ActivityIndicator color={'#FFFFFF'} size={'small'} />
               ) : (
                 'Sign In'
               )
@@ -197,9 +201,7 @@ const LoginScreen = () => {
             width={windowWidth * 0.75}
             height={windowHeight * 0.06}
             marginTop={moderateScale(20, 0.3)}
-            onPress={() => {
-              navigationService.navigate('EnterPhone');
-            }}
+            onPress={Login}
             bgColor={Color.green}
             borderColor={Color.white}
             borderWidth={2}
@@ -220,115 +222,7 @@ const LoginScreen = () => {
         </CardContainer>
       </ScrollView>
 
-      {/* <View
-          style={{
-            // borderWidth: 4,
-            // borderColor: Color.themeColor1,
-            alignItems: "center",
-            height: windowHeight * 0.95,
-            paddingVertical: moderateScale(30, 0.3),
-          }}
-        >
-          <Image
-            style={styles.img}
-            resizeMode={"contain"}
-            source={require("../Assets/Images/pig.png")}
-          />
-
-          <CustomText style={styles.Txt} isBold>
-            {"Welcome Back \n"}
-            <CustomText
-              isBold
-              style={{
-                // lineHeight: moderateScale(50, 0.3),
-                fontSize: moderateScale(11, 0.3),
-                color: Color.mediumGray,
-                fontWeight: "bold",
-                lineHeight : moderateScale(30,0.3)
-
-              }}
-            >
-              login to continue
-            </CustomText>
-          </CustomText>
-          <TextInputWithTitle
-            // iconName="envelope"
-            // iconType={FontAwesome}
-            titleText={"Email"}
-            secureText={false}
-            placeholder={"Email"}
-            setText={setEmail}
-            value={email}
-            viewHeight={0.07}
-            viewWidth={0.9}
-            inputWidth={0.8}
-            border={2}
-            borderColor={Color.lightGrey}
-            backgroundColor={"transparent"}
-            marginTop={moderateScale(60, 0.3)}
-            color={Color.themeLightGray}
-            placeholderColor={Color.themeLightGray}
-          />
-          <TextInputWithTitle
-            // iconName="lock"
-            // iconType={FontAwesome5}
-            titleText={"Password"}
-            secureText={true}
-            placeholder={"Password"}
-            setText={setPassword}
-            value={password}
-            viewHeight={0.07}
-            viewWidth={0.9}
-            inputWidth={0.8}
-            // marginTop={0.04}
-            border={2}
-            borderColor={Color.lightGrey}
-            backgroundColor={"transparent"}
-            marginTop={moderateScale(10, 0.3)}
-            color={Color.themeLightGray}
-            placeholderColor={Color.themeLightGray}
-          />
-          <CustomButton
-            // textTransform={"capitalize"}
-            text={
-              isLoading ? (
-                <ActivityIndicator color={"#000"} size={"small"} />
-              ) : (
-                "SIGN IN"
-              )
-            }
-            isBold
-            textColor={Color.white}
-            width={windowWidth * 0.9}
-            height={windowHeight * 0.07}
-            marginTop={moderateScale(30, 0.3)}
-            onPress={Login}
-            bgColor={Color.themeColor}
-            borderColor={Color.white}
-            borderWidth={2}
-            borderRadius={moderateScale(10, 0.3)}
-          />
-
-          <TouchableOpacity
-            onPress={() => navigationService.navigate("ForgetPassword")}
-            style={styles.tou}
-          >
-            <CustomText style={styles.txt3}>{"Forgot Password"}</CustomText>
-          </TouchableOpacity>
-
-          <View style={styles.container2}>
-            <CustomText style={styles.txt5}>
-              {"Don't have an account? "}
-            </CustomText>
-            <TouchableOpacity
-              style={{ marginLeft: width * 0.01 }}
-              onPress={() => navigationService.navigate("SignupScreen")}
-            >
-              <CustomText style={styles.txt4}>{"Sign Up"}</CustomText>
-            </TouchableOpacity>
-          </View>
-        </View> */}
-      {/* </ImageBackground> */}
+    
     </ScreenBoiler>
   );
 };

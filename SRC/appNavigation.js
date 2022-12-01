@@ -28,39 +28,33 @@ import Wallet from './Screens/Wallet';
 
 const AppNavigator = () => {
   // const isLogin = false;
-  // const isLogin = useSelector(state => state.authReducer.isLoggedIn);
+  const isGoalCreated = useSelector(state => state.authReducer.isGoalCreated);
+  
   const walkThrough = useSelector(state => state.authReducer.userWalkThrough);
   const isVerified = useSelector(state => state.authReducer.isVerified);
   const token = useSelector(state => state.authReducer.token);
-  console.log('token>>>>', token);
-  console.log('isVerified', isVerified);
+  // console.log('token>>>>', token);
+  // console.log('isVerified', isGoalCreated);
   console.log(
     '🚀 ~ file: appNavigation.js ~ line 32 ~ AppNavigator ~ walkThrough',
-    walkThrough,
+    token != null && isGoalCreated == true , isGoalCreated
   );
 
   const RootNav = createNativeStackNavigator();
   const RootNavLogged = createNativeStackNavigator();
 
-  // verified == true && token != null (MyDrawer)
-  // verified == false && token == null (MyDrawer + labels)
-  // verified == false || token (EnterCode)
-  // walkthrough == false ? walkthrough : MyDrawer
+
 
   const AppNavigatorContainer = () => {
     const firstScreen =
       walkThrough == false
         ? 'Walkthrough'
-        : token
+        : token != null && isGoalCreated == false
+        ? 'AddCard' 
+        : token != null && isGoalCreated == true
         ? 'TabNavigation'
         : 'LoginScreen';
-    // : isVerified == true && token != null
-    // ? "MyDrawer"
-    // : isVerified == false && token == null
-    // ? "MyDrawer"
-    // : isVerified == false || token != null
-    // ? "EnterCode"
-    // : "MyDrawer";
+    
     return (
       <NavigationContainer ref={navigationService.navigationRef}>
         <RootNav.Navigator
@@ -77,17 +71,8 @@ const AppNavigator = () => {
           <RootNav.Screen name="Rewards" component={Rewards} />
           <RootNav.Screen name="SignupScreen" component={SignupScreen} />
           <RootNav.Screen name="ResetPassword" component={ResetPassword} />
-
-          <RootNav.Screen
-            name="FinancialBreakDown"
-            component={FinancialBreakDown}
-          />
-
-          <RootNav.Screen
-            name="TermsAndConditions"
-            component={TermsAndConditions}
-          />
-
+          <RootNav.Screen name="FinancialBreakDown" component={FinancialBreakDown} />
+          <RootNav.Screen name="TermsAndConditions" component={TermsAndConditions} />
           <RootNav.Screen name="TabNavigation" component={TabNavigation} />
         </RootNav.Navigator>
       </NavigationContainer>

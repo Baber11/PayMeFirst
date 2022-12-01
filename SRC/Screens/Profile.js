@@ -25,10 +25,12 @@ import {set} from 'immer/dist/internal';
 import {useState} from 'react';
 import navigationService from '../navigationService';
 import {setUserLogout} from '../Store/slices/auth';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 const Profile = () => {
   const dispatch = useDispatch();
+  const user = useSelector((state)=>state.commonReducer.userData);
+  // console.log(user);
   return (
     <ScreenBoiler
       showHeader={false}
@@ -76,10 +78,15 @@ const Profile = () => {
           </View>
         </ImageBackground>
         <View
+
           style={{
-            alignSelf: 'center',
+            // backgroundColor : 'red',
+            // alignSelf: 'center',
             marginTop: moderateScale(-20, 0.3),
-            paddingHorizontal: moderateScale(5, 0.3),
+            width : windowWidth,
+            alignItems  :'center'
+          
+        
           }}
         >
           <View style={[styles.image1]}>
@@ -92,7 +99,7 @@ const Profile = () => {
             isBold
             style={[styles.text, {fontSize: moderateScale(17, 0.3)}]}
           >
-            John Smith
+          {`${user?.first_name} ${user?.last_name}`}
           </CustomText>
           <CustomText
             isBold
@@ -104,7 +111,7 @@ const Profile = () => {
               },
             ]}
           >
-            john@gmail.com
+           {user?.email}
           </CustomText>
         </View>
       </View>

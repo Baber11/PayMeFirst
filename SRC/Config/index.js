@@ -1,4 +1,4 @@
-export const baseUrl = "https://staycationar-backend.herokuapp.com";
+export const baseUrl = "https://www.amazing-grothendieck.23-83-37-162.plesk.page";
 // export const baseUrl = "https://ea01-103-244-178-85.ngrok.io";
 export const imageUrl = `${baseUrl}/api/images/`;
 

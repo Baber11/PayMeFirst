@@ -47,7 +47,7 @@ const EnterPhone = props => {
   const {fcmToken} = useSelector(state => state.commonReducer);
 
   const fromForgot = props?.route?.params?.fromForgot;
-  console.log(fromForgot);
+  console.log('here=>',fromForgot);
   const [phone, setPhone] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
@@ -55,36 +55,38 @@ const EnterPhone = props => {
   const [countryCodePrefex, setCountryCodePrefex] = useState('');
   const [countryCode, setCountryCode] = useState('');
   const [country, setCountry] = useState('');
+console.log(countryCode)
 
-  const Header = apiHeader();
+const sendOTP = async()=>{
 
-  const Login = async () => {
-    const params = {
-      email: email?.trim(),
-      password: password,
-    };
-    if (email == '' || password == '') {
-      return Platform.OS == 'android'
-        ? ToastAndroid.show('Required field is empty', ToastAndroid.SHORT)
-        : Alert.alert('Required field is empty');
-    }
-    if (!validateEmail(email)) {
-      return Platform.OS == 'android'
-        ? ToastAndroid.show('email is not validate', ToastAndroid.SHORT)
-        : Alert.alert('email is not validate');
-    }
-    const url = 'users/login';
-    setIsLoading(true);
-    const response = await Post(url, params, apiHeader());
-    setIsLoading(false);
+  const url = "password/email"
+  if(['',null ,undefined].includes(phone) || ['',null ,undefined].includes(countryCode) ){
+   return Platform.OS =='android' ? 
+    ToastAndroid.show('Phone number is required' , ToastAndroid.SHORT) :
+    alert('Phone number is required');
+    
+  }
+  setIsLoading(true);
+  const response = await Post(url ,{email : 'syedbaber115@gmail.com'} , apiHeader());
+  setIsLoading(false);
+  if(response != undefined){
+    console.log('response data =>' , response?.data)
+    Platform.OS == 'android' ?
+    ToastAndroid.show(`OTP sent to syedbaber115@gmail.com` , ToastAndroid.SHORT) :
+    alert(`OTP sent to syedbaber115@gmail.com`)
+    fromForgot
+    ? navigationService.navigate('VerifyNumber', {
+      fromForgot: fromForgot,
+      phoneNumber : `${countryCode}${phone}`
+    })
+    : navigationService.navigate('VerifyNumber',{
+      phoneNumber : `${countryCode}${phone}`
+    });
+  }
+}
 
-    if (response != undefined) {
-      // console.log("response?.data?.data?.user", response?.data);
-      dispatch(setIsVerified(response?.data?.data?.user?.isActive));
-      dispatch(setUserData(response?.data?.data?.user));
-      dispatch(setUserToken(response?.data));
-    }
-  };
+
+ 
   const onSelect = country => {
     setCountryCode(`+${country.callingCode}`);
     setCountryCodePrefex(country.cca2);
@@ -145,15 +147,13 @@ const EnterPhone = props => {
                 onClose={() => {
                   setShowNumberModal(false);
                 }}
-                placeholder={`+92`}
+                placeholder={`Select`}
                 placeholderColor={Color.black}
                 visible={showNumberModal}
                 containerButtonStyle={styles.countryCode}
               />
             </TouchableOpacity>
             <TextInputWithTitle
-              // iconName="lock"
-              // iconType={FontAwesome}
               titleText={'Email'}
               //   secureText={true}
               placeholder={'number'}
@@ -186,13 +186,7 @@ const EnterPhone = props => {
             width={windowWidth * 0.75}
             height={windowHeight * 0.06}
             marginTop={moderateScale(20, 0.3)}
-            onPress={() => {
-              fromForgot
-                ? navigationService.navigate('VerifyNumber', {
-                    fromForgot: fromForgot,
-                  })
-                : navigationService.navigate('VerifyNumber');
-            }}
+            onPress={sendOTP}
             bgColor={Color.green}
             borderColor={Color.white}
             borderWidth={2}

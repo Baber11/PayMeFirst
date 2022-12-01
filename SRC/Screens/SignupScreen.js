@@ -31,7 +31,7 @@ import ScreenBoiler from '../Components/ScreenBoiler';
 import CustomButton from '../Components/CustomButton';
 import {validateEmail} from '../Config';
 import {Post} from '../Axios/AxiosInterceptorFunction';
-import {setIsVerified, setUserToken} from '../Store/slices/auth';
+import {setGoalCreated, setIsVerified, setUserToken} from '../Store/slices/auth';
 import {setUserData} from '../Store/slices/common';
 import ImagePickerModal from '../Components/ImagePickerModal';
 import CustomImage from '../Components/CustomImage';
@@ -43,7 +43,6 @@ const height = Dimensions.get('window').height;
 const SignupScreen = () => {
   const dispatch = useDispatch();
   const {fcmToken} = useSelector(state => state.commonReducer);
-
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
@@ -58,8 +57,9 @@ const SignupScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [countryCodePrefex, setCountryCodePrefex] = useState('');
   const [showNumberModal, setShowNumberModal] = useState(false);
-
   const [loading, setLoading] = useState(false);
+
+  const formData = new FormData();
 
   const onSelect = country => {
     setCountryCode(`+${country.callingCode}`);
@@ -67,25 +67,29 @@ const SignupScreen = () => {
     setCountry(country);
   };
   const SignUp = async () => {
+   
     const params = {
-      role: 'tourist',
-      firstName: firstName,
-      lastName: lastName,
+     
+      first_name: firstName,
+      last_name: lastName,
       email: email,
       password: password,
-      passwordConfirm: confirmPassword,
-      phoneNumber: phone,
+      c_password: confirmPassword,
+      phone: `${countryCode}${phone}`,
       country: country,
-      countryCode: countryCode,
-      description: description,
+    
     };
+    
     for (let key in params) {
       if (params[key] === '') {
         return Platform.OS == 'android'
           ? ToastAndroid.show('Required field is empty', ToastAndroid.SHORT)
           : Alert.alert('Required field is empty');
       }
+      formData.append(key , params[key]);
     }
+    formData.append('photo',image)
+    console.log(JSON.stringify(formData,null,2))
     if (isNaN(phone)) {
       return Platform.OS == 'android'
         ? ToastAndroid.show('phone is not a number', ToastAndroid.SHORT)
@@ -110,19 +114,18 @@ const SignupScreen = () => {
         : Alert.alert('Password does not match');
     }
 
-    const url = 'users/signup';
+    const url = 'register';
     setIsLoading(true);
     const response = await Post(url, params, apiHeader());
     setIsLoading(false);
     if (response != undefined) {
-      // console.log("response?.data", response?.data);
-      // console.log("response?.data?.data?.user", response?.data?.data?.user);
+      console.log("response?.data", response?.data);
       Platform.OS === 'android'
         ? ToastAndroid.show('User Registered Succesfully', ToastAndroid.SHORT)
-        : Alert.alert('"User Registered Succesfully"');
-      dispatch(setUserToken(response?.data));
-      dispatch(setUserData(response?.data?.data?.user));
-      dispatch(setIsVerified(response?.data?.data?.user?.isActive));
+        : Alert.alert("User Registered Succesfully");
+        dispatch(setUserData(response?.data?.user_info));
+        dispatch(setUserToken(response?.data));
+        dispatch(setGoalCreated(response?.data?.user_info?.is_goal))
     }
   };
   return (
@@ -139,6 +142,7 @@ const SignupScreen = () => {
           alignItems: 'center',
           paddingBottom: moderateScale(50, 0.3),
           paddingTop: moderateScale(30, 0.3),
+          // backgroundColor : 'red'
         }}
       >
         <CustomText style={styles.Txt}>
@@ -375,7 +379,7 @@ const SignupScreen = () => {
           // textTransform={"capitalize"}
           text={
             isLoading ? (
-              <ActivityIndicator color={'black'} size={'small'} />
+              <ActivityIndicator color={'white'} size={'small'} />
             ) : (
               'SIGN UP'
             )
@@ -385,7 +389,7 @@ const SignupScreen = () => {
           width={windowWidth * 0.9}
           height={windowHeight * 0.07}
           marginTop={moderateScale(20, 0.3)}
-          // onPress={SignUp}
+          onPress={SignUp}
           bgColor={Color.green}
           borderColor={Color.green}
           borderWidth={2}
@@ -403,12 +407,12 @@ const SignupScreen = () => {
             <CustomText style={styles.txt4}>{'Sign In'}</CustomText>
           </TouchableOpacity>
         </View>
-      </ScrollView>
       <ImagePickerModal
         show={showModal}
         setShow={setShowModal}
         setFileObject={setImage}
       />
+      </ScrollView>
     </ScreenBoiler>
   );
 };

@@ -14,12 +14,9 @@ import {
 import {ScaledSheet, moderateScale} from 'react-native-size-matters';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {useDispatch, useSelector} from 'react-redux';
-
 import TextInputWithTitle from '../Components/TextInputWithTitle';
 import Color from '../Assets/Utilities/Color';
-
 import CustomText from '../Components/CustomText';
-
 import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import CustomButton from '../Components/CustomButton';
@@ -29,11 +26,14 @@ import {Platform} from 'react-native';
 import {setUserData} from '../Store/slices/common';
 import {Post} from '../Axios/AxiosInterceptorFunction';
 
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
+
 const ResetPassword = props => {
   const phoneNumber = props?.route?.params?.phoneNumber;
+  console.log(phoneNumber);
 
   const dispatch = useDispatch();
   const {fcmToken} = useSelector(state => state.commonReducer);
@@ -44,8 +44,8 @@ const ResetPassword = props => {
   const passwordReset = async () => {
     const params = {
       password: password,
-      passwordConfirm: confirmPassword,
-      phoneNumber: phoneNumber,
+      c_password: confirmPassword,
+      phone: phoneNumber,
     };
     for (let key in params) {
       if (params[key] === '') {
@@ -54,6 +54,7 @@ const ResetPassword = props => {
           : Alert.alert('Required field is empty'));
       }
     }
+
 
     // Password Length
     if (password.length < 8) {
@@ -70,15 +71,15 @@ const ResetPassword = props => {
         : Alert.alert('passwords MissMatched !'));
     }
 
-    const url = 'users/resetPasswordDone';
+    const url = 'password/reset';
     setIsLoading(true);
     const response = await Post(url, params, apiHeader());
     setIsLoading(false);
     if (response !== undefined) {
       console.log(response?.data);
-      dispatch(setIsVerified(response?.data?.data?.user?.isActive));
-      dispatch(setUserLogin(response?.data));
-      dispatch(setUserData(response?.data?.data?.user));
+      // dispatch(setIsVerified(response?.data?.data?.user?.isActive));
+      // dispatch(setUserLogin(response?.data));
+      // dispatch(setUserData(response?.data?.data?.user));
     }
   };
   // dispatch(setUserToken('123456'));
@@ -167,7 +168,7 @@ const ResetPassword = props => {
             isLoading ? (
               <ActivityIndicator color={'#000'} size={'small'} />
             ) : (
-              'Verify now'
+              'Submit'
             )
           }
           isBold
@@ -175,9 +176,7 @@ const ResetPassword = props => {
           width={windowWidth * 0.75}
           height={windowHeight * 0.06}
           marginTop={moderateScale(40, 0.3)}
-          onPress={() => {
-            dispatch(setUserToken({token: true}));
-          }}
+          onPress={passwordReset}
           bgColor={Color.green}
           borderColor={Color.white}
           borderWidth={2}

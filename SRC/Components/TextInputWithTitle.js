@@ -87,6 +87,7 @@ const TextInputWithTitle = props => {
                 ? styles.inputBox
                 : [styles.inputBox, {paddingBottom: 0}],
             ]}
+           
             onChangeText={text => props.setText(text)}
             value={props.value}
             secureTextEntry={!showPassword}
@@ -95,6 +96,7 @@ const TextInputWithTitle = props => {
               props.placeholderColor ? props.placeholderColor : Color.white
             }
             keyboardType={props.keyboardType}
+            autoCapitalize={'none'}
           />
           <TouchableOpacity
             onPress={() => {
@@ -147,7 +149,9 @@ const TextInputWithTitle = props => {
             props.color && {
               color: Color.black,
             },
+
           ]}
+
           onChangeText={text => props.setText(text)}
           value={props.value}
           placeholder={`${props.placeholder}`}
@@ -158,6 +162,7 @@ const TextInputWithTitle = props => {
           multiline={props.multiline || false}
           numberOfLines={props.numberOfLines || 1}
           editable={props.disable ? false : true}
+          autoCapitalize={'none'}
           // textAlignVertical={props.textAlignVertical}
         />
       )}
