@@ -300,13 +300,14 @@ const Profile = ({navigation}) => {
                   style={{
                     // backgroundColor: 'red',
                     flexDirection: 'row',
-                    width: windowWidth * 0.7,
+                    width: windowWidth,
                     alignSelf: 'center',
-                    justifyContent: 'space-between',
-                    paddingLeft: moderateScale(40, 0.3),
+                    // justifyContent: 'space-between',
+                    paddingLeft: windowWidth * 0.43,                   // backgroundColor : 'red',
+                    marginTop : moderateScale(20,0.3)
                   }}
                 >
-                  <CustomText style={styles.text1}>Total</CustomText>
+                  <CustomText style={[styles.text1,{marginRight : windowWidth * 0.1}]}>Total</CustomText>
                   <CustomText style={styles.text1}>
                     {'  '}£{total}
                   </CustomText>
@@ -413,6 +414,15 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     width: windowWidth * 0.2,
     fontWeight: '700',
+    // backgroundColor : 'blue'
+  },
+  text2: {
+    color: '#000000',
+    fontSize: moderateScale(15, 0.3),
+    textAlign: 'center',
+    width: windowWidth * 0.3,
+    fontWeight: '700',
+    // backgroundColor : 'red'
   },
   container: {
     alignSelf: 'center',
@@ -467,6 +477,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: moderateScale(20, 0.3),
     // backgroundColor: 'red',
+    borderBottomWidth : 0.5 ,
+    // marginRight : moderateScale(1120,0.3)
+    borderColor : Color.themeLightGray
   },
 });
 
@@ -477,8 +490,9 @@ const DataCard = ({data, total}) => {
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
-          width: windowWidth * 0.4,
+          // justifyContent: 'space-between',
+          width: windowWidth * 0.15,
+          // backgroundColor : 'yellow'
         }}
       >
         <View
@@ -490,12 +504,12 @@ const DataCard = ({data, total}) => {
           }}
         ></View>
         <CustomText
-          style={{marginLeft: moderateScale(-15, 0.3), color: `${data.color}`}}
+          style={{ color: `${data.color}`}}
         >
           {Math.round((data?.value / total) * 100)}%
         </CustomText>
-        <CustomText style={[styles.text1]}>{data?.name}</CustomText>
       </View>
+        <CustomText style={[styles.text2 ]}>{data?.name}</CustomText>
       <CustomText style={[styles.text1]}>
         £{numeral(data?.value).format('0,0')}
       </CustomText>

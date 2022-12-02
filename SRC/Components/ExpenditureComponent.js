@@ -69,7 +69,7 @@ export const ExpenditureComponent = ({
       >
         <CustomImage
           source={image}
-          // resizeMode={'stretch'}
+          resizeMode={fromGuide ?  'stretch' : 'cover'}
           style={{
             width: fromGuide ? '100%' : '80%',
             height: fromGuide ? '100%' : '80%',

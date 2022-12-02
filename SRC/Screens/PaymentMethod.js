@@ -13,29 +13,16 @@ import {
 } from 'react-native';
 import Color from '../Assets/Utilities/Color';
 import {useDispatch, useSelector} from 'react-redux';
-// import {apiHeader, sleep, URL} from '../Config/apiUrl';
 import {Get, Patch, Post} from '../Axios/AxiosInterceptorFunction';
-// import AddCardModal from '../Components/AddCardModal';
 import {useStripe} from '@stripe/stripe-react-native';
-// import CustomButton from '../Components/CustomButton';
-
-// import CustomAlertModal from '../Components/CustomAlertModal';
 import {Icon} from 'native-base';
-// import {updateUserData} from '../Store/Actions/authAction';
 import {moderateScale, ScaledSheet} from 'react-native-size-matters';
-// import ColorlessHeader from '../Components/ColorlessHeader';
-
-// import Ionicons from 'react-native-vector-icons/Ionicons';
-// import Fontisto from 'react-native-vector-icons/Fontisto';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomText from '../Components/CustomText';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment';
-// import navigationService from '../navigationService';
-// import CustomStatusBar from '../Components/CustomStatusBar';
-// import Loader from '../Components/Loader';
 import {userData} from '../Store/Actions/authAction';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import {windowHeight, windowWidth} from '../Utillity/utils';
@@ -45,10 +32,6 @@ const width = Dimensions.get('window').width;
 
 const PaymentMethod = props => {
   const dispatch = useDispatch();
-  //   const {accessToken} = useSelector(state => state.authReducer);
-  //   const reduxTextObject = useSelector(state => state.langViewReducer.data);
-  //   const balance = useSelector(state => state.commonReducer.user.wallet.balance);
-  //   const user = useSelector(state => state.commonReducer.user);
   const isDelete = true;
   //   const {
   //     isDelete,

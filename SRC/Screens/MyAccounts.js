@@ -16,7 +16,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
 import Color from '../Assets/Utilities/Color';
 import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
-
+import ImageView from "react-native-image-viewing";
 import ScreenBoiler from '../Components/ScreenBoiler';
 import {Icon} from 'native-base';
 import CustomImage from '../Components/CustomImage';
@@ -27,19 +27,29 @@ import {formRegEx, formRegExReplacer, imageUrl} from '../Config';
 import CustomButton from '../Components/CustomButton';
 
 const MyAccounts = props => {
+  const dispatch = useDispatch();
+  
   const user = useSelector(state => state.commonReducer.userData);
+  console.log(user);
   const token = useSelector(state => state.authReducer.token);
   const [showModal, setShowModal] = useState(false);
   const [imageObject, setImageObject] = useState({});
-  const [firstName, setFirstName] = useState(user?.firstName);
-  const [lastName, setLastName] = useState(user?.lastName);
-  const [phone, setPhone] = useState(user?.contact);
+  const [firstName, setFirstName] = useState(user?.first_name);
+  const [lastName, setLastName] = useState(user?.last_name);
+  const [phone, setPhone] = useState(user?.phone);
   const [email, setEmail] = useState(user?.email);
   const [country, setCountry] = useState(user?.country);
-  const [description, setDescription] = useState(user?.description);
+  // const [description, setDescription] = useState(user?.description);
   const [isLoading, setIsLoading] = useState(false);
-  console.log(user?.lastName);
-  const dispatch = useDispatch();
+  const [isVisible , setIsVisible] = useState(false);
+  
+  const imageArray = Object.keys(imageObject).length > 0 ?
+  [{
+    uri : imageObject.uri
+  }]
+  :
+  [require('../Assets/Images/user2.png') ]
+
 
   const EditProfile = async () => {
     const params = {
@@ -108,11 +118,13 @@ const MyAccounts = props => {
         <View>
           {Object.keys(imageObject).length > 0 ? (
             <CustomImage
+            onPress={()=>{setIsVisible(true)}}
               source={{uri: imageObject?.uri}}
               style={[styles.image]}
             />
           ) : (
             <CustomImage
+            onPress={()=>{setIsVisible(true)}}
               style={[styles.image]}
               source={
                 user?.photo
@@ -142,7 +154,7 @@ const MyAccounts = props => {
               as={FontAwesome}
               size={moderateScale(18, 0.3)}
               color={Color.white}
-              // style={{ backgroundColor: "red" }}
+             
             />
           </TouchableOpacity>
         </View>
@@ -199,6 +211,7 @@ const MyAccounts = props => {
           marginTop={moderateScale(15, 0.3)}
           placeholderColor={Color.black}
           color
+          disabled={true}
         />
         <TextInputWithTitle
           iconName={'envelope'}
@@ -218,6 +231,7 @@ const MyAccounts = props => {
           marginTop={moderateScale(15, 0.3)}
           placeholderColor={Color.black}
           color
+          disabled={true}
         />
         <TextInputWithTitle
           iconName={'globe'}
@@ -238,7 +252,7 @@ const MyAccounts = props => {
           placeholderColor={Color.black}
           color
         />
-        <TextInputWithTitle
+        {/* <TextInputWithTitle
           titleText={'Description'}
           secureText={false}
           placeholder={'Description'}
@@ -259,7 +273,7 @@ const MyAccounts = props => {
           borderRadius={moderateScale(10, 0.3)}
           placeholderColor={Color.black}
           color
-        />
+        /> */}
         <CustomButton
           // textTransform={"capitalize"}
           text={
@@ -288,6 +302,12 @@ const MyAccounts = props => {
         setShow={setShowModal}
         setFileObject={setImageObject}
       />
+      <ImageView
+  images={imageArray}
+  imageIndex={0}
+  visible={isVisible}
+  onRequestClose={() => setIsVisible(false)}
+/>
     </ScreenBoiler>
   );
 };

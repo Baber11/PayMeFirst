@@ -77,7 +77,7 @@ const HomeScreen = ({valueFormatter, data}) => {
         <View style={{width: windowWidth * 0.8}}>
           <Progress.Bar
             width={windowWidth * 0.8}
-            progress={0.4}
+            progress={0.3}
             color={Color.green}
             style={{
               marginTop: moderateScale(20, 0.3),
@@ -146,6 +146,8 @@ const HomeScreen = ({valueFormatter, data}) => {
               width={Dimensions.get('window').width * 0.9} // from react-native
               height={windowHeight * 0.22}
               yAxisLabel="$"
+              // withDots={false}
+              // yAxisSuffix='70'
               //   yAxisSuffix="k"
               withHiddenDots={true}
               yAxisInterval={2} // optional, defaults to 1
@@ -338,7 +340,6 @@ const styles = ScaledSheet.create({
   },
   txt5: {
     color: Color.black,
-
     fontSize: moderateScale(12, 0.6),
   },
 

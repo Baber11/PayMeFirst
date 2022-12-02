@@ -100,8 +100,9 @@ const Header = props => {
       ]}
     >
       <TouchableOpacity
-        activeOpacity={0.9}
+        activeOpacity={0.8}
         onPress={() => {
+          
           navigationN.navigate('MyAccounts');
         }}
         style={{
@@ -109,17 +110,19 @@ const Header = props => {
           width: moderateScale(40, 0.3),
           height: moderateScale(40, 0.3),
           borderRadius: moderateScale(20, 0.3),
-          // backgroundColor: '#000',
+          backgroundColor: Color.green,
           overflow: 'hidden',
         }}
       >
-        {/* {token != null && ( */}
         <CustomImage
+        onPress={() => {
+          
+          navigationN.navigate('MyAccounts');
+        }}
           source={
             user?.photo
               ? {uri: `${imageUrl}${user?.photo}`}
               : require('../Assets/Images/Profile.png')
-            // require('../Assets/Images/avatar.png')
           }
           resizeMode={'cover'}
           style={{

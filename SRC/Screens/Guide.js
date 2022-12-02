@@ -29,6 +29,8 @@ import {LineChart} from 'react-native-chart-kit';
 import * as Progress from 'react-native-progress';
 import moment from 'moment';
 import {ExpenditureComponent} from '../Components/ExpenditureComponent';
+import { TouchableOpacity } from 'react-native';
+import { Linking } from 'react-native';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -47,18 +49,24 @@ const Guide = ({valueFormatter, data}) => {
     {
       image: require('../Assets/Images/ebay.png'),
       title: 'Ebay',
+      link : 'https://www.ebay.com/'
     },
     {
       image: require('../Assets/Images/amazon.png'),
       title: 'amazon',
+      link : 'https://www.amazon.com/'
     },
     {
-      image: require('../Assets/Images/ebay.png'),
-      title: 'Ebay',
+      image: require('../Assets/Images/rakuten.png'),
+      title: 'Rakuten',
+      link : 'https://www.rakuten.com/'
     },
     {
-      image: require('../Assets/Images/amazon.png'),
-      title: 'amazon',
+      image: require('../Assets/Images/aliExpress.png'),
+      title: 'Ali Express',
+      link : 'https://www.aliexpress.com/'
+      
+      
     },
   ];
 
@@ -194,12 +202,15 @@ const Guide = ({valueFormatter, data}) => {
               data={dummyData}
               renderItem={({item, index}) => {
                 return (
+                  <TouchableOpacity activeOpacity={0.8} onPress={()=>{Linking.openURL(item?.link)}}>
+
                   <ExpenditureComponent
                     image={item.image}
                     text1={item.title}
                     fromGuide={true}
                     index={index == dummyData.length - 1}
-                  />
+                    />
+                    </TouchableOpacity>
                 );
               }}
             />

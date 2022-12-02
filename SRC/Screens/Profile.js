@@ -26,11 +26,14 @@ import {useState} from 'react';
 import navigationService from '../navigationService';
 import {setUserLogout} from '../Store/slices/auth';
 import {useDispatch, useSelector} from 'react-redux';
+import ImageView from 'react-native-image-viewing';
 
 const Profile = () => {
   const dispatch = useDispatch();
   const user = useSelector((state)=>state.commonReducer.userData);
   // console.log(user);
+  const [isVisible , setIsVisible] = useState(false);
+
   return (
     <ScreenBoiler
       showHeader={false}
@@ -91,6 +94,9 @@ const Profile = () => {
         >
           <View style={[styles.image1]}>
             <CustomImage
+            onPress={()=>{
+              setIsVisible(true)
+            }}
               source={require('../Assets/Images/user2.png')}
               style={[styles.image]}
             />
@@ -206,6 +212,13 @@ const Profile = () => {
           }}
         />
       </ScrollView>
+      <ImageView
+      images={[require('../Assets/Images/user2.png')]}
+      imageIndex={0}
+      visible={isVisible}
+      onRequestClose={()=>{setIsVisible(false)}}
+
+      />
     </ScreenBoiler>
   );
 };
