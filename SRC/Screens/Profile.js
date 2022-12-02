@@ -14,7 +14,7 @@ import CustomImage from '../Components/CustomImage';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 
@@ -127,6 +127,9 @@ const Profile = () => {
           title={'My Account'}
           icon2={'right'}
           icon2type={AntDesign}
+          onPress={() => {
+            navigationService.navigate('MyAccounts');
+          }}
         />
         <ProfileContainer
           icon1Type={Entypo}
@@ -134,32 +137,33 @@ const Profile = () => {
           title={'notifications'}
           notification={true}
         />
-        <ProfileContainer
+        {/* <ProfileContainer
           icon1Type={FontAwesome}
           icon1={'users'}
           title={'About Us'}
           icon2={'right'}
           icon2type={AntDesign}
-        />
+        /> */}
         <ProfileContainer
-          icon1Type={FontAwesome}
-          icon1={'file-text'}
-          title={'Terms & Conditions'}
+          icon1Type={MaterialCommunityIcons}
+          icon1={'finance'}
+          title={'Financial Breakdown'}
           icon2={'right'}
           icon2type={AntDesign}
           onPress={() => {
-            navigationService.navigate('TermsAndConditions');
+            navigationService.navigate('FinancialBreakDown');
           }}
         />
+
         <ProfileContainer
           icon1Type={FontAwesome}
           icon1={'lock'}
           title={'change Password'}
           icon2={'right'}
           icon2type={AntDesign}
-          // onPress={() => {
-          //   navigationService.navigate('TermsAndConditions');
-          // }}
+          onPress={() => {
+            navigationService.navigate('ChangePassword');
+          }}
         />
         <ProfileContainer
           icon1Type={AntDesign}
@@ -168,7 +172,7 @@ const Profile = () => {
           icon2={'right'}
           icon2type={AntDesign}
           onPress={() => {
-            navigationService.navigate('TermsAndConditions');
+            navigationService.navigate('PaymentMethod');
           }}
         />
         <ProfileContainer
@@ -182,13 +186,23 @@ const Profile = () => {
           }}
         />
         <ProfileContainer
-          icon1Type={MaterialCommunityIcons}
-          icon1={'finance'}
-          title={'Financial Breakdown'}
+          icon1Type={MaterialIcons}
+          icon1={'support-agent'}
+          title={'Support'}
           icon2={'right'}
           icon2type={AntDesign}
           onPress={() => {
-            navigationService.navigate('FinancialBreakDown');
+            navigationService.navigate('Support');
+          }}
+        />
+        <ProfileContainer
+          icon1Type={FontAwesome}
+          icon1={'file-text'}
+          title={'Terms & Conditions'}
+          icon2={'right'}
+          icon2type={AntDesign}
+          onPress={() => {
+            navigationService.navigate('TermsAndConditions');
           }}
         />
       </ScrollView>

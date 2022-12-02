@@ -122,7 +122,7 @@ const Guide = ({valueFormatter, data}) => {
             {' '}
             Guide
           </CustomText>
-          <CustomText
+          {/* <CustomText
             onPress={() => {
               setSelected('My Profile');
             }}
@@ -137,7 +137,7 @@ const Guide = ({valueFormatter, data}) => {
           >
             {' '}
             My Profile
-          </CustomText>
+          </CustomText> */}
           <CustomText
             onPress={() => {
               setSelected('Stores');

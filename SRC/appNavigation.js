@@ -25,6 +25,10 @@ import FinancialBreakDown from './Screens/FinancialBreakDown';
 import SignupScreen from './Screens/SignupScreen';
 import ResetPassword from './Screens/ResetPassword';
 import Wallet from './Screens/Wallet';
+import ChangePassword from './Screens/ChangePassword';
+import PaymentMethod from './Screens/PaymentMethod';
+import Support from './Screens/Support';
+import MyAccounts from './Screens/MyAccounts';
 
 const AppNavigator = () => {
   // const isLogin = false;
@@ -71,8 +75,21 @@ const AppNavigator = () => {
           <RootNav.Screen name="Rewards" component={Rewards} />
           <RootNav.Screen name="SignupScreen" component={SignupScreen} />
           <RootNav.Screen name="ResetPassword" component={ResetPassword} />
-          <RootNav.Screen name="FinancialBreakDown" component={FinancialBreakDown} />
-          <RootNav.Screen name="TermsAndConditions" component={TermsAndConditions} />
+          <RootNav.Screen name="ChangePassword" component={ChangePassword} />
+          <RootNav.Screen name="PaymentMethod" component={PaymentMethod} />
+          <RootNav.Screen name="Support" component={Support} />
+          <RootNav.Screen name="MyAccounts" component={MyAccounts} />
+
+          <RootNav.Screen
+            name="FinancialBreakDown"
+            component={FinancialBreakDown}
+          />
+
+          <RootNav.Screen
+            name="TermsAndConditions"
+            component={TermsAndConditions}
+          />
+
           <RootNav.Screen name="TabNavigation" component={TabNavigation} />
         </RootNav.Navigator>
       </NavigationContainer>
