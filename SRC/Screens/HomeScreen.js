@@ -128,7 +128,7 @@ const HomeScreen = ({valueFormatter, data}) => {
           </View> */}
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={{width: windowWidth, overflow: 'hidden'}}
+            style={{width: windowWidth}}
             contentContainerStyle={{
               alignItems: 'center',
               paddingBottom: moderateScale(100, 0.3),

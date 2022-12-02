@@ -220,7 +220,7 @@ const styles = ScaledSheet.create({
   },
   txt4: {
     color: Color.black,
-    fontSize: moderateScale(18, 0.6),
+    fontSize: moderateScale(15, 0.6),
   },
   txt5: {
     color: Color.black,

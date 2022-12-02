@@ -11,12 +11,16 @@ import CustomImage from './CustomImage';
 const {height, width} = Dimensions.get('window');
 import Foundation from 'react-native-vector-icons/Foundation';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Modal from 'react-native-modal';
 
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {imageUrl} from '../Config';
+import {setUserLogout} from '../Store/slices/auth';
 
 const Header = props => {
+  const dispatch = useDispatch();
   const navigationN = useNavigation();
+  const [isModalVisible, setModalVisible] = useState(false);
   const {
     title,
     showBack,
@@ -28,9 +32,18 @@ const Header = props => {
     navigateTO,
     headerType,
   } = props;
+
   const [searchText, setSearchText] = useState('');
   const user = useSelector(state => state.commonReducer.userData);
   const token = useSelector(state => state.authReducer.token);
+  const statusArray = [
+    {label: 'Change Password', value: 'ChangePassword'},
+
+    {label: 'Terms & Conditions', value: 'TermsAndConditions'},
+    {label: 'Financial Breakdown', value: 'FinancialBreakDown'},
+    {label: 'Logout', value: 'Logout'},
+  ];
+
   return headerType == 1 ? (
     <View
       style={[
@@ -88,7 +101,9 @@ const Header = props => {
     >
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => token != null && navigationN.navigate('Profile')}
+        onPress={() => {
+          navigationN.navigate('MyAccounts');
+        }}
         style={{
           alignSelf: 'center',
           width: moderateScale(40, 0.3),
@@ -117,7 +132,7 @@ const Header = props => {
       {showList && (
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => navigationN.goBack()}
+          onPress={() => setModalVisible(true)}
           style={{
             position: 'absolute',
             right: moderateScale(20, 0.3),
@@ -138,6 +153,44 @@ const Header = props => {
           />
         </TouchableOpacity>
       )}
+      <Modal
+        isVisible={isModalVisible}
+        hasBackdrop={true}
+        onBackdropPress={() => {
+          setModalVisible(false);
+        }}
+        backdropOpacity={0}
+        style={{
+          // alignItems: 'flex-start',
+          justifyContent: 'flex-start',
+        }}
+      >
+        <View style={styles.statusModal}>
+          {statusArray.map(item => {
+            return (
+              <CustomText
+                onPress={() => {
+                  if (item?.value == 'Logout') {
+                    return dispatch(setUserLogout());
+                  }
+                  navigationN.navigate(item?.value);
+                  setModalVisible(false);
+                }}
+                style={{
+                  borderBottomWidth: moderateScale(1),
+                  borderColor: Color.themeBlack,
+                  // width: windowWidth * 0.,
+                  lineHeight: moderateScale(25, 0.3),
+                  marginTop: moderateScale(10, 0.3),
+                  textAlign: 'center',
+                }}
+              >
+                {item?.label}
+              </CustomText>
+            );
+          })}
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -157,6 +210,25 @@ const styles = ScaledSheet.create({
     shadowRadius: 6.68,
 
     elevation: 11,
+  },
+  statusModal: {
+    alignSelf: 'flex-end',
+    paddingVertical: moderateScale(15, 0.3),
+    paddingHorizontal: moderateScale(10, 0.3),
+    backgroundColor: Color.white,
+    // borderRadius: moderateScale(5, 0.3),
+    marginTop: moderateScale(60, 0.3),
+    // borderWidth: 1,
+    borderColor: Color.green,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+
+    elevation: 7,
   },
   header2: {
     width: windowWidth,
