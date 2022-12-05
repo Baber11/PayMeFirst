@@ -29,6 +29,20 @@ const SubscriptionCard = ({
         styles.container,
         {backgroundColor: type == 'premium' ? Color.green : Color.white},
       ]}>
+        {currentPlan == type &&
+          <View style={[styles.imageContainer, {position : 'absolute' , width : 50 , height : 50 , right : moderateScale(10,0.3) , top : moderateScale(20,0.3)}]}>
+          <CustomImage
+            resizeMode={'stretch'}
+            source={
+              require('../Assets/Images/crown.jpg')}
+            style={{
+              alignSelf: 'center',
+              width: '100%',
+              height: '100%',
+            }}
+          />
+        </View>
+        }
       <View style={styles.headerContainer}>
         <View style={styles.imageContainer}>
           <CustomImage
