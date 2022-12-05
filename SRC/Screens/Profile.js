@@ -143,13 +143,16 @@ const Profile = () => {
           title={'notifications'}
           notification={true}
         />
-        {/* <ProfileContainer
-          icon1Type={FontAwesome}
-          icon1={'users'}
-          title={'About Us'}
+        <ProfileContainer
+          icon1Type={MaterialCommunityIcons}
+          icon1={'wallet-membership'}
+          title={'Subscription'}
           icon2={'right'}
           icon2type={AntDesign}
-        /> */}
+          onPress={() => {
+            navigationService.navigate('Subscription');
+          }}
+        />
         <ProfileContainer
           icon1Type={MaterialCommunityIcons}
           icon1={'finance'}

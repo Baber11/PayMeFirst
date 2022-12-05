@@ -29,6 +29,7 @@ import ChangePassword from './Screens/ChangePassword';
 import PaymentMethod from './Screens/PaymentMethod';
 import Support from './Screens/Support';
 import MyAccounts from './Screens/MyAccounts';
+import Subscription from './Screens/Subscription';
 
 const AppNavigator = () => {
   // const isLogin = false;
@@ -79,6 +80,7 @@ const AppNavigator = () => {
           <RootNav.Screen name="PaymentMethod" component={PaymentMethod} />
           <RootNav.Screen name="Support" component={Support} />
           <RootNav.Screen name="MyAccounts" component={MyAccounts} />
+          <RootNav.Screen name="Subscription" component={Subscription} />
 
           <RootNav.Screen
             name="FinancialBreakDown"

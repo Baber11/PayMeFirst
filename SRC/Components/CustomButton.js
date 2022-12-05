@@ -70,8 +70,8 @@ const CustomButton = (props) => {
           borderWidth: borderWidth,
         },
         disabled && {
-          backgroundColor: Color.lightGrey,
-          borderColor: Color.lightGrey,
+          backgroundColor: Color.themeLightGray,
+          borderColor: Color.themeLightGray,
           color: Color.white,
         },
       ]}

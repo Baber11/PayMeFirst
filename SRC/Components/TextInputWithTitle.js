@@ -31,6 +31,9 @@ const TextInputWithTitle = props => {
           elevation: props.elevation,
           backgroundColor: props.backgroundColor,
         },
+            props.autoCapitalize &&{
+              textTransform : props.autoCapitalize
+            },
         props.borderRadius && {
           borderRadius: props.borderRadius,
         },
@@ -96,7 +99,8 @@ const TextInputWithTitle = props => {
               props.placeholderColor ? props.placeholderColor : Color.white
             }
             keyboardType={props.keyboardType}
-            autoCapitalize={'none'}
+            autoCapitalize='none'
+            
           />
           <TouchableOpacity
             onPress={() => {
@@ -162,7 +166,7 @@ const TextInputWithTitle = props => {
           multiline={props.multiline || false}
           numberOfLines={props.numberOfLines || 1}
           editable={props.disable ? false : true}
-          autoCapitalize={'none'}
+          autoCapitalize='none'
           // textAlignVertical={props.textAlignVertical}
         />
       )}
@@ -180,13 +184,13 @@ const styles = ScaledSheet.create({
     borderColor: Color.lightGrey,
     flexDirection: 'row',
     placeholderTextColor: Color.white,
-    textTransform: 'capitalize',
+    // textTransform: 'capitalize',
   },
   inputBox: {
     paddingLeft: moderateScale(8, 0.6),
     borderRadius: 8,
     fontSize: moderateScale(12, 0.3),
-    textTransform: 'capitalize',
+    // textTransform: 'capitalize',
 
     // fontFamily: 'PlusJakartaDisplay-Regular',
     textAlign: I18nManager.isRTL ? 'right' : 'left',

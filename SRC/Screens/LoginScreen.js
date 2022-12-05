@@ -134,9 +134,9 @@ const LoginScreen = () => {
           <TextInputWithTitle
             iconName="lock"
             iconType={FontAwesome}
-            titleText={'Email'}
+            titleText={'password'}
             secureText={true}
-            placeholder={'Email'}
+            placeholder={'password'}
             setText={setPassword}
             value={password}
             viewHeight={0.05}
@@ -149,6 +149,7 @@ const LoginScreen = () => {
             color={'#11A44C'}
             placeholderColor={Color.themeLightGray}
             borderRadius={moderateScale(20, 0.3)}
+            autoCapitalize={'none'}
           />
           <CustomText
             onPress={() => {
