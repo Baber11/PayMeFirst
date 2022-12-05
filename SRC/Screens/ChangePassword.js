@@ -32,11 +32,14 @@ import {Icon} from 'native-base';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import {useNavigation} from '@react-navigation/native';
+import navigationService from '../navigationService';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const ChangePassword = props => {
+  const token = useSelector(state => state.authReducer.token);
+  console.log(token);
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -48,9 +51,9 @@ const ChangePassword = props => {
 
   const passwordReset = async () => {
     const params = {
-      password: password,
-      passwordConfirm: confirmPassword,
-      phoneNumber: phoneNumber,
+      current_password: currentPassword,
+      new_password: password,
+      confirm_password: confirmPassword,
     };
     for (let key in params) {
       if (params[key] === '') {
@@ -75,15 +78,16 @@ const ChangePassword = props => {
         : Alert.alert('passwords MissMatched !'));
     }
 
-    const url = 'users/resetPasswordDone';
+    const url = 'auth/change_password';
     setIsLoading(true);
-    const response = await Post(url, params, apiHeader());
+    const response = await Post(url, params, apiHeader(token));
     setIsLoading(false);
     if (response !== undefined) {
+      Platform.OS == 'android'
+        ? ToastAndroid.show('Password changed successfully', ToastAndroid.SHORT)
+        : alert('Password changed successfully');
       console.log(response?.data);
-      dispatch(setIsVerified(response?.data?.data?.user?.isActive));
-      dispatch(setUserLogin(response?.data));
-      dispatch(setUserData(response?.data?.data?.user));
+      navigationService.navigate('HomeScreen')
     }
   };
   // dispatch(setUserToken('123456'));
@@ -94,8 +98,7 @@ const ChangePassword = props => {
       showBack={false}
       showDrawer={false}
       statusBarBackgroundColor={Color.green}
-      statusBarContentStyle={'light-content'}
-    >
+      statusBarContentStyle={'light-content'}>
       <Icon
         name={'arrowleft'}
         as={AntDesign}
@@ -120,8 +123,7 @@ const ChangePassword = props => {
           width: windowWidth,
           paddingVertical: moderateScale(30, 0.3),
           backgroundColor: Color.white,
-        }}
-      >
+        }}>
         <CustomImage
           style={styles.img}
           resizeMode={'contain'}
@@ -137,8 +139,7 @@ const ChangePassword = props => {
               fontSize: moderateScale(40, 0.3),
               color: Color.themeBlack,
               fontWeight: 'bold',
-            }}
-          >
+            }}>
             password
           </CustomText>
         </CustomText>
@@ -203,7 +204,7 @@ const ChangePassword = props => {
           // textTransform={"capitalize"}
           text={
             isLoading ? (
-              <ActivityIndicator color={'#000'} size={'small'} />
+              <ActivityIndicator color={'#FFFFFF'} size={'small'} />
             ) : (
               'Submit'
             )
@@ -213,9 +214,7 @@ const ChangePassword = props => {
           width={windowWidth * 0.75}
           height={windowHeight * 0.06}
           marginTop={moderateScale(40, 0.3)}
-          onPress={() => {
-            dispatch(setUserToken({token: true}));
-          }}
+          onPress={passwordReset}
           bgColor={Color.green}
           borderColor={Color.white}
           borderWidth={2}

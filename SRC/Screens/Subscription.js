@@ -2,15 +2,41 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import {ScrollView} from 'react-native';
-import {windowWidth} from '../Utillity/utils';
+import {apiHeader, windowWidth} from '../Utillity/utils';
 import CustomText from '../Components/CustomText';
 import {moderateScale} from 'react-native-size-matters';
 import Color from '../Assets/Utilities/Color';
 import SubscriptionCard from '../Components/SubscriptionCard';
 import { useState } from 'react';
+import { Post } from '../Axios/AxiosInterceptorFunction';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserData } from '../Store/slices/common';
 
 const Subscription = () => {
-    const [currentPlan , setCurrentPlan] = useState('basic')
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.commonReducer.userData);
+  const token = useSelector(state => state.authReducer.token);
+
+  
+  const [isLoading, setIsLoading] = useState(false);
+
+
+
+
+    const getSubscription = async () =>{
+      const url = 'auth/cuurent/plan';
+      const params ={
+        current_plan : user?.current_plan
+      }
+   
+      setIsLoading(true)
+      const response = await Post(url , params , apiHeader(token))
+      setIsLoading(false);
+      if(response != undefined){
+        console.log( 'here is the response ===>',response?.data);
+        dispatch(setUserData(response?.data?.user_info))
+      }
+    }
   return (
     <ScreenBoiler
       showHeader={true}
@@ -43,8 +69,9 @@ const Subscription = () => {
             'can not change card',
             'can set plan for upto $1000',
           ]}
-          onPress={()=>{setCurrentPlan('basic')}}
-          currentPlan={currentPlan}
+          onPress={getSubscription}
+          currentPlan={user?.current_plan}
+          loader={isLoading}
         />
         <SubscriptionCard
           type={'premium'}
@@ -56,8 +83,10 @@ const Subscription = () => {
             'can change card 2 times (after discussing with backend',
             'can save unlimited money',
           ]}
-          onPress={()=>{setCurrentPlan('premium')}}
-          currentPlan={currentPlan}
+          onPress={getSubscription}
+          currentPlan={user?.current_plan}
+          loader={isLoading}
+
         />
       </ScrollView>
     </ScreenBoiler>

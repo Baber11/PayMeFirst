@@ -29,44 +29,72 @@ import {LineChart} from 'react-native-chart-kit';
 import * as Progress from 'react-native-progress';
 import moment from 'moment';
 import {ExpenditureComponent} from '../Components/ExpenditureComponent';
-import { TouchableOpacity } from 'react-native';
-import { Linking } from 'react-native';
+import {TouchableOpacity} from 'react-native';
+import {Linking} from 'react-native';
+import { Get } from '../Axios/AxiosInterceptorFunction';
+import { useEffect } from 'react';
+import { useIsFocused } from '@react-navigation/native';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const Guide = ({valueFormatter, data}) => {
-  const [state, setState] = useState(null);
+const token = useSelector(state => state.authReducer.token);
+// console.log(token);
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   const [selected, setSelected] = useState('Guide');
-  console.log('Selected =>', selected);
-
+const [guideData , setGuideData]=useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const Header = apiHeader();
+
+
+  const getGuide = async () => {
+    // console.log('here token =>' , token);
+    const url = 'guide';
+    setIsLoading(true);
+    const response = await Get(url);
+    setIsLoading(false);
+    if(response != undefined){
+      console.log(response?.data?.data);
+      setGuideData(response?.data?.data)
+    }
+  }
+
+
+  useEffect(() => {
+    getGuide();
+  }, [isFocused])
+  
+
+
+
   const dummyData = [
     {
       image: require('../Assets/Images/ebay.png'),
       title: 'Ebay',
-      link : 'https://www.ebay.com/'
+      link: 'https://www.ebay.com/',
     },
     {
       image: require('../Assets/Images/amazon.png'),
       title: 'amazon',
-      link : 'https://www.amazon.com/'
+      link: 'https://www.amazon.com/',
     },
     {
       image: require('../Assets/Images/rakuten.png'),
       title: 'Rakuten',
-      link : 'https://www.rakuten.com/'
+      link: 'https://www.rakuten.com/',
+    },
+    {
+      image: require('../Assets/Images/alibaba.png'),
+      title: 'Ali Baba ',
+      link: 'https://www.alibaba.com/',
     },
     {
       image: require('../Assets/Images/aliExpress.png'),
       title: 'Ali Express',
-      link : 'https://www.aliexpress.com/'
-      
-      
+      link: 'https://www.aliexpress.com/',
     },
   ];
 
@@ -78,42 +106,9 @@ const Guide = ({valueFormatter, data}) => {
       statusBarContentStyle={'dark-content'}
       headerType={2}
       showList={false}
-      headerColor={'#F6F6F6'}
-    >
-      <View
-        // showsVerticalScrollIndicator={false}
-        style={styles.sectionContainer}
-      >
-        {/* <CustomText style={styles.txt4}>Total Balance</CustomText> */}
+      headerColor={'#F6F6F6'}>
+      <View style={styles.sectionContainer}>
         <View style={[styles.row]}>
-          {/* <CustomText
-            onPress={() => {
-              setSelected('My Wallet');
-            }}
-            style={[
-              styles.textWithContainer,
-              selected == 'My Wallet' && {
-                backgroundColor: Color.green,
-                color: 'white',
-              },
-            ]}
-          >
-            My Wallet
-          </CustomText> */}
-          {/* <CustomText
-            onPress={() => {
-              setSelected('My Future');
-            }}
-            style={[
-              styles.textWithContainer,
-              selected == 'My Future' && {
-                backgroundColor: Color.green,
-                color: 'white',
-              },
-            ]}
-          >
-            My Future
-          </CustomText> */}
           <CustomText
             onPress={() => {
               setSelected('Guide');
@@ -125,27 +120,10 @@ const Guide = ({valueFormatter, data}) => {
                 backgroundColor: Color.green,
                 color: 'white',
               },
-            ]}
-          >
+            ]}>
             {' '}
             Guide
           </CustomText>
-          {/* <CustomText
-            onPress={() => {
-              setSelected('My Profile');
-            }}
-            style={[
-              styles.textWithContainer,
-              {fontSize: moderateScale(20, 0.3)},
-              selected == 'My Profile' && {
-                backgroundColor: Color.green,
-                color: 'white',
-              },
-            ]}
-          >
-            {' '}
-            My Profile
-          </CustomText> */}
           <CustomText
             onPress={() => {
               setSelected('Stores');
@@ -157,8 +135,7 @@ const Guide = ({valueFormatter, data}) => {
                 backgroundColor: Color.green,
                 color: 'white',
               },
-            ]}
-          >
+            ]}>
             {' '}
             Stores
           </CustomText>
@@ -170,29 +147,34 @@ const Guide = ({valueFormatter, data}) => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             paddingBottom: moderateScale(200, 0.3),
-          }}
-        >
+          }}>
           {selected == 'Guide' && (
-            <>
-              <CustomText style={styles.Txt}>What is Lorem Ipsum?</CustomText>
+            isLoading ?
+            <View style={{
+              height : windowHeight * 0.6,
+              justifyContent : 'center'
+            }}>
+              <ActivityIndicator
+            color={Color.green}
+            size={'large'}
+              />
+            </View> :
+           
+            guideData.map((x, index)=>{
+              return(
+                <>
+              
+              <CustomText style={styles.Txt}>{x?.question}</CustomText>
               <CustomText style={styles.txt4}>
                 {
-                  'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
-                }
+                  x?.description
+  }
               </CustomText>
-              <CustomText style={styles.Txt}>What is Lorem Ipsum?</CustomText>
-              <CustomText style={styles.txt4}>
-                {
-                  'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
-                }
-              </CustomText>
-              <CustomText style={styles.Txt}>What is Lorem Ipsum?</CustomText>
-              <CustomText style={styles.txt4}>
-                {
-                  'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
-                }
-              </CustomText>
-            </>
+
+</>
+              )
+            }) 
+            
           )}
 
           {selected == 'Stores' && (
@@ -202,15 +184,21 @@ const Guide = ({valueFormatter, data}) => {
               data={dummyData}
               renderItem={({item, index}) => {
                 return (
-                  <TouchableOpacity activeOpacity={0.8} onPress={()=>{Linking.openURL(item?.link)}}>
-
-                  <ExpenditureComponent
-                    image={item.image}
-                    text1={item.title}
-                    fromGuide={true}
-                    index={index == dummyData.length - 1}
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      Linking.openURL(item?.link);
+                    }}>
+                    <ExpenditureComponent
+                      image={item.image}
+                      text1={item.title}
+                      fromGuide={true}
+                      index={index == dummyData.length - 1}
+                      onPress={() => {
+                        Linking.openURL(item?.link);
+                      }}
                     />
-                    </TouchableOpacity>
+                  </TouchableOpacity>
                 );
               }}
             />
@@ -386,8 +374,7 @@ const Tooltip = ({x, y, textX, textY, stroke, pointStroke, position}) => {
           x={tipTxtX}
           y={tipTxtY + 5}
           fontSize="12"
-          textAnchor="start"
-        >
+          textAnchor="start">
           ${textY}
         </Text>
       </G>

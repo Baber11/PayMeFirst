@@ -97,7 +97,9 @@ const Profile = () => {
             onPress={()=>{
               setIsVisible(true)
             }}
-              source={require('../Assets/Images/user2.png')}
+              source={{
+                uri : `${user?.photo}`
+              }}
               style={[styles.image]}
             />
           </View>
@@ -216,7 +218,7 @@ const Profile = () => {
         />
       </ScrollView>
       <ImageView
-      images={[require('../Assets/Images/user2.png')]}
+      images={[{uri : `${user?.photo}`}]}
       imageIndex={0}
       visible={isVisible}
       onRequestClose={()=>{setIsVisible(false)}}

@@ -149,7 +149,6 @@ const LoginScreen = () => {
             color={'#11A44C'}
             placeholderColor={Color.themeLightGray}
             borderRadius={moderateScale(20, 0.3)}
-            autoCapitalize={'none'}
           />
           <CustomText
             onPress={() => {

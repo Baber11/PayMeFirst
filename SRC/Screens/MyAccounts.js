@@ -20,7 +20,7 @@ import ScreenBoiler from '../Components/ScreenBoiler';
 import {Icon} from 'native-base';
 import CustomImage from '../Components/CustomImage';
 import {setUserData} from '../Store/slices/common';
-import {Patch} from '../Axios/AxiosInterceptorFunction';
+import {Patch, Post} from '../Axios/AxiosInterceptorFunction';
 import ImagePickerModal from '../Components/ImagePickerModal';
 import {formRegEx, formRegExReplacer, imageUrl} from '../Config';
 import CustomButton from '../Components/CustomButton';
@@ -29,7 +29,7 @@ const MyAccounts = props => {
   const dispatch = useDispatch();
   
   const user = useSelector(state => state.commonReducer.userData);
-  console.log(user);
+  // console.log(user);
   const token = useSelector(state => state.authReducer.token);
   const [showModal, setShowModal] = useState(false);
   const [imageObject, setImageObject] = useState({});
@@ -47,19 +47,20 @@ const MyAccounts = props => {
     uri : imageObject.uri
   }]
   :
-  [require('../Assets/Images/user2.png') ]
+  [{
+    uri : `${user?.photo}`
+  }]
 
 
   const EditProfile = async () => {
     const params = {
-      firstName: firstName,
-      lastName: lastName,
-      fullName: `${firstName} ${lastName}`,
+      first_name: firstName,
+      last_name: lastName,
+      phone : phone ,
       email: email,
       country: country,
-      description: description,
+     
     };
-    // console.log(params);
     const formdata = new FormData();
     for (let key in params) {
       if ([undefined, '', null].includes(params[key])) {
@@ -77,15 +78,16 @@ const MyAccounts = props => {
     if (Object.keys(imageObject).length > 0) {
       formdata.append('photo', imageObject);
     }
+    console.log(formdata);
 
-    const url = 'users/updateMe';
+    const url = 'auth/profile';
     setIsLoading(true);
-    const response = await Patch(url, formdata, apiHeader(token, true));
+    const response = await Post(url, formdata, apiHeader(token, true));
     setIsLoading(false);
 
     if (response !== undefined) {
-      console.log('response?.data?.data?.user', response?.data?.data?.user);
-      dispatch(setUserData(response?.data?.data?.user));
+      console.log('response?.data?.data?.user', response?.data);
+      dispatch(setUserData(response?.data?.user_info));
 
       Platform.OS == 'android'
         ? ToastAndroid.show('Profile Updated Succesfully', ToastAndroid.SHORT)
@@ -127,7 +129,7 @@ const MyAccounts = props => {
               style={[styles.image]}
               source={
                 user?.photo
-                  ? {uri: `${imageUrl}${user?.photo}`}
+                  ? {uri: `${user?.photo}`}
                   : require('../Assets/Images/user2.png')
               }
             />
@@ -210,12 +212,12 @@ const MyAccounts = props => {
           marginTop={moderateScale(15, 0.3)}
           placeholderColor={Color.black}
           color
-          disabled={true}
+          disable={true}
         />
         <TextInputWithTitle
           iconName={'envelope'}
           iconType={FontAwesome}
-          disable
+          // disable
           titleText={'Email'}
           secureText={false}
           placeholder={'Email'}
@@ -230,7 +232,7 @@ const MyAccounts = props => {
           marginTop={moderateScale(15, 0.3)}
           placeholderColor={Color.black}
           color
-          disabled={true}
+          disable
         />
         <TextInputWithTitle
           iconName={'globe'}
@@ -250,6 +252,7 @@ const MyAccounts = props => {
           marginTop={moderateScale(15, 0.3)}
           placeholderColor={Color.black}
           color
+        
         />
         {/* <TextInputWithTitle
           titleText={'Description'}
@@ -277,7 +280,7 @@ const MyAccounts = props => {
           // textTransform={"capitalize"}
           text={
             isLoading ? (
-              <ActivityIndicator color={'#000'} size={'small'} />
+              <ActivityIndicator color={'#ffffff'} size={'small'} />
             ) : (
               'Submit'
             )
@@ -287,9 +290,7 @@ const MyAccounts = props => {
           width={windowWidth * 0.75}
           height={windowHeight * 0.06}
           marginTop={moderateScale(20, 0.3)}
-          onPress={() => {
-            alert('Profile will be updated');
-          }}
+          onPress={EditProfile}
           bgColor={Color.green}
           borderColor={Color.white}
           borderWidth={2}

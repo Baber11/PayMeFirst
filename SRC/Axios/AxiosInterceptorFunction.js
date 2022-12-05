@@ -21,6 +21,7 @@ let Get = async (route, token, showAlert = true) => {
     },
   };
   const apiUrl = URL(route);
+  console.log(apiUrl);
   try {
     const response = await axios.get(apiUrl, options);
     return response;

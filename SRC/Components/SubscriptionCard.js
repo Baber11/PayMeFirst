@@ -9,6 +9,7 @@ import {FlatList} from 'native-base';
 import {current} from '@reduxjs/toolkit';
 import CustomButton from './CustomButton';
 import {useState} from 'react';
+import { ActivityIndicator } from 'react-native';
 
 const SubscriptionCard = ({
   featuresArray,
@@ -16,12 +17,12 @@ const SubscriptionCard = ({
   onPress,
   price,
   currentPlan,
+  loader
 }) => {
-  // const currentPlan = 'premium'
+
 
   console.log(currentPlan);
-  const [isLoading, setIsLoading] = useState(false);
-  // console.log(featuresArray);
+
   return (
     <View
       style={[
@@ -114,8 +115,8 @@ const SubscriptionCard = ({
       />
       <CustomButton
         text={
-          isLoading ? (
-            <ActivityIndicator color={'#FFFFFF'} size={'small'} />
+          loader ? (
+            'Please Wait'
           ) : currentPlan == type ? (
             'Subscribed'
           ) : (
@@ -132,7 +133,7 @@ const SubscriptionCard = ({
         borderColor={Color.white}
         borderWidth={2}
         borderRadius={moderateScale(30, 0.3)}
-        disabled={currentPlan == type}
+        disabled={loader || currentPlan == type}
       />
     </View>
   );

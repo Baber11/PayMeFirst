@@ -34,7 +34,7 @@ const Header = props => {
 
   const [searchText, setSearchText] = useState('');
   const user = useSelector(state => state.commonReducer.userData);
-  // console.log(JSON.stringify(user , null ,2));
+  // console.log(JSON.stringify(  user, null ,2));
   const token = useSelector(state => state.authReducer.token);
   const statusArray = [
     {label: 'Change Password', value: 'ChangePassword'},
@@ -121,7 +121,7 @@ const Header = props => {
         }}
           source={
             user?.photo
-              ? {uri: `${imageUrl}${user?.photo}`}
+              ? {uri: `${user?.photo}`}
               : require('../Assets/Images/Profile.png')
           }
           resizeMode={'cover'}

@@ -32,6 +32,7 @@ export const ExpenditureComponent = ({
   amount,
   fromGuide,
   index,
+  onPress
 }) => {
   return (
     <View
@@ -68,6 +69,7 @@ export const ExpenditureComponent = ({
         ]}
       >
         <CustomImage
+        onPress={onPress}
           source={image}
           resizeMode={fromGuide ?  'stretch' : 'cover'}
           style={{
