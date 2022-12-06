@@ -9,11 +9,11 @@ import {
 } from 'react-native';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import Color from '../Assets/Utilities/Color';
-import {windowHeight, windowWidth} from '../Utillity/utils';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import {moderateScale} from 'react-native-size-matters';
 import {DonutChart} from 'react-native-circular-chart';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {FlatList, Icon, ScrollView} from 'native-base';
+import {FlatList, Icon, ScrollView, Toast} from 'native-base';
 import DropDownSingleSelect from '../Components/DropDownSingleSelect';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
 import {ColorPicker} from 'react-native-color-picker';
@@ -28,13 +28,17 @@ import {useDispatch, useSelector} from 'react-redux';
 import numeral from 'numeral';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Pie from 'react-native-pie';
+import {Patch, Post} from '../Axios/AxiosInterceptorFunction';
+import { ActivityIndicator } from 'react-native';
+
 
 const Profile = ({navigation}) => {
   const dispatch = useDispatch();
   const financeData = useSelector(
     state => state.commonReducer.financeBreakDown,
   );
-  console.log(financeData);
+  const token = useSelector((state)=>state.authReducer.token);
+  // console.log(financeData);
 
   const [total, setTotal] = useState(0);
   const [category, setCategory] = useState('');
@@ -44,9 +48,35 @@ const Profile = ({navigation}) => {
   const [ChartData, setChartData] = useState(financeData);
   const [addSection, setAddSection] = useState(false);
   const [forChart, setforChart] = useState([]);
+  const [isLoading , setIsLoading] = useState(false);
 
-  console.log('pie chart data  data => ', forChart);
+  // console.log('pie chart data  data => ', forChart);
 
+  
+    const postFinanceData = async()=>{
+      const url = 'financial/breakdowns/post';
+      const body ={
+        data : ChartData
+      }
+      setIsLoading(true)
+      const response = await Post(url , body , apiHeader(token))
+      setIsLoading(false) 
+      if(response != undefined){
+        console.log(response?.data);
+      ToastAndroid.show(
+        'Saved' , ToastAndroid.SHORT
+      )
+      setAddSection(false);  
+    }
+      
+    }
+
+    // const getData = async()=>{
+    //   const url = 
+
+    // }
+
+  
   const categoryData = [
     'food',
     'shopping',
@@ -253,7 +283,7 @@ const Profile = ({navigation}) => {
 
             <CustomButton
               // textTransform={"capitalize"}
-              text={'Add'}
+              text={isLoading ? <ActivityIndicator color={'#ffffff'} size={'small'} /> :  'Add'}
               isBold
               textColor={Color.white}
               width={windowWidth * 0.75}
@@ -273,12 +303,15 @@ const Profile = ({navigation}) => {
                   {name: category, value: amount, color: color},
                 ]);
 
-                setAddSection(false);
+                postFinanceData();
+
+               
               }}
               bgColor={Color.green}
               borderColor={Color.white}
               borderWidth={2}
               borderRadius={moderateScale(30, 0.3)}
+              disable={isLoading}
             />
           </View>
         )}
@@ -484,7 +517,7 @@ const styles = StyleSheet.create({
 });
 
 const DataCard = ({data, total}) => {
-  console.log('in the cmponent', total);
+  // console.log('in the cmponent', total);
   return (
     <View style={styles.cardView}>
       <View

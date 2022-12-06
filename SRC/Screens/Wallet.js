@@ -144,13 +144,13 @@ const Wallet = () => {
       }}
     >
       <CustomStatusBar
-        backgroundColor={[Color.green, Color.green]}
-        barStyle={'light-content'}
+        backgroundColor={Color.white}
+        barStyle={'dark-content'}
       />
       <LinearGradient
-        colors={[Color.green, Color.green]}
-        start={{x: 1, y: 1}}
-        end={{x: 0, y: 0}}
+        colors={[Color.lightGreen, Color.green,Color.lightGreen,]}
+        start={{x: 0, y: 1}}
+        end={{x: 1, y: 1}}
         style={styles.header}
       >
         <View
@@ -227,7 +227,7 @@ const Wallet = () => {
           >
             $250
           </CustomText>
-          <CustomText>Withdraw Amount</CustomText>
+          <CustomText> Last Withdrawal Amount</CustomText>
         </View>
         <View style={styles.container}>
           <CustomText

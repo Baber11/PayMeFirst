@@ -26,6 +26,7 @@ import {useIsFocused} from '@react-navigation/native';
 import CustomButton from '../Components/CustomButton';
 
 const Support = () => {
+  const token = useSelector((state)=>state.authReducer.token)
   const isFocused = useIsFocused();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -37,28 +38,28 @@ const Support = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
 
   const GetSupportData = async () => {
-    const url = 'users/support';
+    const url = 'auth/admin/info';
     setLoading(true);
-    const response = await Get(url);
+    const response = await Get(url,token);
     setLoading(false);
     if (response != undefined) {
+      console.log(response?.data);
       setSupportData(response?.data?.data);
     }
   };
-  // useEffect(() => {
-  //   GetSupportData();
-
-  //   setFullName('');
-  //   setPhone('');
-  //   setEmail('');
-  //   setSubject('');
-  //   setMessage('');
-  // }, [isFocused]);
+  useEffect(() => {
+    GetSupportData();
+    // setFullName('');
+    // setPhone('');
+    // setEmail('');
+    // setSubject('');
+    // setMessage('');
+  }, [isFocused]);
   const sendQuestion = async () => {
-    const url = 'contact-us';
+    const url = 'auth/contact/submit';
     const body = {
-      fullName: fullName,
-      contact: phone,
+      name: fullName,
+      phone: phone,
       email: email,
       subject: subject,
       description: message,
@@ -66,13 +67,13 @@ const Support = () => {
     for (let key in body) {
       if (body[key] === '') {
         return Platform.OS == 'android'
-          ? ToastAndroid.show('Required Field is Empty', ToastAndroid.SHORT)
-          : alert('Required Field is Empty');
+          ? ToastAndroid.show(`${key}  is required`, ToastAndroid.SHORT)
+          : alert(`${key}  is required`);
       }
     }
     setSubmitLoading(true);
 
-    const response = await Post(url, body, apiHeader());
+    const response = await Post(url, body, apiHeader(token));
     setSubmitLoading(false);
     if (response != undefined) {
       Platform.OS == 'android'
@@ -129,9 +130,9 @@ const Support = () => {
             <CustomText style={[styles.contactInfoText]} isRegular>
               {loading
                 ? 'loading...'
-                : supportData?.contact
-                ? supportData?.contact
-                : '03112048588'}
+                : supportData?.phone
+                ? supportData?.phone
+                : 'no contact added yet'}
             </CustomText>
           </TouchableOpacity>
           <TouchableOpacity
@@ -150,9 +151,9 @@ const Support = () => {
             <CustomText style={[styles.contactInfoText]} isRegular>
               {loading
                 ? 'loading...'
-                : supportData?.email
-                ? supportData?.email
-                : 'syedbaber115@gmail.com'}
+                : supportData?.official_email
+                ? supportData?.official_email
+                : 'not added yet'}
             </CustomText>
           </TouchableOpacity>
           <CustomText
@@ -248,7 +249,7 @@ const Support = () => {
               // textTransform={"capitalize"}
               text={
                 submitLoading ? (
-                  <ActivityIndicator color={'#000'} size={'small'} />
+                  <ActivityIndicator color={'#ffffff'} size={'small'} />
                 ) : (
                   'Submit'
                 )
@@ -258,9 +259,7 @@ const Support = () => {
               width={windowWidth * 0.75}
               height={windowHeight * 0.06}
               marginTop={moderateScale(20, 0.3)}
-              onPress={() => {
-                alert('Query will send to admin');
-              }}
+              onPress={sendQuestion}
               bgColor={Color.green}
               borderColor={Color.white}
               borderWidth={2}

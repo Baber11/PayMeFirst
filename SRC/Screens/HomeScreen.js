@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -32,6 +32,11 @@ import {LineChart} from 'react-native-chart-kit';
 import moment from 'moment';
 import * as Progress from 'react-native-progress';
 import {ExpenditureComponent} from '../Components/ExpenditureComponent';
+import DeviceInfo from 'react-native-device-info';
+
+// or ES6+ destructured imports
+
+import { getUniqueId, getManufacturer } from 'react-native-device-info';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -45,7 +50,34 @@ const HomeScreen = ({valueFormatter, data}) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const Header = apiHeader();
+
+
+  const getDeviceInfo = async()=>{
+    let a = [];
+    
+    a.push(DeviceInfo.getBrand())
+    a.push(DeviceInfo.getApplicationName())
+    a.push(await DeviceInfo.getDeviceName())
+    a.push(await DeviceInfo.getBatteryLevel())
+    a.push( DeviceInfo.getDeviceType())
+    a.push(await DeviceInfo.getFingerprint())
+    a.push(await DeviceInfo.getManufacturer())
+    a.push(DeviceInfo.getModel())
+    a.push(await DeviceInfo.getTotalDiskCapacity())
+    a.push( DeviceInfo.hasNotch())
+
+    if(a[0] != undefined){
+      a.map((x)=>console.log(x))
+    }
+
+  
+  }
+
+
+  useEffect( () => {
+  getDeviceInfo();
+  }, [])
+  
 
   return (
     <ScreenBoiler

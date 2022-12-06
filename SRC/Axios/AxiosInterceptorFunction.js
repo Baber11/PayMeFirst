@@ -16,8 +16,8 @@ const URL = (link) => {
 let Get = async (route, token, showAlert = true) => {
   const options = {
     headers: {
-      Authorization: token,
-      "Content-Type": "application/json",
+     Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
     },
   };
   const apiUrl = URL(route);
@@ -73,7 +73,7 @@ let Get = async (route, token, showAlert = true) => {
 
 let Post = async (route, data, headers, showAlert = true) => {
   const apiUrl = URL(route);
-  console.log(apiUrl);
+  console.log('here is the url =>',apiUrl);
 
   try {
     return await axios.post(apiUrl, data, headers);

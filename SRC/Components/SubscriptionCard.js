@@ -34,11 +34,12 @@ const SubscriptionCard = ({
           <CustomImage
             resizeMode={'stretch'}
             source={
-              require('../Assets/Images/crown.jpg')}
+              require('../Assets/Images/crown.png')}
             style={{
               alignSelf: 'center',
               width: '100%',
               height: '100%',
+              
             }}
           />
         </View>
@@ -190,7 +191,7 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.2,
     height: '80%',
     borderRadius: moderateScale(10, 0.3),
-    backgroundColor: Color.lightGrey,
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     overflow: 'hidden',
     // alignItems : 'center'
