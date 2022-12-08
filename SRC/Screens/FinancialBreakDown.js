@@ -28,16 +28,19 @@ import {useDispatch, useSelector} from 'react-redux';
 import numeral from 'numeral';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Pie from 'react-native-pie';
-import {Patch, Post} from '../Axios/AxiosInterceptorFunction';
-import { ActivityIndicator } from 'react-native';
-
-
+import {Get, Patch, Post} from '../Axios/AxiosInterceptorFunction';
+import {ActivityIndicator} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
+import ChatCardSkeleton from '../Components/ChatCardSkeleton';
+// import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
+import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 const Profile = ({navigation}) => {
+  const focused = useIsFocused();
   const dispatch = useDispatch();
   const financeData = useSelector(
     state => state.commonReducer.financeBreakDown,
   );
-  const token = useSelector((state)=>state.authReducer.token);
+  const token = useSelector(state => state.authReducer.token);
   // console.log(financeData);
 
   const [total, setTotal] = useState(0);
@@ -45,38 +48,45 @@ const Profile = ({navigation}) => {
   const [amount, setAmount] = useState('');
   const [color, setColor] = useState('');
   const [isVisible, setIsVisible] = useState(false);
-  const [ChartData, setChartData] = useState(financeData);
+  const [ChartData, setChartData] = useState([]);
   const [addSection, setAddSection] = useState(false);
   const [forChart, setforChart] = useState([]);
-  const [isLoading , setIsLoading] = useState(false);
+  console.log('the chart data ', forChart);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingForPost, setIsLoadingForPost] = useState(false);
 
   // console.log('pie chart data  data => ', forChart);
 
-  
-    const postFinanceData = async()=>{
-      const url = 'financial/breakdowns/post';
-      const body ={
-        data : ChartData
-      }
-      setIsLoading(true)
-      const response = await Post(url , body , apiHeader(token))
-      setIsLoading(false) 
-      if(response != undefined){
-        console.log(response?.data);
-      ToastAndroid.show(
-        'Saved' , ToastAndroid.SHORT
-      )
-      setAddSection(false);  
+  const postFinanceData = async () => {
+    const url = 'auth/financial/breakdowns/post';
+    const body = {
+      name: category,
+      value: amount,
+      color: color,
+    };
+    console.log(body);
+    setIsLoadingForPost(true);
+    const response = await Post(url, body, apiHeader(token));
+    setIsLoadingForPost(false);
+    if (response != undefined) {
+      console.log('hfhgfygf', response?.data);
+      ToastAndroid.show('Saved', ToastAndroid.SHORT);
+      setAddSection(false);
     }
-      
+  };
+
+  const getData = async () => {
+    // https://54ac-103-125-71-14.ap.ngrok.io/api/auth/financial/breakdowns
+    const url = 'auth/financial/breakdowns';
+    setIsLoading(true);
+    const response = await Get(url, token);
+    setIsLoading(false);
+    if (response != undefined) {
+      console.log('dsdasdasda ==========>', response?.data?.data);
+      setChartData(response?.data?.data);
     }
+  };
 
-    // const getData = async()=>{
-    //   const url = 
-
-    // }
-
-  
   const categoryData = [
     'food',
     'shopping',
@@ -98,18 +108,26 @@ const Profile = ({navigation}) => {
     ChartData.map(item => {
       return setTotal(x => parseInt(x) + parseInt(item.value));
     });
-    if (ChartData.length > 0) {
-      dispatch(setFinanceBreakDown(ChartData));
-    }
+    // if (ChartData.length > 0) {
+    //   dispatch(setFinanceBreakDown(ChartData));
+    // }
   }, [ChartData]);
+
+  useEffect(() => {
+    getData();
+  }, [focused]);
 
   useEffect(() => {
     if (total != 0) {
       setforChart([]);
       ChartData.map(item => {
+        const percentage = Math.round((item?.value / total) * 100).toFixed(0);
         return setforChart(x => [
           ...x,
-          {percentage: (item?.value / total) * 100, color: item?.color},
+          {
+            percentage: percentage == 0 ? 2 : parseInt(percentage),
+            color: item?.color,
+          },
         ]);
       });
     }
@@ -122,8 +140,7 @@ const Profile = ({navigation}) => {
       title={'Financial BreakDown'}
       statusBarBackgroundColor={'#ffffff'}
       statusBarContentStyle={'dark-content'}
-      headerType={1}
-    >
+      headerType={1}>
       <View style={styles.header}>
         <ImageBackground
           source={require('../Assets/Images/vector-up.png')}
@@ -134,8 +151,7 @@ const Profile = ({navigation}) => {
             height: windowHeight * 0.2,
             width: windowWidth,
             zIndex: -1,
-          }}
-        >
+          }}>
           <Icon
             name={'arrowleft'}
             as={AntDesign}
@@ -156,8 +172,7 @@ const Profile = ({navigation}) => {
             style={[
               styles.text,
               {alignSelf: 'center', marginTop: moderateScale(20, 0.3)},
-            ]}
-          >
+            ]}>
             Financial BreakDown
           </CustomText>
         </ImageBackground>
@@ -168,17 +183,40 @@ const Profile = ({navigation}) => {
             paddingHorizontal: moderateScale(5, 0.3),
             width: windowWidth,
             // backgroundColor: 'red',
-          }}
-        >
-          {ChartData.length > 0 ? (
-            //  <></>
-            <Pie
-              radius={80}
-              innerRadius={50}
-              sections={forChart}
-              // dividerSize={4}
-              // strokeCap={'round'}
-            />
+          }}>
+          {forChart?.length > 0 ? (
+            <View
+              style={{
+                width: windowWidth,
+                height: windowHeight * 0.2,
+                // backgroundColor: 'red',
+                alignItems: 'center',
+              }}>
+              <ReactNativeZoomableView
+                maxZoom={5}
+                minZoom={1}
+                zoomStep={0.5}
+                initialZoom={1}
+                bindToBorders={true}
+                
+                // onZoomAfter={this.logOutZoomState}
+                style={
+                  {
+                    // width : windowWidth * 0.4 ,
+                    // height : windowHeight * 0.2,
+                    // padding: 10,
+                    // backgroundColor: 'red',
+                  }
+                }>
+                <Pie
+                  radius={80}
+                  innerRadius={60}
+                  sections={forChart}
+                  dividerSize={4}
+                  strokeCap={'butt'}
+                />
+              </ReactNativeZoomableView>
+            </View>
           ) : (
             <>
               <CustomImage
@@ -194,78 +232,77 @@ const Profile = ({navigation}) => {
             </>
           )}
           <View
-            style={{flexDirection: 'row', marginTop: moderateScale(10, 0.3)}}
-          >
+            style={{flexDirection: 'row', marginTop: moderateScale(10, 0.3)}}>
             <CustomText style={styles.text}>Total Consumption : </CustomText>
             <CustomText style={styles.text}>£{total}</CustomText>
           </View>
         </View>
       </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{backgroundColor: 'white'}}
-      >
-        <Icon
-          name={'add-circle-sharp'}
-          as={Ionicons}
-          color={Color.green}
-          size={moderateScale(40, 0.3)}
-          style={{
-            alignSelf: 'flex-end',
-            marginTop: moderateScale(10, 0.3),
-            marginRight: moderateScale(20, 0.3),
-          }}
-          onPress={() => {
-            setAddSection(!addSection);
-          }}
-        />
-        {addSection && (
-          <View style={styles.addItem}>
-            <CustomButton
-              // textTransform={"capitalize"}
-              text={'Choose Color'}
-              isBold
-              textColor={Color.green}
-              width={windowWidth * 0.25}
-              height={windowHeight * 0.06}
-              marginTop={moderateScale(10, 0.3)}
-              onPress={() => {
-                setIsVisible(true);
-              }}
-            />
-            <DropDownSingleSelect
-              dropdownStyle={[styles.dropdown]}
-              array={categoryData}
-              item={category}
-              setItem={setCategory}
-              placeholder={'Select Category'}
-              Colors={Color.green}
-            />
-            <TextInputWithTitle
-              titleText={'Enter Amount'}
-              secureText={false}
-              placeholder={'Enter Amount'}
-              setText={setAmount}
-              value={amount}
-              viewHeight={0.06}
-              viewWidth={0.8}
-              inputWidth={0.7}
-              inputHeight={0.05}
-              border={1}
-              marginTop={moderateScale(5, 0.3)}
-              borderColor={Color.themeLightGray}
-              backgroundColor={'#F5F5F5'}
-              borderRadius={moderateScale(10, 0.3)}
-              placeholderColor={Color.themeLightGray}
-              // color
-            />
-            {color != '' && (
+
+      {isLoading ? (
+        <View style={{marginTop: moderateScale(30, 0.3)}}>
+          <ChatCardSkeleton />
+          <ChatCardSkeleton />
+          <ChatCardSkeleton />
+          <ChatCardSkeleton />
+          <ChatCardSkeleton />
+          <ChatCardSkeleton />
+          <ChatCardSkeleton />
+          <ChatCardSkeleton />
+          <ChatCardSkeleton />
+          <ChatCardSkeleton />
+          <ChatCardSkeleton />
+          <ChatCardSkeleton />
+          <ChatCardSkeleton />
+          <ChatCardSkeleton />
+          <ChatCardSkeleton />
+        </View>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{backgroundColor: 'white'}}>
+          <Icon
+            name={'add-circle-sharp'}
+            as={Ionicons}
+            color={Color.green}
+            size={moderateScale(40, 0.3)}
+            style={{
+              alignSelf: 'flex-end',
+              marginTop: moderateScale(10, 0.3),
+              marginRight: moderateScale(20, 0.3),
+            }}
+            onPress={() => {
+              setAddSection(!addSection);
+            }}
+          />
+          {addSection && (
+            <View style={styles.addItem}>
+              <CustomButton
+                // textTransform={"capitalize"}
+                text={'Choose Color'}
+                isBold
+                textColor={Color.green}
+                width={windowWidth * 0.25}
+                height={windowHeight * 0.06}
+                marginTop={moderateScale(10, 0.3)}
+                onPress={() => {
+                  setIsVisible(true);
+                }}
+              />
+              <DropDownSingleSelect
+                dropdownStyle={[styles.dropdown]}
+                array={categoryData}
+                item={category}
+                setItem={setCategory}
+                placeholder={'Select Category'}
+                Colors={Color.green}
+              />
               <TextInputWithTitle
-                titleText={'Selected Color'}
+                titleText={'Enter Amount'}
                 secureText={false}
-                placeholder={'Selected Color'}
-                setText={setColor}
-                value={color}
+                placeholder={'Enter Amount'}
+                setText={setAmount}
+                value={amount}
                 viewHeight={0.06}
                 viewWidth={0.8}
                 inputWidth={0.7}
@@ -276,88 +313,140 @@ const Profile = ({navigation}) => {
                 backgroundColor={'#F5F5F5'}
                 borderRadius={moderateScale(10, 0.3)}
                 placeholderColor={Color.themeLightGray}
-                disable={true}
                 // color
               />
-            )}
+              {color != '' && (
+                <TextInputWithTitle
+                  titleText={'Selected Color'}
+                  secureText={false}
+                  placeholder={'Selected Color'}
+                  setText={setColor}
+                  value={color}
+                  viewHeight={0.06}
+                  viewWidth={0.8}
+                  inputWidth={0.7}
+                  inputHeight={0.05}
+                  border={1}
+                  marginTop={moderateScale(5, 0.3)}
+                  borderColor={Color.themeLightGray}
+                  backgroundColor={'#F5F5F5'}
+                  borderRadius={moderateScale(10, 0.3)}
+                  placeholderColor={Color.themeLightGray}
+                  disable={true}
+                  // color
+                />
+              )}
 
-            <CustomButton
-              // textTransform={"capitalize"}
-              text={isLoading ? <ActivityIndicator color={'#ffffff'} size={'small'} /> :  'Add'}
-              isBold
-              textColor={Color.white}
-              width={windowWidth * 0.75}
-              height={windowHeight * 0.06}
-              marginTop={moderateScale(20, 0.3)}
-              onPress={() => {
-                if (category == '' || amount == '' || color == '') {
-                  return Platform.OS == 'android'
-                    ? ToastAndroid.show(
-                        'Required Field Is Empty',
-                        ToastAndroid.SHORT,
-                      )
-                    : Alert.alert('Required Field Is Empty');
+              <CustomButton
+                // textTransform={"capitalize"}
+                text={
+                  isLoadingForPost ? (
+                    <ActivityIndicator color={'#ffffff'} size={'small'} />
+                  ) : (
+                    'Add'
+                  )
                 }
-                setChartData(x => [
-                  ...x,
-                  {name: category, value: amount, color: color},
-                ]);
+                isBold
+                textColor={Color.white}
+                width={windowWidth * 0.75}
+                height={windowHeight * 0.06}
+                marginTop={moderateScale(20, 0.3)}
+                onPress={() => {
+                  if (category == '' || amount == '' || color == '') {
+                    return Platform.OS == 'android'
+                      ? ToastAndroid.show(
+                          'Required Field Is Empty',
+                          ToastAndroid.SHORT,
+                        )
+                      : Alert.alert('Required Field Is Empty');
+                  }
+                  setChartData(x => [
+                    ...x,
+                    {name: category, value: amount, color: color},
+                  ]);
 
-                postFinanceData();
-
-               
+                  postFinanceData();
+                }}
+                bgColor={Color.green}
+                borderColor={Color.white}
+                borderWidth={2}
+                borderRadius={moderateScale(30, 0.3)}
+                disable={isLoadingForPost}
+              />
+            </View>
+          )}
+          {ChartData.length > 0 && (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={ChartData}
+              contentContainerStyle={{
+                paddingTop: moderateScale(20, 0.3),
+                paddingBottom: moderateScale(20, 0.3),
               }}
-              bgColor={Color.green}
-              borderColor={Color.white}
-              borderWidth={2}
-              borderRadius={moderateScale(30, 0.3)}
-              disable={isLoading}
+              style={styles.list}
+              renderItem={({item, index}) => {
+                return <DataCard data={item} total={total} />;
+              }}
+              ListFooterComponent={() => {
+                return (
+                  <View
+                    style={{
+                      // backgroundColor: 'red',
+                      flexDirection: 'row',
+                      width: windowWidth,
+                      alignSelf: 'center',
+                      // justifyContent: 'space-between',
+                      paddingLeft: windowWidth * 0.43, // backgroundColor : 'red',
+                      marginTop: moderateScale(20, 0.3),
+                    }}>
+                    <CustomText
+                      style={[styles.text1, {marginRight: windowWidth * 0.1}]}>
+                      Total
+                    </CustomText>
+                    <CustomText style={styles.text1}>
+                      {'  '}£{total}
+                    </CustomText>
+                  </View>
+                );
+              }}
+              ListHeaderComponent={() => {
+                return (
+                  <View style={styles.cardView}>
+                    <CustomText
+                      style={{
+                        color: '#000000',
+                        fontSize: moderateScale(15, 0.3),
+                        textAlign: 'left',
+                        // width: windowWidth * 0.2,
+                        fontWeight: '700',
+                      }}>
+                      Color
+                    </CustomText>
+                    <CustomText
+                      style={{
+                        color: '#000000',
+                        fontSize: moderateScale(15, 0.3),
+                        textAlign: 'right',
+                        width: windowWidth * 0.2,
+                        fontWeight: '700',
+                      }}>
+                      Reason
+                    </CustomText>
+                    <CustomText style={styles.text1}>Amount</CustomText>
+                  </View>
+                );
+              }}
             />
-          </View>
-        )}
-        {ChartData.length > 0 && (
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={ChartData}
-            contentContainerStyle={{
-              paddingTop: moderateScale(20, 0.3),
-              paddingBottom: moderateScale(20, 0.3),
-            }}
-            style={styles.list}
-            renderItem={({item, index}) => {
-              return <DataCard data={item} total={total} />;
-            }}
-            ListFooterComponent={() => {
-              return (
-                <View
-                  style={{
-                    // backgroundColor: 'red',
-                    flexDirection: 'row',
-                    width: windowWidth,
-                    alignSelf: 'center',
-                    // justifyContent: 'space-between',
-                    paddingLeft: windowWidth * 0.43,                   // backgroundColor : 'red',
-                    marginTop : moderateScale(20,0.3)
-                  }}
-                >
-                  <CustomText style={[styles.text1,{marginRight : windowWidth * 0.1}]}>Total</CustomText>
-                  <CustomText style={styles.text1}>
-                    {'  '}£{total}
-                  </CustomText>
-                </View>
-              );
-            }}
-          />
-        )}
-      </ScrollView>
+          )}
+        </ScrollView>
+      )}
       <Modal
         hasBackdrop={true}
         style={{justifyContent: 'center', alignItems: 'center'}}
         isVisible={isVisible}
         onBackdropPress={() => {
           setIsVisible(false);
-        }}
-      >
+        }}>
         <View style={styles.modal}>
           <View style={styles.headerModal}>
             <CustomText style={styles.text}>Select a Color</CustomText>
@@ -510,9 +599,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: moderateScale(20, 0.3),
     // backgroundColor: 'red',
-    borderBottomWidth : 0.5 ,
+    borderBottomWidth: 0.5,
     // marginRight : moderateScale(1120,0.3)
-    borderColor : Color.themeLightGray
+    borderColor: Color.themeLightGray,
   },
 });
 
@@ -526,23 +615,19 @@ const DataCard = ({data, total}) => {
           // justifyContent: 'space-between',
           width: windowWidth * 0.15,
           // backgroundColor : 'yellow'
-        }}
-      >
+        }}>
         <View
           style={{
             width: moderateScale(20, 0.3),
             height: moderateScale(20, 0.3),
             borderRadius: moderateScale(10, 0.3),
             backgroundColor: `${data.color}`,
-          }}
-        ></View>
-        <CustomText
-          style={{ color: `${data.color}`}}
-        >
-          {Math.round((data?.value / total) * 100)}%
+          }}></View>
+        <CustomText style={{color: `${data.color}`}}>
+          {((data?.value / total) * 100).toFixed(1)}%
         </CustomText>
       </View>
-        <CustomText style={[styles.text2 ]}>{data?.name}</CustomText>
+      <CustomText style={[styles.text2]}>{data?.name}</CustomText>
       <CustomText style={[styles.text1]}>
         £{numeral(data?.value).format('0,0')}
       </CustomText>

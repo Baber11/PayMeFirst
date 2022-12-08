@@ -34,17 +34,17 @@ const TermsAndConditions = () => {
     GetSupportData();
   }, []);
 
-  useEffect(() => {
-    console.log(termsData);
-    // let a = parser?.parseFromString(
-    //   "<p>Hello world <b>world</b> <i>foo</i> abc</p>",
-    //   "text/html"
-    // );
+  // useEffect(() => {
+  //   console.log(termsData);
+  //   // let a = parser?.parseFromString(
+  //   //   "<p>Hello world <b>world</b> <i>foo</i> abc</p>",
+  //   //   "text/html"
+  //   // );
 
     
-    const parsed = parser.parseFromString(termsData?.description, 'text/html');
-    console.log('here is the data =>',  parsed);
-  }, [termsData]);
+  //   const parsed = parser.parseFromString(termsData?.description, 'text/html');
+  //   console.log('here is the data =>',  parsed);
+  // }, [termsData]);
 
   return (
     <ScreenBoiler

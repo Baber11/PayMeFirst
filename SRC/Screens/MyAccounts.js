@@ -29,7 +29,7 @@ const MyAccounts = props => {
   const dispatch = useDispatch();
   
   const user = useSelector(state => state.commonReducer.userData);
-  // console.log(user);
+  console.log(user?.photo);
   const token = useSelector(state => state.authReducer.token);
   const [showModal, setShowModal] = useState(false);
   const [imageObject, setImageObject] = useState({});

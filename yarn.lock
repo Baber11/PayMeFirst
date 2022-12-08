@@ -1080,6 +1080,14 @@
     deepmerge "^3.2.0"
     hoist-non-react-statics "^3.3.0"
 
+"@dudigital/react-native-zoomable-view@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.npmjs.org/@dudigital/react-native-zoomable-view/-/react-native-zoomable-view-1.1.4.tgz"
+  integrity sha512-fYYMm9Xg2BhSHUgWhVUE7DOY9Q3bhJTVpusZOi8k4QiKw44TaX5J810IVcEpNYTZdTO1hsZvIvaFjAX9DhG0yg==
+  dependencies:
+    prop-types "^15.7.2"
+    react-native ">=0.54.0"
+
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
   resolved "https://registry.npmjs.org/@egjs/hammerjs/-/hammerjs-2.0.17.tgz"
@@ -8057,7 +8065,7 @@ react-native-web@*, react-native-web@0.9.x:
     prop-types "^15.6.0"
     react-timer-mixin "^0.13.4"
 
-react-native@*, react-native@^*, "react-native@^0.0.0-0 || 0.60 - 0.70 || 1000.0.0", "react-native@>= 0.30.0", "react-native@>= 0.50.0", "react-native@>= 0.59", react-native@>=0.42.0, react-native@>=0.47.1, react-native@>=0.48.4, react-native@>=0.50.0, react-native@>=0.50.1, react-native@>=0.57, react-native@>=0.59, react-native@>=0.60.0, react-native@>=0.61.3, react-native@>=0.64.0, react-native@>=0.65.0, react-native@>0.57.0, react-native@0.68.2:
+react-native@*, react-native@^*, "react-native@^0.0.0-0 || 0.60 - 0.70 || 1000.0.0", "react-native@>= 0.30.0", "react-native@>= 0.50.0", "react-native@>= 0.59", react-native@>=0.42.0, react-native@>=0.47.1, react-native@>=0.48.4, react-native@>=0.50.0, react-native@>=0.50.1, react-native@>=0.54.0, react-native@>=0.57, react-native@>=0.59, react-native@>=0.60.0, react-native@>=0.61.3, react-native@>=0.64.0, react-native@>=0.65.0, react-native@>0.57.0, react-native@0.68.2:
   version "0.68.2"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.68.2.tgz"
   integrity sha512-qNMz+mdIirCEmlrhapAtAG+SWVx6MAiSfCbFNhfHqiqu1xw1OKXdzIrjaBEPihRC2pcORCoCHduHGQe/Pz9Yuw==
@@ -8135,7 +8143,7 @@ react-timer-mixin@^0.13.4:
   resolved "https://registry.npmjs.org/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz"
   integrity sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
 
-react@*, "react@^16.0.0 || ^17.0.0", react@^16.13.1, react@^16.14.0, react@^16.3.0, "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0-rc.1", "react@^16.8.0 || ^17.0.0-rc.1 || ^18.0.0", "react@^16.9.0 || ^17.0.0 || ^18", "react@> 16.7.0", "react@>= 15.2.1", react@>=0.14.8, react@>=16, react@>=16.11.0, react@>=16.4.0, react@>=16.5.1, react@>=16.8, react@>=17.0.0, react@>16.6.0, react@16.x.x, react@17.0.2:
+react@*, "react@^16.0.0 || ^17.0.0", react@^16.13.1, react@^16.14.0, react@^16.3.0, "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0-rc.1", "react@^16.8.0 || ^17.0.0-rc.1 || ^18.0.0", "react@^16.9.0 || ^17.0.0 || ^18", "react@> 16.7.0", "react@>= 15.2.1", react@>=0.14.8, react@>=16, react@>=16.11.0, react@>=16.4.0, react@>=16.5.1, react@>=16.8, react@>=16.8.0, react@>=17.0.0, react@>16.6.0, react@16.x.x, react@17.0.2:
   version "17.0.2"
   resolved "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==
