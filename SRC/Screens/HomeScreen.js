@@ -7,6 +7,7 @@ import {
   ToastAndroid,
   Alert,
   FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import {ScaledSheet, moderateScale} from 'react-native-size-matters';
@@ -36,48 +37,88 @@ import DeviceInfo from 'react-native-device-info';
 
 // or ES6+ destructured imports
 
-import { getUniqueId, getManufacturer } from 'react-native-device-info';
+import {getUniqueId, getManufacturer} from 'react-native-device-info';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
+
+const dummyArray = [
+  {month: 'Jan-22', value: 100},
+  {month: 'feb-22', value: 200},
+  {month: 'mar-22', value: 300},
+  {month: 'apr-22', value: 400},
+  {month: 'may-22', value: 500},
+  {month: 'June-22', value: 600},
+  {month: 'July-22', value: 700},
+  {month: 'aug-22', value: 800},
+  {month: 'sept-22', value: 900},
+  {month: 'oct-22', value: 1000},
+  {month: 'nov-22', value: 1100},
+  {month: 'dec-22', value: 1200},
+  {month: 'jan-23', value: 1300},
+  {month: 'fab-23', value: 1400},
+];
 
 const HomeScreen = ({valueFormatter, data}) => {
   const [state, setState] = useState(null);
   const dispatch = useDispatch();
   const {fcmToken} = useSelector(state => state.commonReducer);
 
-  const [phone, setPhone] = useState('');
-
   const [isLoading, setIsLoading] = useState(false);
+  const [months, setMoths] = useState([]);
+  const [cashPaid, setCashPaid] = useState([]);
 
+  const [startIndex, setStartIndex] = useState(0);
+  const [endIndex, setEndIndex] = useState(6);
+  console.log(
+    'months are =>',
+    // months,
+    // months.slice(startIndex, endIndex),
+    months.slice(startIndex, endIndex)[
+      months.slice(startIndex, endIndex).length - 1
+    ],
+    months[months.length - 1],
+    months.slice(startIndex, endIndex)[
+      months.slice(startIndex, endIndex).length - 1
+    ] == months[months.length - 1],
+    // months[0],
+    // months.slice(startIndex , endIndex)[0],
+    // months.slice(startIndex , endIndex)[0] == months[0]
+  );
+  // console.log('months are =>', cashPaid, cashPaid.slice(startIndex, endIndex));
 
+  const breakArray = array => {
+    array.map((item, index) => {
+      setMoths(data => [...data, item.month]);
+      setCashPaid(data => [...data, item.value]);
+    });
+  };
 
-  const getDeviceInfo = async()=>{
+  const getDeviceInfo = async () => {
     let a = [];
-    
-    a.push(DeviceInfo.getBrand())
-    a.push(DeviceInfo.getApplicationName())
-    a.push(await DeviceInfo.getDeviceName())
-    a.push(await DeviceInfo.getBatteryLevel())
-    a.push( DeviceInfo.getDeviceType())
-    a.push(await DeviceInfo.getFingerprint())
-    a.push(await DeviceInfo.getManufacturer())
-    a.push(DeviceInfo.getModel())
-    a.push(await DeviceInfo.getTotalDiskCapacity())
-    a.push( DeviceInfo.hasNotch())
 
-    if(a[0] != undefined){
-      a.map((x)=>console.log(x))
+    a.push(DeviceInfo.getBrand());
+    a.push(DeviceInfo.getApplicationName());
+    a.push(await DeviceInfo.getDeviceName());
+    a.push(await DeviceInfo.getBatteryLevel());
+    a.push(DeviceInfo.getDeviceType());
+    a.push(await DeviceInfo.getFingerprint());
+    a.push(await DeviceInfo.getManufacturer());
+    a.push(DeviceInfo.getModel());
+    a.push(await DeviceInfo.getTotalDiskCapacity());
+    a.push(DeviceInfo.hasNotch());
+
+    if (a[0] != undefined) {
+      a.map(x => console.log(x));
     }
+  };
 
-  
-  }
-
-
-  useEffect( () => {
-  getDeviceInfo();
-  }, [])
-  
+  useEffect(() => {
+    setMoths([]);
+    setCashPaid([]);
+    breakArray(dummyArray);
+    // getDeviceInfo();
+  }, []);
 
   return (
     <ScreenBoiler
@@ -87,23 +128,13 @@ const HomeScreen = ({valueFormatter, data}) => {
       statusBarContentStyle={'dark-content'}
       headerType={2}
       showList={true}
-      headerColor={'#F6F6F6'}
-    >
+      headerColor={'#F6F6F6'}>
       <View
         // showsVerticalScrollIndicator={false}
-        style={styles.sectionContainer}
-      >
+        style={styles.sectionContainer}>
         <CustomText style={styles.txt4}>Total Balance</CustomText>
         <View style={styles.row}>
           <CustomText style={styles.txt2}>$234,12</CustomText>
-          {/* <View style={styles.absolute}>
-            <Icon
-              name="plus"
-              as={AntDesign}
-              color={Color.black}
-              size={moderateScale(25, 0.3)}
-            />
-          </View> */}
         </View>
         {/* <CustomText style={styles.txtContainer}>+$1,234,2</CustomText> */}
         <View style={{width: windowWidth * 0.8}}>
@@ -127,8 +158,7 @@ const HomeScreen = ({valueFormatter, data}) => {
               width: windowWidth * 0.8,
               // backgroundColor: 'red',
               justifyContent: 'space-between',
-            }}
-          >
+            }}>
             <CustomText style={{color: Color.green}}>30%</CustomText>
             <CustomText style={{color: Color.black}}>70%</CustomText>
           </View>
@@ -164,46 +194,84 @@ const HomeScreen = ({valueFormatter, data}) => {
             contentContainerStyle={{
               alignItems: 'center',
               paddingBottom: moderateScale(100, 0.3),
-            }}
-          >
-            <LineChart
-              data={{
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'july'],
-                datasets: [
-                  {
-                    data: [100, 200, 330, 400, 420, 600],
+            }}>
+            {months.slice(startIndex, endIndex)[0] != months[0] && (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  setStartIndex(startIndex - 6);
+                  setEndIndex(endIndex - 6);
+                }}
+                style={[
+                  styles.absolute,
+                  {left: moderateScale(5, 0.3), zIndex: 1},
+                ]}>
+                <Icon
+                  name="left"
+                  as={AntDesign}
+                  color={Color.black}
+                  size={moderateScale(18, 0.3)}
+                />
+              </TouchableOpacity>
+            )}
+            {Object.keys(months).length > 0 && (
+              <LineChart
+                data={{
+                  labels: months.slice(startIndex, endIndex),
+                  datasets: [
+                    {
+                      data: cashPaid.slice(startIndex, endIndex),
+                    },
+                  ],
+                }}
+                width={Dimensions.get('window').width * 0.9} // from react-native
+                height={windowHeight * 0.22}
+                yAxisLabel="$"
+                // withDots={false}
+                // yAxisSuffix='70'
+                //   yAxisSuffix="k"
+                withHiddenDots={true}
+                yAxisInterval={2} // optional, defaults to 1
+                chartConfig={{
+                  backgroundColor: Color.white,
+                  backgroundGradientFrom: Color.white,
+                  backgroundGradientTo: Color.white,
+                  decimalPlaces: 0, // optional, defaults to 2dp
+                  color: (opacity = 1) => `rgba(90,146,14, ${opacity})`,
+                  labelColor: (opacity = 1) => `rgba(0,0,0, ${opacity})`,
+                  style: {
+                    borderRadius: 16,
                   },
-                ],
-              }}
-              width={Dimensions.get('window').width * 0.9} // from react-native
-              height={windowHeight * 0.22}
-              yAxisLabel="$"
-              // withDots={false}
-              // yAxisSuffix='70'
-              //   yAxisSuffix="k"
-              withHiddenDots={true}
-              yAxisInterval={2} // optional, defaults to 1
-              chartConfig={{
-                backgroundColor: Color.white,
-                backgroundGradientFrom: Color.white,
-                backgroundGradientTo: Color.white,
-                decimalPlaces: 0, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(90,146,14, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(0,0,0, ${opacity})`,
-                style: {
+                }}
+                bezier
+                style={{
+                  marginVertical: 8,
                   borderRadius: 16,
-                },
-              }}
-              bezier
-              style={{
-                marginVertical: 8,
-                borderRadius: 16,
-              }}
-              onDataPointClick={setState}
-              withShadow={true}
-              //   {...props}
-              decorator={tooltipDecorators(state, data, valueFormatter)}
-            />
+                }}
+                onDataPointClick={setState}
+                withShadow={true}
+                //   {...props}
+                decorator={tooltipDecorators(state, data, valueFormatter)}
+              />
+            )}
+            {months.slice(startIndex, endIndex)[
+              months.slice(startIndex, endIndex).length - 1
+            ] != months[months.length - 1] && (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  setStartIndex(startIndex + 6);
+                  setEndIndex(endIndex + 6);
+                }}
+                style={styles.absolute}>
+                <Icon
+                  name="right"
+                  as={AntDesign}
+                  color={Color.black}
+                  size={moderateScale(18, 0.3)}
+                />
+              </TouchableOpacity>
+            )}
             <FlatList
               style={{marginTop: moderateScale(20, 0.3)}}
               contentContainerStyle={{
@@ -376,14 +444,15 @@ const styles = ScaledSheet.create({
   },
 
   absolute: {
-    width: moderateScale(40, 0.3),
-    height: moderateScale(40, 0.3),
-    borderRadius: moderateScale(20, 0.3),
+    width: moderateScale(30, 0.3),
+    height: moderateScale(30, 0.3),
+    borderRadius: moderateScale(15, 0.3),
     backgroundColor: Color.white,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
     right: moderateScale(10, 0.3),
+    top: moderateScale(60, 0.3),
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -410,8 +479,7 @@ const IncomeContainer = ({icon, text1, text2, backgroundColor}) => {
             height: moderateScale(30, 0.3),
             borderRadius: moderateScale(15, 0.3),
           },
-        ]}
-      >
+        ]}>
         <Icon
           name={icon}
           as={AntDesign}
@@ -482,8 +550,7 @@ const Tooltip = ({x, y, textX, textY, stroke, pointStroke, position}) => {
           x={tipTxtX}
           y={tipTxtY + 5}
           fontSize="12"
-          textAnchor="start"
-        >
+          textAnchor="start">
           ${textY}
         </Text>
       </G>

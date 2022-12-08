@@ -1,6 +1,7 @@
-export const baseUrl = "https://www.amazing-grothendieck.23-83-37-162.plesk.page";
-// export const baseUrl = "https://54ac-103-125-71-14.ap.ngrok.io";
+// export const baseUrl = "https://www.amazing-grothendieck.23-83-37-162.plesk.page";
+export const baseUrl = "https://2707-103-125-71-14.in.ngrok.io";
 export const imageUrl = `${baseUrl}/api/images/`;
+export const profilePicUrl = `${baseUrl}/uploads`
 
 export const apiDataLimit = 10;
 export const validateEmail = (email) => {

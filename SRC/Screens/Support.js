@@ -78,10 +78,10 @@ const Support = () => {
     if (response != undefined) {
       Platform.OS == 'android'
         ? ToastAndroid.show(
-            'Question Submitted Successfully',
+            'Sent Successfully',
             ToastAndroid.SHORT,
           )
-        : alert('Question Submitted Successfully');
+        : alert('Sent Successfully');
       navigationService.navigate('HomeScreen');
     }
   };
@@ -251,7 +251,7 @@ const Support = () => {
                 submitLoading ? (
                   <ActivityIndicator color={'#ffffff'} size={'small'} />
                 ) : (
-                  'Submit'
+                  'send'
                 )
               }
               isBold

@@ -27,10 +27,12 @@ import navigationService from '../navigationService';
 import {setUserLogout} from '../Store/slices/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import ImageView from 'react-native-image-viewing';
+import { profilePicUrl } from '../Config';
 
 const Profile = () => {
   const dispatch = useDispatch();
   const user = useSelector((state)=>state.commonReducer.userData);
+  // console.log("🚀 ~ file: Profile.js:34 ~ Profile ~ user", user?.photo , `${profilePicUrl}${user?.photo.split('uploads')[1]}`)
   // console.log(user);
   const [isVisible , setIsVisible] = useState(false);
 

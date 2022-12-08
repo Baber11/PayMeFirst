@@ -11,7 +11,6 @@ import ScreenBoiler from '../Components/ScreenBoiler';
 import Color from '../Assets/Utilities/Color';
 import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import {moderateScale} from 'react-native-size-matters';
-import {DonutChart} from 'react-native-circular-chart';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {FlatList, Icon, ScrollView, Toast} from 'native-base';
 import DropDownSingleSelect from '../Components/DropDownSingleSelect';
@@ -32,8 +31,10 @@ import {Get, Patch, Post} from '../Axios/AxiosInterceptorFunction';
 import {ActivityIndicator} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import ChatCardSkeleton from '../Components/ChatCardSkeleton';
-// import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
+import DatePicker from 'react-native-date-picker';
+import moment from 'moment/moment';
+
 const Profile = ({navigation}) => {
   const focused = useIsFocused();
   const dispatch = useDispatch();
@@ -41,7 +42,6 @@ const Profile = ({navigation}) => {
     state => state.commonReducer.financeBreakDown,
   );
   const token = useSelector(state => state.authReducer.token);
-  // console.log(financeData);
 
   const [total, setTotal] = useState(0);
   const [category, setCategory] = useState('');
@@ -51,9 +51,11 @@ const Profile = ({navigation}) => {
   const [ChartData, setChartData] = useState([]);
   const [addSection, setAddSection] = useState(false);
   const [forChart, setforChart] = useState([]);
-  console.log('the chart data ', forChart);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingForPost, setIsLoadingForPost] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState(new Date());
+  // console.log("🚀 ~ file: FinancialBreakDown.js:62 ~ Profile ~ date", date)
 
   // console.log('pie chart data  data => ', forChart);
 
@@ -64,7 +66,6 @@ const Profile = ({navigation}) => {
       value: amount,
       color: color,
     };
-    console.log(body);
     setIsLoadingForPost(true);
     const response = await Post(url, body, apiHeader(token));
     setIsLoadingForPost(false);
@@ -77,12 +78,14 @@ const Profile = ({navigation}) => {
 
   const getData = async () => {
     // https://54ac-103-125-71-14.ap.ngrok.io/api/auth/financial/breakdowns
-    const url = 'auth/financial/breakdowns';
+    const url = `auth/financial/breakdowns/${moment(date).format(
+      'YYYY-MM-DD',
+    )}`;
     setIsLoading(true);
     const response = await Get(url, token);
     setIsLoading(false);
     if (response != undefined) {
-      console.log('dsdasdasda ==========>', response?.data?.data);
+      console.log('dsdasdasda ==========>', response?.data);
       setChartData(response?.data?.data);
     }
   };
@@ -115,7 +118,7 @@ const Profile = ({navigation}) => {
 
   useEffect(() => {
     getData();
-  }, [focused]);
+  }, [focused, date]);
 
   useEffect(() => {
     if (total != 0) {
@@ -198,7 +201,6 @@ const Profile = ({navigation}) => {
                 zoomStep={0.5}
                 initialZoom={1}
                 bindToBorders={true}
-                
                 // onZoomAfter={this.logOutZoomState}
                 style={
                   {
@@ -228,81 +230,89 @@ const Profile = ({navigation}) => {
                   alignSelf: 'center',
                 }}
               />
-              <CustomText style={[styles.text]}>No Record Added Yet</CustomText>
+              <CustomText style={[styles.text]}>No Record found</CustomText>
             </>
           )}
           <View
             style={{flexDirection: 'row', marginTop: moderateScale(10, 0.3)}}>
             <CustomText style={styles.text}>Total Consumption : </CustomText>
-            <CustomText style={styles.text}>£{total}</CustomText>
+            <CustomText style={styles.text}>${total}</CustomText>
           </View>
         </View>
       </View>
 
-      {isLoading ? (
-        <View style={{marginTop: moderateScale(30, 0.3)}}>
-          <ChatCardSkeleton />
-          <ChatCardSkeleton />
-          <ChatCardSkeleton />
-          <ChatCardSkeleton />
-          <ChatCardSkeleton />
-          <ChatCardSkeleton />
-          <ChatCardSkeleton />
-          <ChatCardSkeleton />
-          <ChatCardSkeleton />
-          <ChatCardSkeleton />
-          <ChatCardSkeleton />
-          <ChatCardSkeleton />
-          <ChatCardSkeleton />
-          <ChatCardSkeleton />
-          <ChatCardSkeleton />
-        </View>
-      ) : (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={{backgroundColor: 'white'}}>
-          <Icon
-            name={'add-circle-sharp'}
-            as={Ionicons}
-            color={Color.green}
-            size={moderateScale(40, 0.3)}
-            style={{
-              alignSelf: 'flex-end',
-              marginTop: moderateScale(10, 0.3),
-              marginRight: moderateScale(20, 0.3),
-            }}
-            onPress={() => {
-              setAddSection(!addSection);
-            }}
-          />
-          {addSection && (
-            <View style={styles.addItem}>
-              <CustomButton
-                // textTransform={"capitalize"}
-                text={'Choose Color'}
-                isBold
-                textColor={Color.green}
-                width={windowWidth * 0.25}
-                height={windowHeight * 0.06}
-                marginTop={moderateScale(10, 0.3)}
-                onPress={() => {
-                  setIsVisible(true);
-                }}
-              />
-              <DropDownSingleSelect
-                dropdownStyle={[styles.dropdown]}
-                array={categoryData}
-                item={category}
-                setItem={setCategory}
-                placeholder={'Select Category'}
-                Colors={Color.green}
-              />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{backgroundColor: 'white'}}>
+        <CustomText
+          style={styles.dateContainer}
+          onPress={() => {
+            setOpen(true), setAddSection(false);
+          }}>
+          selected date : {<CustomText>{moment(date).format('ll')}</CustomText>}
+        </CustomText>
+        <Icon
+          name={'add-circle-sharp'}
+          as={Ionicons}
+          color={Color.green}
+          size={moderateScale(40, 0.3)}
+          style={{
+            alignSelf: 'flex-end',
+            marginTop: moderateScale(10, 0.3),
+            marginRight: moderateScale(20, 0.3),
+          }}
+          onPress={() => {
+            setDate(new Date());
+            setAddSection(!addSection);
+          }}
+        />
+        {addSection && (
+          <View style={styles.addItem}>
+            <CustomButton
+              // textTransform={"capitalize"}
+              text={'Choose Color'}
+              isBold
+              textColor={Color.green}
+              width={windowWidth * 0.25}
+              height={windowHeight * 0.06}
+              marginTop={moderateScale(10, 0.3)}
+              onPress={() => {
+                setIsVisible(true);
+              }}
+            />
+            <DropDownSingleSelect
+              dropdownStyle={[styles.dropdown]}
+              array={categoryData}
+              item={category}
+              setItem={setCategory}
+              placeholder={'Select Category'}
+              Colors={Color.green}
+            />
+            <TextInputWithTitle
+              titleText={'Enter Amount'}
+              secureText={false}
+              placeholder={'Enter Amount'}
+              setText={setAmount}
+              value={amount}
+              viewHeight={0.06}
+              viewWidth={0.8}
+              inputWidth={0.7}
+              inputHeight={0.05}
+              border={1}
+              marginTop={moderateScale(5, 0.3)}
+              borderColor={Color.themeLightGray}
+              backgroundColor={'#F5F5F5'}
+              borderRadius={moderateScale(10, 0.3)}
+              placeholderColor={Color.themeLightGray}
+              // color
+            />
+            {color != '' && (
               <TextInputWithTitle
-                titleText={'Enter Amount'}
+                titleText={'Selected Color'}
                 secureText={false}
-                placeholder={'Enter Amount'}
-                setText={setAmount}
-                value={amount}
+                placeholder={'Selected Color'}
+                setText={setColor}
+                value={color}
                 viewHeight={0.06}
                 viewWidth={0.8}
                 inputWidth={0.7}
@@ -313,133 +323,166 @@ const Profile = ({navigation}) => {
                 backgroundColor={'#F5F5F5'}
                 borderRadius={moderateScale(10, 0.3)}
                 placeholderColor={Color.themeLightGray}
+                disable={true}
                 // color
               />
-              {color != '' && (
-                <TextInputWithTitle
-                  titleText={'Selected Color'}
-                  secureText={false}
-                  placeholder={'Selected Color'}
-                  setText={setColor}
-                  value={color}
-                  viewHeight={0.06}
-                  viewWidth={0.8}
-                  inputWidth={0.7}
-                  inputHeight={0.05}
-                  border={1}
-                  marginTop={moderateScale(5, 0.3)}
-                  borderColor={Color.themeLightGray}
-                  backgroundColor={'#F5F5F5'}
-                  borderRadius={moderateScale(10, 0.3)}
-                  placeholderColor={Color.themeLightGray}
-                  disable={true}
-                  // color
-                />
-              )}
+            )}
 
-              <CustomButton
-                // textTransform={"capitalize"}
-                text={
-                  isLoadingForPost ? (
-                    <ActivityIndicator color={'#ffffff'} size={'small'} />
-                  ) : (
-                    'Add'
-                  )
+            <CustomButton
+              // textTransform={"capitalize"}
+              text={
+                isLoadingForPost ? (
+                  <ActivityIndicator color={'#ffffff'} size={'small'} />
+                ) : (
+                  'Add'
+                )
+              }
+              isBold
+              textColor={Color.white}
+              width={windowWidth * 0.75}
+              height={windowHeight * 0.06}
+              marginTop={moderateScale(20, 0.3)}
+              onPress={() => {
+                if (category == '' || amount == '' || color == '') {
+                  return Platform.OS == 'android'
+                    ? ToastAndroid.show(
+                        'Required Field Is Empty',
+                        ToastAndroid.SHORT,
+                      )
+                    : Alert.alert('Required Field Is Empty');
                 }
-                isBold
-                textColor={Color.white}
-                width={windowWidth * 0.75}
-                height={windowHeight * 0.06}
-                marginTop={moderateScale(20, 0.3)}
-                onPress={() => {
-                  if (category == '' || amount == '' || color == '') {
-                    return Platform.OS == 'android'
-                      ? ToastAndroid.show(
-                          'Required Field Is Empty',
-                          ToastAndroid.SHORT,
-                        )
-                      : Alert.alert('Required Field Is Empty');
-                  }
-                  setChartData(x => [
-                    ...x,
-                    {name: category, value: amount, color: color},
-                  ]);
+                setChartData(x => [
+                  ...x,
+                  {name: category, value: amount, color: color},
+                ]);
 
-                  postFinanceData();
-                }}
-                bgColor={Color.green}
-                borderColor={Color.white}
-                borderWidth={2}
-                borderRadius={moderateScale(30, 0.3)}
-                disable={isLoadingForPost}
-              />
-            </View>
-          )}
-          {ChartData.length > 0 && (
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              data={ChartData}
-              contentContainerStyle={{
-                paddingTop: moderateScale(20, 0.3),
-                paddingBottom: moderateScale(20, 0.3),
+                postFinanceData();
               }}
-              style={styles.list}
-              renderItem={({item, index}) => {
-                return <DataCard data={item} total={total} />;
-              }}
-              ListFooterComponent={() => {
-                return (
-                  <View
-                    style={{
-                      // backgroundColor: 'red',
-                      flexDirection: 'row',
-                      width: windowWidth,
-                      alignSelf: 'center',
-                      // justifyContent: 'space-between',
-                      paddingLeft: windowWidth * 0.43, // backgroundColor : 'red',
-                      marginTop: moderateScale(20, 0.3),
-                    }}>
-                    <CustomText
-                      style={[styles.text1, {marginRight: windowWidth * 0.1}]}>
-                      Total
-                    </CustomText>
-                    <CustomText style={styles.text1}>
-                      {'  '}£{total}
-                    </CustomText>
-                  </View>
-                );
-              }}
-              ListHeaderComponent={() => {
-                return (
-                  <View style={styles.cardView}>
-                    <CustomText
-                      style={{
-                        color: '#000000',
-                        fontSize: moderateScale(15, 0.3),
-                        textAlign: 'left',
-                        // width: windowWidth * 0.2,
-                        fontWeight: '700',
-                      }}>
-                      Color
-                    </CustomText>
-                    <CustomText
-                      style={{
-                        color: '#000000',
-                        fontSize: moderateScale(15, 0.3),
-                        textAlign: 'right',
-                        width: windowWidth * 0.2,
-                        fontWeight: '700',
-                      }}>
-                      Reason
-                    </CustomText>
-                    <CustomText style={styles.text1}>Amount</CustomText>
-                  </View>
-                );
-              }}
+              bgColor={Color.green}
+              borderColor={Color.white}
+              borderWidth={2}
+              borderRadius={moderateScale(30, 0.3)}
+              disable={isLoadingForPost}
             />
-          )}
-        </ScrollView>
-      )}
+          </View>
+        )}
+        {isLoading ? (
+          <View style={styles.list}>
+            <ChatCardSkeleton />
+            <ChatCardSkeleton />
+            <ChatCardSkeleton />
+            <ChatCardSkeleton />
+            <ChatCardSkeleton />
+            <ChatCardSkeleton />
+            <ChatCardSkeleton />
+            <ChatCardSkeleton />
+            <ChatCardSkeleton />
+            <ChatCardSkeleton />
+            <ChatCardSkeleton />
+            <ChatCardSkeleton />
+            <ChatCardSkeleton />
+            <ChatCardSkeleton />
+            <ChatCardSkeleton />
+          </View>
+        ) : (
+          // Object.keys(ChartData).length > 0 && (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={ChartData}
+            contentContainerStyle={{
+              paddingTop: moderateScale(20, 0.3),
+              paddingBottom: moderateScale(20, 0.3),
+            }}
+            style={styles.list}
+            renderItem={({item, index}) => {
+              return <DataCard data={item} total={total} />;
+            }}
+            ListFooterComponent={() => {
+              return (
+                <View
+                  style={{
+                    // backgroundColor: 'red',
+                    flexDirection: 'row',
+                    width: windowWidth,
+                    alignSelf: 'center',
+                    // justifyContent: 'space-between',
+                    paddingLeft: windowWidth * 0.43, // backgroundColor : 'red',
+                    marginTop: moderateScale(20, 0.3),
+                  }}>
+                  <CustomText
+                    style={[styles.text1, {marginRight: windowWidth * 0.1}]}>
+                    Total
+                  </CustomText>
+                  <CustomText style={styles.text1}>
+                    {'  '}${total}
+                  </CustomText>
+                </View>
+              );
+            }}
+            ListEmptyComponent={() => {
+              return (
+                // <View style={{backgroundColor : 'red' , height : windowHeight * 0.2 , width : windowWidth}}>
+                <>
+                  <CustomImage
+                    resizeMode={'contain'}
+                    source={require('../Assets/Images/notfound.png')}
+                    style={{
+                      width: windowWidth * 0.5,
+                      height: windowHeight * 0.22,
+                      alignSelf: 'center',
+                    }}
+                  />
+                </>
+                // </View>
+              );
+            }}
+            ListHeaderComponent={() => {
+              return (
+                <View style={styles.cardView}>
+                  <CustomText
+                    style={{
+                      color: '#000000',
+                      fontSize: moderateScale(15, 0.3),
+                      textAlign: 'left',
+                      // width: windowWidth * 0.2,
+                      fontWeight: '700',
+                    }}>
+                    Color
+                  </CustomText>
+                  <CustomText
+                    style={{
+                      color: '#000000',
+                      fontSize: moderateScale(15, 0.3),
+                      textAlign: 'right',
+                      width: windowWidth * 0.2,
+                      fontWeight: '700',
+                    }}>
+                    Reason
+                  </CustomText>
+                  <CustomText style={styles.text1}>Amount</CustomText>
+                </View>
+              );
+            }}
+          />
+          // )
+        )}
+      </ScrollView>
+
+      <DatePicker
+        maximumDate={new Date()}
+        modal
+        open={open}
+        date={date}
+        onConfirm={date => {
+          setOpen(false);
+          setDate(date);
+        }}
+        onCancel={() => {
+          setOpen(false);
+        }}
+        mode={'date'}
+        androidVariant="iosClone"
+      />
       <Modal
         hasBackdrop={true}
         style={{justifyContent: 'center', alignItems: 'center'}}
@@ -486,18 +529,18 @@ const styles = StyleSheet.create({
   list: {
     borderRadius: moderateScale(20, 0.3),
     width: windowWidth,
-    // backgroundColor: 'transparent',
+    backgroundColor: 'white',
     minHeight: windowHeight * 0.5,
     marginTop: moderateScale(20, 0.3),
-    // shadowColor: '#000',
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 12,
-    // },
-    // shadowOpacity: 0.58,
-    // shadowRadius: 16.0,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.58,
+    shadowRadius: 16.0,
 
-    // elevation: 24,
+    elevation: 24,
   },
 
   headerModal: {
@@ -530,13 +573,24 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(20, 0.3),
     textAlign: 'center',
   },
+  dateContainer: {
+    top: moderateScale(5, 0.3),
+    position: 'absolute',
+    margin: moderateScale(10, 0.3),
+    borderWidth: 1,
+    borderColor: Color.green,
+    paddingHorizontal: moderateScale(10, 0.3),
+    paddingVertical: moderateScale(5, 0.3),
+    borderStyle: 'dotted',
+    borderRadius: moderateScale(5, 0.3),
+    fontWeight: 'bold',
+  },
   text1: {
     color: '#000000',
     fontSize: moderateScale(15, 0.3),
     textAlign: 'left',
     width: windowWidth * 0.2,
     fontWeight: '700',
-    // backgroundColor : 'blue'
   },
   text2: {
     color: '#000000',
@@ -544,7 +598,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: windowWidth * 0.3,
     fontWeight: '700',
-    // backgroundColor : 'red'
   },
   container: {
     alignSelf: 'center',
@@ -579,7 +632,6 @@ const styles = StyleSheet.create({
     paddingTop: moderateScale(10, 0.3),
   },
   dropdown: {
-    // borderColor: 'transparent',
     borderRadius: moderateScale(10, 0.3),
     borderWidth: 1,
     borderBottomColor: 'lightgrey',
@@ -591,30 +643,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
   cardView: {
-    // marginBottom: moderateScale(20, 0.3),
     width: '100%',
     height: windowHeight * 0.08,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: moderateScale(20, 0.3),
-    // backgroundColor: 'red',
     borderBottomWidth: 0.5,
-    // marginRight : moderateScale(1120,0.3)
     borderColor: Color.themeLightGray,
   },
 });
 
 const DataCard = ({data, total}) => {
-  // console.log('in the cmponent', total);
   return (
     <View style={styles.cardView}>
       <View
         style={{
           flexDirection: 'row',
-          // justifyContent: 'space-between',
           width: windowWidth * 0.15,
-          // backgroundColor : 'yellow'
         }}>
         <View
           style={{
@@ -629,7 +675,7 @@ const DataCard = ({data, total}) => {
       </View>
       <CustomText style={[styles.text2]}>{data?.name}</CustomText>
       <CustomText style={[styles.text1]}>
-        £{numeral(data?.value).format('0,0')}
+        ${numeral(data?.value).format('0,0')}
       </CustomText>
     </View>
   );

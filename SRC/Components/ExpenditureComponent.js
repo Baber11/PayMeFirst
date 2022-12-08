@@ -32,7 +32,7 @@ export const ExpenditureComponent = ({
   amount,
   fromGuide,
   index,
-  onPress
+  onPress,
 }) => {
   return (
     <View
@@ -40,38 +40,27 @@ export const ExpenditureComponent = ({
         styles.smallContainer,
         fromGuide && {borderColor: Color.green, borderBottomWidth: 1},
         index && {borderBottomWidth: 0},
-      ]}
-    >
+      ]}>
       <View
         style={[
           fromGuide
             ? {
-                // position: 'relative',
-                // backgroundColor: 'white',
-                // justifyContent: 'center',
-                // alignItems: 'center',
                 width: moderateScale(80, 0.3),
                 height: moderateScale(80, 0.3),
                 borderRadius: moderateScale(20, 0.3),
                 borderWidth: 0,
-                // borderWidth: 1,
-                // borderColor: Color.purple,
               }
             : {
-                // justifyContent: 'center',
-                // alignItems: 'center',
                 width: moderateScale(40, 0.3),
                 height: moderateScale(40, 0.3),
                 borderRadius: moderateScale(20, 0.3),
-                // borderWidth: 1,
                 borderColor: Color.purple,
               },
-        ]}
-      >
+        ]}>
         <CustomImage
-        onPress={onPress}
+          onPress={onPress}
           source={image}
-          resizeMode={fromGuide ?  'stretch' : 'cover'}
+          resizeMode={fromGuide ? 'stretch' : 'cover'}
           style={{
             width: fromGuide ? '100%' : '80%',
             height: fromGuide ? '100%' : '80%',
@@ -83,8 +72,7 @@ export const ExpenditureComponent = ({
           width: windowWidth * 0.35,
           //   backgroundColor: 'red',
           marginLeft: moderateScale(25, 0.3),
-        }}
-      >
+        }}>
         <CustomText isBold style={[styles.txt4]}>
           {text1}
         </CustomText>

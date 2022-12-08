@@ -162,11 +162,16 @@ const Header = props => {
         onBackdropPress={() => {
           setModalVisible(false);
         }}
+        animationIn={'fadeIn'}
+        animationOut={'fadeOut'}
+        animationInTiming={700}
+        animationOutTiming={700}
         backdropOpacity={0}
         style={{
           // alignItems: 'flex-start',
           justifyContent: 'flex-start',
         }}
+        
       >
         <View style={styles.statusModal}>
           {statusArray.map(item => {
@@ -231,7 +236,7 @@ const styles = ScaledSheet.create({
     shadowOpacity: 0.29,
     shadowRadius: 4.65,
 
-    elevation: 7,
+    elevation: 3,
   },
   header2: {
     width: windowWidth,

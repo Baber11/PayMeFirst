@@ -7845,6 +7845,13 @@ react-native-credit-card-input@^0.4.1:
     prop-types "^15.6.0"
     react-native-flip-card "^3.4.1"
 
+react-native-date-picker@^4.2.6:
+  version "4.2.6"
+  resolved "https://registry.npmjs.org/react-native-date-picker/-/react-native-date-picker-4.2.6.tgz"
+  integrity sha512-qnSLefvCInFp1etQ27AsDzpCJgvi0Q0eIYRtIzjBp5WC5hzINIY7WWeQESAA/QUPbwFJU7Vk06ouQc51dC1Qaw==
+  dependencies:
+    prop-types "^15.8.1"
+
 react-native-device-info@^10.3.0:
   version "10.3.0"
   resolved "https://registry.npmjs.org/react-native-device-info/-/react-native-device-info-10.3.0.tgz"

@@ -32,7 +32,7 @@ const Loader = (props) => {
     >
       <ActivityIndicator
         size={size}
-        color={textColor ? textColor : Color.themeColor}
+        color={textColor ? textColor : Color.green}
       />
       {text && (
         <CustomText

@@ -105,8 +105,10 @@ const [guideData , setGuideData]=useState([]);
       statusBarBackgroundColor={'#F6F6F6'}
       statusBarContentStyle={'dark-content'}
       headerType={2}
-      showList={false}
-      headerColor={'#F6F6F6'}>
+      // showList={false}
+      headerColor={'#F6F6F6'}
+      showList={true}
+      >
       <View style={styles.sectionContainer}>
         <View style={[styles.row]}>
           <CustomText
