@@ -64,8 +64,8 @@ const CustomAlertModal = (props) => {
           }}
         >
           <CustomButton
-            bgColor={Color.themePurpleLevel4}
-            borderColor={Color.themePurpleLevel4}
+            bgColor={Color.green}
+            borderColor={'white'}
             borderWidth={1}
             textColor={Color.white}
             onPress={onOKPress}
@@ -75,7 +75,7 @@ const CustomAlertModal = (props) => {
             fontSize={moderateScale(16, 0.3)}
             borderRadius={moderateScale(30, 0.3)}
             // textTransform={'capitalize'}
-            isGradient={true}
+            // isGradient={true}
             marginTop={moderateScale(12, 0.3)}
           />
           {areYouSureAlert && (
@@ -85,10 +85,10 @@ const CustomAlertModal = (props) => {
               }}
             >
               <CustomButton
-                bgColor={Color.themePurpleLevel4}
-                borderColor={Color.themePurpleLevel4}
+                bgColor={Color.white}
+                borderColor={Color.green}
                 borderWidth={1}
-                textColor={Color.white}
+                textColor={Color.green}
                 onPress={onClose}
                 width={width * 0.3}
                 height={height * 0.055}
@@ -96,7 +96,7 @@ const CustomAlertModal = (props) => {
                 fontSize={moderateScale(16, 0.3)}
                 borderRadius={moderateScale(30, 0.3)}
                 // textTransform={'capitalize'}
-                isGradient={true}
+                // isGradient={true}
                 marginTop={moderateScale(12, 0.3)}
               />
             </View>
@@ -111,7 +111,7 @@ const CustomAlertModal = (props) => {
 
 const styles = ScaledSheet.create({
   modalUpperView: {
-    backgroundColor: Color.themePurpleLevel4,
+    backgroundColor: Color.green,
     width: width * 0.8,
     minHeight: height * 0.14,
     maxHeight: height * 0.18,

@@ -7937,6 +7937,11 @@ react-native-multiple-select@^0.5.9:
   dependencies:
     prop-types "^15.7.2"
 
+react-native-pager-view@*, react-native-pager-view@^6.1.2:
+  version "6.1.2"
+  resolved "https://registry.npmjs.org/react-native-pager-view/-/react-native-pager-view-6.1.2.tgz"
+  integrity sha512-qs2KSFc+7N7B+UZ6SG2sTvCkppagm5fVyRclv1KFKc7lDtrhXLzN59tXJw575LDP/dRJoXsNwqUAhZJdws6ABQ==
+
 react-native-pie@^1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/react-native-pie/-/react-native-pie-1.1.2.tgz"
@@ -8038,6 +8043,13 @@ react-native-swiper@^1.6.0:
   integrity sha512-OnkTTZi+9uZUgy0uz1I9oYDhCU3z36lZn+LFsk9FXPRelxb/KeABzvPs3r3SrHWy1aA67KGtSFj0xNK2QD0NJQ==
   dependencies:
     prop-types "^15.5.10"
+
+react-native-tab-view@^3.3.3:
+  version "3.3.3"
+  resolved "https://registry.npmjs.org/react-native-tab-view/-/react-native-tab-view-3.3.3.tgz"
+  integrity sha512-hrxGu/Bj/GRXt+6ErqUFMAw2E82tjeTJ97nH1dZ2FSnLYOVnY9FDqju8TkQtT3GpJGL6Ur/ZkRT4eQfYwTZbtg==
+  dependencies:
+    use-latest-callback "^0.1.5"
 
 react-native-vector-icons@^4.5.0:
   version "4.6.0"

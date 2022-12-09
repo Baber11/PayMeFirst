@@ -11,12 +11,14 @@ import { useState } from 'react';
 import { Post } from '../Axios/AxiosInterceptorFunction';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserData } from '../Store/slices/common';
+import navigationService from '../navigationService';
 
-const Subscription = () => {
+const Subscription = (props) => {
   const dispatch = useDispatch()
   const user = useSelector(state => state.commonReducer.userData);
   const token = useSelector(state => state.authReducer.token);
-
+  const fromStores = props?.route?.params?.fromStores ;
+  console.log("🚀 ~ file: Subscription.js:20 ~ Subscription ~ fromStores", fromStores)
   
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,6 +37,7 @@ const Subscription = () => {
       if(response != undefined){
         console.log( 'here is the response ===>',response?.data);
         dispatch(setUserData(response?.data?.user_info))
+        fromStores && props.navigation.goBack()
       }
     }
   return (

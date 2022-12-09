@@ -31,24 +31,116 @@ import moment from 'moment';
 import {ExpenditureComponent} from '../Components/ExpenditureComponent';
 import {TouchableOpacity} from 'react-native';
 import {Linking} from 'react-native';
-import { Get } from '../Axios/AxiosInterceptorFunction';
-import { useEffect } from 'react';
-import { useIsFocused } from '@react-navigation/native';
+import {Get} from '../Axios/AxiosInterceptorFunction';
+import {useEffect} from 'react';
+import {useIsFocused} from '@react-navigation/native';
+import {SceneMap, TabView, TabBar} from 'react-native-tab-view';
+import CustomAlertModal from '../Components/CustomAlertModal';
+// import {TabView, SceneMap} from 'react-native-tab-view';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const Guide = ({valueFormatter, data}) => {
-const token = useSelector(state => state.authReducer.token);
-// console.log(token);
+  const token = useSelector(state => state.authReducer.token);
+  const user = useSelector(state => state.commonReducer.userData);
+  // console.log('🚀 ~ file: Guide.js:51 ~ Guide ~ user', user);
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
-
   const [selected, setSelected] = useState('Guide');
-const [guideData , setGuideData]=useState([]);
+  const [guideData, setGuideData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [alertModalVisible, setAlertModalVisible] = useState(false);
+  const [currentRoute, setCurrentRoute] = useState('');
+  console.log('🚀 ~ file: Guide.js:60 ~ Guide ~ currentRoute', currentRoute);
 
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    {key: 'guide', title: 'Guide'},
+    {key: 'stores', title: 'Stores'},
+  ]);
 
+  const FirstRoute = () => {
+    return (
+      <ScrollView
+        nestedScrollEnabled={true}
+        style={styles.subcontainer}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom: moderateScale(20, 0.3),
+        }}>
+        {isLoading ? (
+          <View
+            style={{
+              height: windowHeight * 0.6,
+              justifyContent: 'center',
+            }}>
+            <ActivityIndicator color={Color.green} size={'large'} />
+          </View>
+        ) : (
+          guideData.map((x, index) => {
+            return (
+              <>
+                <CustomText style={styles.Txt}>{x?.question}</CustomText>
+                <CustomText style={styles.txt4}>{x?.description}</CustomText>
+              </>
+            );
+          })
+        )}
+      </ScrollView>
+    );
+  };
+
+  const SecondRoute = () => {
+    return (
+      <FlatList
+        style={{marginTop: moderateScale(20, 0.3)}}
+        contentContainerStyle={{
+          alignItems: 'center',
+          paddingBottom: moderateScale(20, 0.3),
+        }}
+        data={dummyData}
+        renderItem={({item, index}) => {
+          return (
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                Linking.openURL(item?.link);
+              }}>
+              <ExpenditureComponent
+                image={item.image}
+                text1={item.title}
+                fromGuide={true}
+                index={index == dummyData.length - 1}
+                onPress={() => {
+                  Linking.openURL(item?.link);
+                }}
+              />
+            </TouchableOpacity>
+          );
+        }}
+      />
+    );
+  };
+
+  const renderScene = SceneMap({
+    guide: FirstRoute,
+    stores: SecondRoute,
+  });
+
+  const renderSceneCustom = ({route, position}) => {
+    if (position == 'stores' && user?.current_plan == 'basic') {
+      
+      setAlertModalVisible(true);
+    } else {
+      switch (route.key) {
+        case 'guide':
+          return <FirstRoute />;
+        case 'stores':
+          return <SecondRoute />;
+      }
+    }
+  };
 
   const getGuide = async () => {
     // console.log('here token =>' , token);
@@ -56,19 +148,54 @@ const [guideData , setGuideData]=useState([]);
     setIsLoading(true);
     const response = await Get(url);
     setIsLoading(false);
-    if(response != undefined){
-      console.log(response?.data?.data);
-      setGuideData(response?.data?.data)
+    if (response != undefined) {
+      // console.log(response?.data?.data);
+      setGuideData(response?.data?.data);
     }
-  }
+  };
+  const renderTabBar = props => {
+    const inputRange = props.navigationState.routes.map((x, i) => x);
+    setCurrentRoute(inputRange[index].key);
 
+    if (currentRoute == 'stores' && user?.current_plan == 'basic') {
+      return setAlertModalVisible(true);
+    }
+
+    return (
+      <TabBar
+        {...props}
+        inactiveColor={Color.veryLightGray}
+        indicatorStyle={{
+          backgroundColor: 'white',
+          height: moderateScale(3, 0.5),
+        }}
+        style={{backgroundColor: Color.green}}
+        labelStyle={{
+          fontWeight: 'bold',
+        }}
+        onTabPress={({route, preventDefault}) => {
+          if (route.key === 'stores' && user?.current_plan == 'basic') {
+            preventDefault();
+            setAlertModalVisible(true);
+
+            // Do something else
+          }
+        }}
+      
+      />
+    );
+  };
 
   useEffect(() => {
     getGuide();
-  }, [isFocused])
+    return ()=>{
+      setCurrentRoute('guide'),
+      setIndex(0)
+    }
+  }, []);
+
+ 
   
-
-
 
   const dummyData = [
     {
@@ -96,6 +223,32 @@ const [guideData , setGuideData]=useState([]);
       title: 'Ali Express',
       link: 'https://www.aliexpress.com/',
     },
+    {
+      image: require('../Assets/Images/walmart.png'),
+      title: 'Wallmart',
+      link: 'https://www.walmart.com/',
+    },
+    {
+      image: {uri : 'https://www.kindpng.com/picc/m/286-2864990_newegg-marketplace-hd-png-download.png'},
+      title: 'NewEgg',
+      link: 'https://www.newEgg.com/',
+    },
+    {
+      image: require('../Assets/Images/flipcart.png'),
+      title: 'Flipcart',
+      link: 'https://www.flipkart.com/',
+    },
+    {
+      image: require('../Assets/Images/target.png'),
+      title: 'target',
+      link: 'https://www.target.com/',
+    },
+    {
+      image: require('../Assets/Images/etsy.png'),
+      title: 'etsy',
+      link: 'https://www.etsy.com/',
+    },
+    
   ];
 
   return (
@@ -107,106 +260,46 @@ const [guideData , setGuideData]=useState([]);
       headerType={2}
       // showList={false}
       headerColor={'#F6F6F6'}
-      showList={true}
-      >
-      <View style={styles.sectionContainer}>
-        <View style={[styles.row]}>
-          <CustomText
-            onPress={() => {
-              setSelected('Guide');
-            }}
-            style={[
-              styles.textWithContainer,
-              {fontSize: moderateScale(20, 0.3)},
-              selected == 'Guide' && {
-                backgroundColor: Color.green,
-                color: 'white',
-              },
-            ]}>
-            {' '}
-            Guide
-          </CustomText>
-          <CustomText
-            onPress={() => {
-              setSelected('Stores');
-            }}
-            style={[
-              styles.textWithContainer,
-              {fontSize: moderateScale(20, 0.3)},
-              selected == 'Stores' && {
-                backgroundColor: Color.green,
-                color: 'white',
-              },
-            ]}>
-            {' '}
-            Stores
-          </CustomText>
-        </View>
+      showList={true}>
+      <TabView
+        // lazy
+        navigationState={{index, routes}}
+        renderScene={renderSceneCustom}
+        onIndexChange={setIndex}
+        initialLayout={{width: windowWidth}}
+        style={[
+          styles.subcontainer,
+          {
+            borderTopLeftRadius: moderateScale(10, 0.3),
+            borderTopRightRadius: moderateScale(10, 0.3),
+            // marginTop: moderateScale(10, 0.3),
+          },
+        ]}
+        renderTabBar={renderTabBar}
+      />
 
-        <ScrollView
-          nestedScrollEnabled={true}
-          style={styles.subcontainer}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingBottom: moderateScale(200, 0.3),
-          }}>
-          {selected == 'Guide' && (
-            isLoading ?
-            <View style={{
-              height : windowHeight * 0.6,
-              justifyContent : 'center'
-            }}>
-              <ActivityIndicator
-            color={Color.green}
-            size={'large'}
-              />
-            </View> :
-           
-            guideData.map((x, index)=>{
-              return(
-                <>
-              
-              <CustomText style={styles.Txt}>{x?.question}</CustomText>
-              <CustomText style={styles.txt4}>
-                {
-                  x?.description
-  }
-              </CustomText>
-
-</>
-              )
-            }) 
-            
-          )}
-
-          {selected == 'Stores' && (
-            <FlatList
-              style={{marginTop: moderateScale(20, 0.3)}}
-              contentContainerStyle={{alignItems: 'center'}}
-              data={dummyData}
-              renderItem={({item, index}) => {
-                return (
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      Linking.openURL(item?.link);
-                    }}>
-                    <ExpenditureComponent
-                      image={item.image}
-                      text1={item.title}
-                      fromGuide={true}
-                      index={index == dummyData.length - 1}
-                      onPress={() => {
-                        Linking.openURL(item?.link);
-                      }}
-                    />
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          )}
-        </ScrollView>
-      </View>
+      <CustomAlertModal
+        isModalVisible={alertModalVisible}
+        onClose={() => {
+          if (currentRoute == 'stores' && user?.current_plan == 'basic') {
+            setCurrentRoute('guide')
+            setIndex(0);
+          }
+          setAlertModalVisible(false);
+        }}
+        onOKPress={() => {
+          setCurrentRoute('guide')
+          setIndex(0);
+          setAlertModalVisible(false);
+          navigationService.navigate('Subscription',{fromStores : true});
+        }}
+        title={'Hold On !!'}
+        message={
+          'You are on Basic plan , please upgrade it to avail this feature'
+        }
+        iconType={2}
+        areYouSureAlert
+      />
     </ScreenBoiler>
   );
 };
@@ -250,9 +343,7 @@ const styles = ScaledSheet.create({
     // justifyContent: 'center',
     backgroundColor: Color.white,
     // backgroundColor: 'red',
-    borderTopLeftRadius: moderateScale(25, 0.3),
-    borderTopRightRadius: moderateScale(25, 0.3),
-    marginTop: moderateScale(30, 0.3),
+
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -323,101 +414,97 @@ const styles = ScaledSheet.create({
 });
 
 export default Guide;
-const Tooltip = ({x, y, textX, textY, stroke, pointStroke, position}) => {
-  let tipW = 50,
-    tipH = 30,
-    tipX = 5,
-    tipY = -9,
-    tipTxtX = 12,
-    tipTxtY = 6;
-  const posY = y;
-  const posX = x;
 
-  if (posX > windowWidth - tipW) {
-    tipX = -(tipX + tipW);
-    tipTxtX = tipTxtX - tipW - 6;
-  }
+{
+  /* <View style={styles.sectionContainer}>
+<View style={[styles.row]}>
+  <CustomText
+    onPress={() => {
+      setSelected('Guide');
+    }}
+    style={[
+      styles.textWithContainer,
+      {fontSize: moderateScale(20, 0.3)},
+      selected == 'Guide' && {
+        backgroundColor: Color.green,
+        color: 'white',
+      },
+    ]}>
+    {' '}
+    Guide
+  </CustomText>
+  <CustomText
+    onPress={() => {
+      setSelected('Stores');
+    }}
+    style={[
+      styles.textWithContainer,
+      {fontSize: moderateScale(20, 0.3)},
+      selected == 'Stores' && {
+        backgroundColor: Color.green,
+        color: 'white',
+      },
+    ]}>
+    {' '}
+    Stores
+  </CustomText>
+</View>
 
-  const boxPosX = position === 'left' ? posX - tipW - 10 : posX;
+<ScrollView
+  nestedScrollEnabled={true}
+  style={styles.subcontainer}
+  showsVerticalScrollIndicator={false}
+  contentContainerStyle={{
+    paddingBottom: moderateScale(200, 0.3),
+  }}>
+  {selected == 'Guide' &&
+    (isLoading ? (
+      <View
+        style={{
+          height: windowHeight * 0.6,
+          justifyContent: 'center',
+        }}>
+        <ActivityIndicator color={Color.green} size={'large'} />
+      </View>
+    ) : (
+      guideData.map((x, index) => {
+        return (
+          <>
+            <CustomText style={styles.Txt}>{x?.question}</CustomText>
+            <CustomText style={styles.txt4}>
+              {x?.description}
+            </CustomText>
+          </>
+        );
+      })
+    ))}
 
-  return (
-    <G>
-      <Circle
-        cx={posX}
-        cy={posY}
-        r={4}
-        stroke={pointStroke}
-        strokeWidth={2}
-        fill={'orange'}
-      />
-      <G x={boxPosX < 40 ? 40 : boxPosX} y={posY}>
-        {/* <Rect
-          x={tipX + 1}
-          y={tipY - 1}
-          width={tipW - 2}
-          height={tipH - 2}
-          fill={'rgba(255, 255, 255, 0.9)'}
-          rx={2}
-          ry={2}
-        /> */}
-        <Rect
-          x={tipX}
-          y={tipY}
-          width={tipW}
-          height={tipH}
-          rx={2}
-          ry={2}
-          fill={'white'}
-          stroke={stroke}
-        />
-
-        <Text
-          fill={Color.green}
-          x={tipTxtX}
-          y={tipTxtY + 5}
-          fontSize="12"
-          textAnchor="start">
-          ${textY}
-        </Text>
-      </G>
-    </G>
-  );
-};
-
-Tooltip.propTypes = {
-  x: PropTypes.func.isRequired,
-  y: PropTypes.func.isRequired,
-  height: PropTypes.number,
-  stroke: PropTypes.string,
-  pointStroke: PropTypes.string,
-  textX: PropTypes.string,
-  textY: PropTypes.string,
-  position: PropTypes.string,
-};
-
-Tooltip.defaultProps = {
-  position: 'rigth',
-};
-
-const tooltipDecorators = (state, data, valueFormatter) => () => {
-  if (state === null) {
-    return null;
-  }
-
-  const {index, value, x, y} = state;
-  const textX = data?.labels[index];
-  console.log(data?.labels);
-  const position = data?.labels.length === index + 1 ? 'left' : 'right';
-
-  return (
-    <Tooltip
-      textX={String(textX)}
-      textY={String(value)}
-      x={x}
-      y={y}
-      stroke={Color.white}
-      pointStroke={'orange'}
-      position={position}
+  {selected == 'Stores' && (
+    <FlatList
+      style={{marginTop: moderateScale(20, 0.3)}}
+      contentContainerStyle={{alignItems: 'center'}}
+      data={dummyData}
+      renderItem={({item, index}) => {
+        return (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              Linking.openURL(item?.link);
+            }}>
+            <ExpenditureComponent
+              image={item.image}
+              text1={item.title}
+              fromGuide={true}
+              index={index == dummyData.length - 1}
+              onPress={() => {
+                Linking.openURL(item?.link);
+              }}
+            />
+          </TouchableOpacity>
+        );
+      }}
     />
-  );
-};
+  )}
+</ScrollView>
+    </View> */
+}
