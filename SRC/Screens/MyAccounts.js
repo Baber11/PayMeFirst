@@ -175,7 +175,7 @@ const MyAccounts = props => {
           backgroundColor={'#F8F8F8'}
           marginTop={moderateScale(30, 0.3)}
           placeholderColor={Color.black}
-          color
+          color={Color.themeDarkGray}
         />
         <TextInputWithTitle
           iconName={'user'}
@@ -193,7 +193,7 @@ const MyAccounts = props => {
           backgroundColor={'#F8F8F8'}
           marginTop={moderateScale(15, 0.3)}
           placeholderColor={Color.black}
-          color
+          color={Color.themeDarkGray}
         />
         <TextInputWithTitle
           iconName={'phone'}
@@ -211,7 +211,7 @@ const MyAccounts = props => {
           backgroundColor={'#F8F8F8'}
           marginTop={moderateScale(15, 0.3)}
           placeholderColor={Color.black}
-          color
+       color={Color.themeDarkGray}
           disable={true}
         />
         <TextInputWithTitle
@@ -231,7 +231,7 @@ const MyAccounts = props => {
           backgroundColor={'#F8F8F8'}
           marginTop={moderateScale(15, 0.3)}
           placeholderColor={Color.black}
-          color
+       color={Color.themeDarkGray}
           disable
         />
         <TextInputWithTitle
@@ -251,7 +251,7 @@ const MyAccounts = props => {
           backgroundColor={'#F8F8F8'}
           marginTop={moderateScale(15, 0.3)}
           placeholderColor={Color.black}
-          color
+       color={Color.themeDarkGray}
         
         />
         {/* <TextInputWithTitle
@@ -274,7 +274,7 @@ const MyAccounts = props => {
           }}
           borderRadius={moderateScale(10, 0.3)}
           placeholderColor={Color.black}
-          color
+       color={Color.themeDarkGray}
         /> */}
         <CustomButton
           // textTransform={"capitalize"}
@@ -301,6 +301,7 @@ const MyAccounts = props => {
         show={showModal}
         setShow={setShowModal}
         setFileObject={setImageObject}
+        crop={true}
       />
       <ImageView
   images={imageArray}

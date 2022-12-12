@@ -22,6 +22,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomText from '../Components/CustomText';
 import {windowHeight, windowWidth} from '../Utillity/utils';
 import Color from '../Assets/Utilities/Color';
+import ImagePicker from 'react-native-image-crop-picker';
 
 const requestCameraPermission = async () => {
   try {
@@ -43,7 +44,7 @@ const requestCameraPermission = async () => {
 };
 
 const ImagePickerModal = props => {
-  let {show, setShow, setFileObject, setMultiImages} = props;
+  let {show, setShow, setFileObject, setMultiImages, crop} = props;
 
   const openGallery = () => {
     let options = {
@@ -53,33 +54,44 @@ const ImagePickerModal = props => {
       quailty: 0.9,
       saveToPhotos: true,
     };
+    // {
+    //   crop
+    //     ? ImagePicker.openPicker({
+    //         width: 300,
+    //         height: 400,
+    //         cropping: true,
+    //       }).then(image => {
+    //         console.log( 'dasdas ========>',image);
+    //       })
+    //     : 
     launchImageLibrary(options, response => {
-      if (Platform.OS === 'ios') {
-        setShow(false);
-      }
-      if (response.didCancel) {
-      } else if (response.error) {
-      } else if (response.customButton) {
-        alert(response.customButton);
-      } else {
-        setFileObject &&
-          setFileObject({
-            uri: response?.assets[0]?.uri,
-            type: response?.assets[0]?.type,
-            name: response?.assets[0]?.fileName,
-          });
+            if (Platform.OS === 'ios') {
+              setShow(false);
+            }
+            if (response.didCancel) {
+            } else if (response.error) {
+            } else if (response.customButton) {
+              alert(response.customButton);
+            } else {
+              setFileObject &&
+                setFileObject({
+                  uri: response?.assets[0]?.uri,
+                  type: response?.assets[0]?.type,
+                  name: response?.assets[0]?.fileName,
+                });
 
-        setMultiImages &&
-          setMultiImages(x => [
-            ...x,
-            {
-              uri: response?.assets[0]?.uri,
-              type: response?.assets[0]?.type,
-              name: response?.assets[0]?.fileName,
-            },
-          ]);
-      }
-    });
+              setMultiImages &&
+                setMultiImages(x => [
+                  ...x,
+                  {
+                    uri: response?.assets[0]?.uri,
+                    type: response?.assets[0]?.type,
+                    name: response?.assets[0]?.fileName,
+                  },
+                ]);
+            }
+          });
+    // }
   };
 
   const openCamera = async () => {
@@ -137,8 +149,7 @@ const ImagePickerModal = props => {
       }}
       onBackdropPress={() => {
         setShow(false);
-      }}
-    >
+      }}>
       <View
         style={{
           backgroundColor: Color.white,
@@ -147,8 +158,7 @@ const ImagePickerModal = props => {
           paddingHorizontal: moderateScale(10, 0.3),
           paddingVertical: moderateScale(10, 0.3),
           borderRadius: Dimensions.get('window').width * 0.02,
-        }}
-      >
+        }}>
         <CustomText style={styles.modalHead}>Upload picture</CustomText>
         <View style={styles.modalContentContianer}>
           <TouchableOpacity
@@ -158,8 +168,7 @@ const ImagePickerModal = props => {
               }
               openGallery();
             }}
-            style={styles.modalContentBtn}
-          >
+            style={styles.modalContentBtn}>
             <Icon
               name={'folder-images'}
               as={Entypo}
@@ -177,8 +186,7 @@ const ImagePickerModal = props => {
               }
               openCamera();
             }}
-            style={styles.modalContentBtn}
-          >
+            style={styles.modalContentBtn}>
             <Icon
               name={'camera'}
               as={FontAwesome5}
@@ -192,8 +200,7 @@ const ImagePickerModal = props => {
         </View>
         <TouchableOpacity
           onPress={() => setShow(false)}
-          style={styles.modalCancelBtn}
-        >
+          style={styles.modalCancelBtn}>
           <CustomText style={styles.modalBtnText}>Cancel</CustomText>
         </TouchableOpacity>
       </View>

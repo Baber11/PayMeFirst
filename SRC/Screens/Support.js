@@ -99,16 +99,19 @@ const Support = () => {
         source={require('../Assets/Images/chatBackground.png')}
         // imageStyle={{flex: 1}}
         style={{
-          flex: 1,
+          height : windowHeight,
+          // flex: 1,
           backgroundColor: '#E8E8E9',
           marginTop: moderateScale(-20, 0.3),
           zIndex: -1,
+          // backgroundColor : 'red'
         }}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            paddingBottom: moderateScale(50, 0.3),
+            paddingBottom: moderateScale(20, 0.3),
+            // backgroundColor : 'green'
           }}
         >
           <CustomText style={styles.Txt1} isBold>
@@ -118,7 +121,7 @@ const Support = () => {
             style={[styles?.ContactInfoContainer]}
             activeOpacity={0.85}
             onPress={() => {
-              Linking.openURL(`tel:${supportData?.contact}`);
+              Linking.openURL(`tel:${supportData?.phone}`);
             }}
           >
             <FontAwesome
@@ -139,7 +142,7 @@ const Support = () => {
             style={[styles?.ContactInfoContainer]}
             activeOpacity={0.85}
             onPress={() => {
-              Linking.openURL(`mailto: ${supportData?.email}`);
+              Linking.openURL(`mailto: ${supportData?.official_email}`);
             }}
           >
             <Entypo

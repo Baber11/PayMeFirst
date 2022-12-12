@@ -20,7 +20,7 @@ import CustomText from '../Components/CustomText';
 import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import CustomButton from '../Components/CustomButton';
-import {setIsVerified, setUserToken} from '../Store/slices/auth';
+import {setIsVerified, setUserLogout, setUserToken} from '../Store/slices/auth';
 import {validateEmail} from '../Config';
 import {ActivityIndicator} from 'react-native';
 import {Post} from '../Axios/AxiosInterceptorFunction';
@@ -216,6 +216,11 @@ const AddCard = () => {
             borderWidth={2}
             borderRadius={moderateScale(30, 0.3)}
           />
+          <CustomText
+           onPress={() => {
+            dispatch(setUserLogout());
+          }}
+          >Logout</CustomText>
         </CardContainer>
       </ScrollView>
     </ScreenBoiler>

@@ -33,6 +33,7 @@ export const ExpenditureComponent = ({
   fromGuide,
   index,
   onPress,
+  type ,
 }) => {
   return (
     <View
@@ -79,10 +80,11 @@ export const ExpenditureComponent = ({
         {!fromGuide && <CustomText style={styles.txt3}>{text2}</CustomText>}
       </View>
       {!fromGuide && (
+          
         <Icon
-          name={'caretdown'}
+          name={type == 'credit' ? 'caretdown' : 'caretup'}
           as={AntDesign}
-          color={'#F76666'}
+          color={type == 'credit' ? '#F76666' : Color.lightGreen}
           size={moderateScale(20, 0.3)}
         />
       )}

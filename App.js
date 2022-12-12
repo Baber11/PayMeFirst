@@ -28,8 +28,25 @@ import {NavigationContainer} from '@react-navigation/native';
 import LoginScreen from './SRC/Screens/LoginScreen';
 
 const App = () => {
+  const [publishableKey, setPublishableKey] = useState('');
+
+  const fetchPublishableKey = async () => {
+    const key = await fetchKey(); // fetch key from your server here
+    setPublishableKey(key);
+  };
+
+  // useEffect(() => {
+  //   fetchPublishableKey();
+  // }, []);
+
+
   console.reportErrorsAsExceptions = false;
   return (
+    <StripeProvider
+    publishableKey={"pk_test_qblFNYngBkEdjEZ16jxxoWSM"}
+    // merchantIdentifier="merchant.identifier" // required for Apple Pay
+    // urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+  >
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <NativeBaseProvider>
@@ -37,6 +54,7 @@ const App = () => {
         </NativeBaseProvider>
       </PersistGate>
     </Provider>
+    </StripeProvider>
   );
 };
 

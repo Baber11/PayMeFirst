@@ -13,21 +13,11 @@ import PropTypes from 'prop-types';
 import {ScaledSheet, moderateScale} from 'react-native-size-matters';
 import {Circle, G, Rect, Text} from 'react-native-svg';
 import {useDispatch, useSelector} from 'react-redux';
-
-import navigationService from '../navigationService';
-
 import Color from '../Assets/Utilities/Color';
 import CustomText from '../Components/CustomText';
-
-import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
+import { windowHeight, windowWidth} from '../Utillity/utils';
 import ScreenBoiler from '../Components/ScreenBoiler';
-import CustomButton from '../Components/CustomButton';
-import {validateEmail} from '../Config';
-import {ActivityIndicator} from 'react-native';
-import {Post} from '../Axios/AxiosInterceptorFunction';
-import {setUserData} from '../Store/slices/common';
 import {Icon, ScrollView} from 'native-base';
-import CardContainer from '../Components/CardContainer';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {LineChart} from 'react-native-chart-kit';
 import moment from 'moment';
@@ -283,24 +273,31 @@ const HomeScreen = ({valueFormatter, data}) => {
                   title: 'shopping',
                   date: moment().format('ll'),
                   amount: '$100',
+                  type :'credit',
+                },
+                {
+                  image: require('../Assets/Images/dummy.png'),
+                  title: 'gift',
+                  date: moment(new Date('2022-11-22')).format('ll'),
+                  amount: '$80',
+                  type :'deposit',
+
                 },
                 {
                   image: require('../Assets/Images/dummy.png'),
                   title: 'shopping',
                   date: moment().format('ll'),
                   amount: '$100',
+                  type :'credit',
+
                 },
                 {
                   image: require('../Assets/Images/dummy.png'),
                   title: 'shopping',
                   date: moment().format('ll'),
                   amount: '$100',
-                },
-                {
-                  image: require('../Assets/Images/dummy.png'),
-                  title: 'shopping',
-                  date: moment().format('ll'),
-                  amount: '$100',
+                  type :'deposit',
+
                 },
               ]}
               renderItem={({item, index}) => {
@@ -310,6 +307,7 @@ const HomeScreen = ({valueFormatter, data}) => {
                     image={item.image}
                     text1={item.title}
                     text2={item.date}
+                    type={item.type}
                   />
                 );
               }}
@@ -434,9 +432,10 @@ const styles = ScaledSheet.create({
   txt4: {
     color: Color.black,
     fontSize: moderateScale(14, 0.6),
-    // fontWeight: 'bold',
+    fontWeight: '700',
     // borderBottomWidth: 1,
-    // borderColor: Color.white,
+    // borderColor: Color.green,
+    // borderStyle : 'dashed',
   },
   txt5: {
     color: Color.black,

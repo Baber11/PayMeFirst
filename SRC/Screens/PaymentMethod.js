@@ -14,7 +14,7 @@ import {
 import Color from '../Assets/Utilities/Color';
 import {useDispatch, useSelector} from 'react-redux';
 import {Get, Patch, Post} from '../Axios/AxiosInterceptorFunction';
-import {useStripe} from '@stripe/stripe-react-native';
+import {CardField, createPaymentMethod, useStripe} from '@stripe/stripe-react-native';
 import {Icon} from 'native-base';
 import {moderateScale, ScaledSheet} from 'react-native-size-matters';
 import LinearGradient from 'react-native-linear-gradient';
@@ -26,13 +26,35 @@ import moment from 'moment';
 import {userData} from '../Store/Actions/authAction';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import {windowHeight, windowWidth} from '../Utillity/utils';
+import Modal from 'react-native-modal';
+import CustomButton from '../Components/CustomButton';
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 
 const PaymentMethod = props => {
   const dispatch = useDispatch();
+  const [isModalVisible , setIsModalVisible] = useState(false);
+  const [isLoading , setIsLoading] = useState(false);
   const isDelete = true;
+
+
+const addCard = async ()=>{
+  setIsLoading(true);
+  const responseData = await createPaymentMethod({type: 'Card' ,
+  billing_details : {
+    name : 'Baber ali',
+    phone : '03112048588',
+    email : 'syedbaber115@gmail.com'
+  }
+});
+  setIsLoading(false);
+  if(responseData != undefined){
+    console.log( 'dfdsfdsfdf data ========>  ',JSON.stringify(responseData?.paymentMethod,null,2));
+  }
+
+}
+
   //   const {
   //     isDelete,
   //     eventId,
@@ -338,14 +360,12 @@ const PaymentMethod = props => {
       showBack={true}
       headerType={1}
       title={'Payment Method'}
-      statusBarContentStyle={'dark-content'}
-    >
+      statusBarContentStyle={'dark-content'}>
       <View style={{width: windowWidth, height: windowHeight * 0.88}}>
         <ImageBackground
           source={require('../Assets/Images/master.png')}
           resizeMode="contain"
-          style={[styles?.cardContainer]}
-        >
+          style={[styles?.cardContainer]}>
           {/* <CustomText style={[styles.cardNumberText]}>{'1234'}</CustomText>
         <CustomText style={[styles.cardExpireText]}>
           {'02'}/{'26'}
@@ -375,14 +395,12 @@ const PaymentMethod = props => {
                 right: moderateScale(-25, 0.3),
                 top: '40%',
               },
-            ]}
-          >
+            ]}>
             <LinearGradient
               style={[styles?.cardIconContainer, styles?.addBtnShadow]}
               start={{x: 0, y: 0}}
               end={{x: 1, y: 0}}
-              colors={[Color.lightGreen, Color.green]}
-            >
+              colors={[Color.lightGreen, Color.green]}>
               {/* {cardloading && item?.id == selectedCardId ? (
                 <ActivityIndicator size="small" color={Color.white} />
               ) : ( */}
@@ -402,6 +420,7 @@ const PaymentMethod = props => {
             alert(
               'AddCard Modal Will open after connecting to stripe but only if above card is detached ',
             );
+            // setIsModalVisible(true)
             // setShowCardModal(true);
           }}
           style={[
@@ -412,14 +431,12 @@ const PaymentMethod = props => {
               bottom: moderateScale(50, 0.3),
               alignSelf: 'center',
             },
-          ]}
-        >
+          ]}>
           <LinearGradient
             style={[styles.addBtnContainer, styles?.addBtnShadow]}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
-            colors={[Color.lightGreen, Color.green]}
-          >
+            colors={[Color.lightGreen, Color.green]}>
             <Icon
               as={AntDesign}
               name="plus"
@@ -429,6 +446,61 @@ const PaymentMethod = props => {
           </LinearGradient>
         </TouchableOpacity>
       </View>
+
+      <Modal
+        hasBackdrop={true}
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        isVisible={isModalVisible}
+        onBackdropPress={()=>{
+          setIsModalVisible(false)
+        }}
+        >
+          <View style={{width : windowWidth , height : windowHeight * 0.5 , backgroundColor : 'red'}}>
+          <CardField
+
+      postalCodeEnabled={false}
+      placeholders={{
+        number: '4242 4242 4242 4242',
+
+      }}
+      
+      cardStyle={{
+        backgroundColor: '#FFFFFF',
+        textColor: '#000000',
+      }}
+      style={{
+        width: '100%',
+        height: 50,
+        marginVertical: 30,
+      }}
+      onCardChange={(cardDetails) => {
+        console.log('cardDetails', cardDetails);
+      }}
+      onFocus={(focusedField) => {
+        console.log('focusField', focusedField);
+      }}
+    />
+      <CustomButton
+            bgColor={Color.green}
+            borderColor={'white'}
+            borderWidth={1}
+            textColor={Color.white}
+            onPress={addCard}
+            width={width * 0.45}
+            height={height * 0.055}
+            text={"Okay"}
+            fontSize={moderateScale(16, 0.3)}
+            borderRadius={moderateScale(30, 0.3)}
+            // textTransform={'capitalize'}
+            // isGradient={true}
+            marginTop={moderateScale(12, 0.3)}
+          />
+
+          </View>
+        </Modal>
     </ScreenBoiler>
     // <>
     //   <CustomStatusBar
