@@ -32,8 +32,6 @@ import { profilePicUrl } from '../Config';
 const Profile = () => {
   const dispatch = useDispatch();
   const user = useSelector((state)=>state.commonReducer.userData);
-  // console.log("🚀 ~ file: Profile.js:34 ~ Profile ~ user", user?.photo , `${profilePicUrl}${user?.photo.split('uploads')[1]}`)
-  // console.log(user);
   const [isVisible , setIsVisible] = useState(false);
 
   return (
@@ -302,14 +300,13 @@ const ProfileContainer = ({
     <TouchableOpacity
       activeOpacity={0.9}
       style={styles.container}
-      onPress={onPress}
-    >
+      onPress={onPress}>
       <Icon
         name={icon1}
         as={icon1Type}
         color={Color.green}
         size={moderateScale(25, 0.3)}
-        style={{width: 40}}
+        style={{width: moderateScale(40,0.3)}}
       />
       <CustomText
         style={{

@@ -14,7 +14,7 @@ import {
 import Color from '../Assets/Utilities/Color';
 import {useDispatch, useSelector} from 'react-redux';
 import {Get, Patch, Post} from '../Axios/AxiosInterceptorFunction';
-import {CardField, createPaymentMethod, useStripe} from '@stripe/stripe-react-native';
+import {CardField, createPaymentMethod, useStripe , BillingDetails} from '@stripe/stripe-react-native';
 import {Icon} from 'native-base';
 import {moderateScale, ScaledSheet} from 'react-native-size-matters';
 import LinearGradient from 'react-native-linear-gradient';
@@ -40,13 +40,24 @@ const PaymentMethod = props => {
 
 
 const addCard = async ()=>{
+  const billingDetails: BillingDetails = {
+    email: 'syedbaber115@gmail.com',
+    name : 'Syed Baber Ali',
+    phone : '03112048588',
+    address : {
+      city : 'karachi',
+      country : 'korea',
+      state : 'sindh',
+      postalCode : '766543',
+  
+    }
+  };
   setIsLoading(true);
   const responseData = await createPaymentMethod({type: 'Card' ,
-  billing_details : {
-    name : 'Baber ali',
-    phone : '03112048588',
-    email : 'syedbaber115@gmail.com'
+  paymentMethodData : {
+    billingDetails,
   }
+  
 });
   setIsLoading(false);
   if(responseData != undefined){
@@ -417,10 +428,10 @@ const addCard = async ()=>{
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => {
-            alert(
-              'AddCard Modal Will open after connecting to stripe but only if above card is detached ',
-            );
-            // setIsModalVisible(true)
+            // alert(
+            //   'AddCard Modal Will open after connecting to stripe but only if above card is detached ',
+            // );
+            setIsModalVisible(true)
             // setShowCardModal(true);
           }}
           style={[
