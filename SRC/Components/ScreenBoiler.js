@@ -24,7 +24,8 @@ const ScreenBoiler = props => {
     close,
     navigateTO,
     headerType,
-    showList
+    showList,
+    Notify
   } = props;
 
   return (
@@ -48,6 +49,7 @@ const ScreenBoiler = props => {
           navigateTO={navigateTO}
           headerType={headerType}
           showList={showList}
+          Notify={Notify}
         />
       )}
       {children}

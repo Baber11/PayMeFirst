@@ -30,11 +30,12 @@ import PaymentMethod from './Screens/PaymentMethod';
 import Support from './Screens/Support';
 import MyAccounts from './Screens/MyAccounts';
 import Subscription from './Screens/Subscription';
+import NotificationScreen from './Screens/NotificationScreen';
 
 const AppNavigator = () => {
   // const isLogin = false;
   const isGoalCreated = useSelector(state => state.authReducer.isGoalCreated);
-  
+
   const walkThrough = useSelector(state => state.authReducer.userWalkThrough);
   const isVerified = useSelector(state => state.authReducer.isVerified);
   const token = useSelector(state => state.authReducer.token);
@@ -42,30 +43,28 @@ const AppNavigator = () => {
   // console.log('isVerified', isGoalCreated);
   console.log(
     '🚀 ~ file: appNavigation.js ~ line 32 ~ AppNavigator ~ walkThrough',
-    token != null && isGoalCreated == true , isGoalCreated
+    token != null && isGoalCreated == true,
+    isGoalCreated,
   );
 
   const RootNav = createNativeStackNavigator();
   const RootNavLogged = createNativeStackNavigator();
-
-
 
   const AppNavigatorContainer = () => {
     const firstScreen =
       walkThrough == false
         ? 'Walkthrough'
         : token != null && isGoalCreated == false
-        ? 'AddCard' 
+        ? 'AddCard'
         : token != null && isGoalCreated == true
         ? 'TabNavigation'
         : 'LoginScreen';
-    
+
     return (
       <NavigationContainer ref={navigationService.navigationRef}>
         <RootNav.Navigator
           initialRouteName={firstScreen}
-          screenOptions={{headerShown: false}}
-        >
+          screenOptions={{headerShown: false}}>
           <RootNav.Screen name="Walkthrough" component={Walkthrough} />
           <RootNav.Screen name="LoginScreen" component={LoginScreen} />
           <RootNav.Screen name="EnterPhone" component={EnterPhone} />
@@ -81,6 +80,8 @@ const AppNavigator = () => {
           <RootNav.Screen name="Support" component={Support} />
           <RootNav.Screen name="MyAccounts" component={MyAccounts} />
           <RootNav.Screen name="Subscription" component={Subscription} />
+          <RootNav.Screen name="NotificationScreen" component={NotificationScreen} />
+
 
           <RootNav.Screen
             name="FinancialBreakDown"
@@ -134,8 +135,7 @@ export const TabNavigation = () => {
           );
         },
         tabBarShowLabel: false,
-      })}
-    >
+      })}>
       <Tabs.Screen name={'HomeScreen'} component={HomeScreen} />
       <Tabs.Screen name={'Guide'} component={Guide} />
       <Tabs.Screen name={'Wallet'} component={Wallet} />

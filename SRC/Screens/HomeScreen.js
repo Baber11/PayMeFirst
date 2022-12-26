@@ -118,7 +118,9 @@ const HomeScreen = ({valueFormatter, data}) => {
       statusBarContentStyle={'dark-content'}
       headerType={2}
       showList={true}
-      headerColor={'#F6F6F6'}>
+      headerColor={'#F6F6F6'}
+      Notify
+      >
       <View
         // showsVerticalScrollIndicator={false}
         style={styles.sectionContainer}>

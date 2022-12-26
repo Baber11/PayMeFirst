@@ -26,6 +26,7 @@ import AppNavigator, {DrawerRoot} from './SRC/appNavigation';
 
 import {NavigationContainer} from '@react-navigation/native';
 import LoginScreen from './SRC/Screens/LoginScreen';
+import NetworkErrorAlert from './SRC/Components/NetworkErrorAlert';
 
 const App = () => {
   const [publishableKey, setPublishableKey] = useState('');
@@ -120,7 +121,7 @@ const MainContainer = () => {
       await requestWritePermission();
       await requestLocationPermission();
     }
-    console.log('hererererer');
+    // console.log('hererererer');
     //  messaging()
     //    .getToken()
     //    .then((_token) => {

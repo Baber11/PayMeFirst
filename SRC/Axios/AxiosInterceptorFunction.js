@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Alert } from "react-native";
+import NetworkErrorAlert from "../Components/NetworkErrorAlert";
 import { baseUrl } from "../Config";
 
 /**
@@ -43,6 +44,7 @@ let Get = async (route, token, showAlert = true) => {
           ],
           { cancelable: false }
         );
+        // <NetworkErrorAlert/>
       } else {
         Alert.alert(
           "Submission Errors",
@@ -78,10 +80,12 @@ let Post = async (route, data, headers, showAlert = true) => {
   try {
     return await axios.post(apiUrl, data, headers);
   } catch (error) {
-    console.log("error", error.response?.data);
+    console.log("error", error.message);
     let networkError = error.message === "Network Error";
     if (showAlert == true) {
       if (networkError === true) {
+        console.log('sadasdsad');
+
         Alert.alert(
           error.message,
           "Please Check Your Network Connection",
@@ -95,6 +99,8 @@ let Post = async (route, data, headers, showAlert = true) => {
           ],
           { cancelable: false }
         );
+        // <NetworkErrorAlert/>
+
       } else {
         Alert.alert(
           "Submission Errors",
@@ -145,6 +151,9 @@ let Patch = async (route, data, headers, showAlert = true) => {
           ],
           { cancelable: false }
         );
+        console.log('sadasdsad');
+        // <NetworkErrorAlert/>
+
       } else {
         Alert.alert(
           "Submission Errors",

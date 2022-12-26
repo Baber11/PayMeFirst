@@ -21,7 +21,7 @@ const SubscriptionCard = ({
 }) => {
 
 
-  console.log(currentPlan);
+  // console.log(currentPlan);
 
   return (
     <View

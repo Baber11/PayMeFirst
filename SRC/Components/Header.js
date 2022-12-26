@@ -11,6 +11,8 @@ import CustomImage from './CustomImage';
 const {height, width} = Dimensions.get('window');
 import Foundation from 'react-native-vector-icons/Foundation';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 import Modal from 'react-native-modal';
 
 import {useDispatch, useSelector} from 'react-redux';
@@ -19,6 +21,8 @@ import {setUserLogout} from '../Store/slices/auth';
 
 const Header = props => {
   const dispatch = useDispatch();
+  const notification = useSelector(state=>state.commonReducer.notification)
+  console.log("🚀 ~ file: Header.js:25 ~ Header ~ notification", notification)
   const navigationN = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
   const {
@@ -30,6 +34,7 @@ const Header = props => {
     close,
     navigateTO,
     headerType,
+    Notify ,
   } = props;
 
   const [searchText, setSearchText] = useState('');
@@ -99,6 +104,42 @@ const Header = props => {
         },
       ]}
     >
+      {
+        Notify && (
+        <View style={{
+          position: 'absolute',
+          left: moderateScale(20, 0.3),
+          height: moderateScale(30, 0.3),
+          width: moderateScale(30, 0.3),
+          borderRadius: moderateScale(5, 0.3),
+          // backgroundColor : 'red'
+        }}>
+          <Icon
+          name={'bell-o'}
+          as={FontAwesome}
+          color={Color.green}
+          size={moderateScale(25, 0.3)}
+          style={{
+            position: 'absolute',
+            // left: moderateScale(20, 0.3),
+            // height: moderateScale(30, 0.3),
+            // width: moderateScale(30, 0.3),
+            // borderRadius: moderateScale(5, 0.3),
+          }}
+          onPress={()=>{
+            navigationN.navigate('NotificationScreen')
+          }}
+          />
+        {
+          notification &&
+          <View style={styles.notificationCircle}>
+
+          </View>
+        }
+          </View>  
+        )
+
+      }
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={() => {
@@ -247,6 +288,15 @@ const styles = ScaledSheet.create({
     // justifyContent: 'space-between',
     paddingHorizontal: moderateScale(20, 0.3),
     // backgroundColor: 'red',
+  },
+  notificationCircle : { 
+    position : 'absolute',
+    height : moderateScale(10,0.3),
+    width : moderateScale(10,0.3),
+    borderRadius : moderateScale(5,0.3),
+    backgroundColor : Color.green,
+    right : moderateScale(5,0.3)
+    // marginTop : moderateScale(10,0.3)
   },
 });
 export default Header;

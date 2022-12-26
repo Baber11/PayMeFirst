@@ -27,6 +27,7 @@ import {Post} from '../Axios/AxiosInterceptorFunction';
 import {setUserData} from '../Store/slices/common';
 import {Icon, ScrollView} from 'native-base';
 import CardContainer from '../Components/CardContainer';
+import {CardField, createPaymentMethod,BillingDetails} from '@stripe/stripe-react-native';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -35,9 +36,14 @@ const AddCard = () => {
   const dispatch = useDispatch();
   const {fcmToken} = useSelector(state => state.commonReducer);
 
-  const [phone, setPhone] = useState('');
-
   const [isLoading, setIsLoading] = useState(false);
+  const [cardData, setCardData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    city: '',
+  });
+  // console.log('🚀 ~ file: AddCard.js:45 ~ AddCard ~ cardData', cardData);
 
   const Header = apiHeader();
 
@@ -69,21 +75,48 @@ const AddCard = () => {
     }
   };
 
+
+
+  const addCard = async ()=>{
+    const billingDetails: BillingDetails = {
+      email: cardData.email,
+      name : cardData.name,
+      phone : cardData.phone,
+      address : {
+        city : cardData.city,
+        // country : 'PK'
+      }
+    };
+    console.log("🚀 ~ file: AddCard.js:91 ~ addCard ~ billingDetails", billingDetails)
+    setIsLoading(true);
+    const responseData = await createPaymentMethod({type: 'Card' ,
+    paymentMethodData : {
+      billingDetails,
+    }
+    
+  });
+    setIsLoading(false);
+    if(responseData.error){
+      console.log(responseData.error);
+    }
+    if(responseData != undefined){
+      console.log( 'dfdsfdsfdf data ========>  ',JSON.stringify(responseData?.paymentMethod,null,2));
+    }
+  
+  }
   return (
     <ScreenBoiler
-      showHeader={true}
-      showBack={true}
-      statusBarBackgroundColor={Color.white}
+      showHeader={false}
+      // showBack={true}
+      statusBarBackgroundColor={'transparent'}
       statusBarContentStyle={'dark-content'}
-      headerType={1}
+      headerType={2}
       title={'Connect cash account'}
-      showList={true}
-    >
+      showList={true}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.sectionContainer}
-        contentContainerStyle={{paddingBottom: moderateScale(20, 0.3)}}
-      >
+        contentContainerStyle={{paddingBottom: moderateScale(20, 0.3)}}>
         <Image
           source={require('../Assets/Images/card.png')}
           resizeMode={'contain'}
@@ -96,22 +129,52 @@ const AddCard = () => {
         />
         <CardContainer
           style={{
-            height: windowHeight * 0.45,
+            height: windowHeight * 0.5,
             paddingTop: moderateScale(30, 0.3),
-          }}
-        >
+          }}>
+          <CardField
+            postalCodeEnabled={false}
+            placeholders={{
+              number: '4242 4242 4242 4242',
+            }}
+            cardStyle={{
+              backgroundColor: '#EAEAEA',
+              textColor: '#000000',
+              borderRadius : moderateScale(25, 0.3),
+
+            }}
+            style={{
+              width: windowWidth * 0.75,
+              height: windowHeight * 0.05,
+              marginVertical: moderateScale(12,0.3),
+             
+              borderColor : Color.lightGrey,
+
+            }}
+            
+            onCardChange={cardDetails => {
+              console.log('cardDetails', cardDetails);
+            }}
+            onFocus={focusedField => {
+              console.log('focusField', focusedField);
+            }}
+          />
           <TextInputWithTitle
-            titleText={'Email'}
-            placeholder={'number'}
-            setText={setPhone}
-            value={phone}
+            titleText={'Cardholder Name'}
+            placeholder={'Cardholder Name'}
+            setText={data => {
+              setCardData(prev => {
+                return {...prev, name: data};
+              });
+            }}
+            value={cardData?.name}
             viewHeight={0.05}
             viewWidth={0.75}
             inputWidth={0.72}
             border={1}
             borderColor={Color.lightGrey}
             backgroundColor={'#EAEAEA'}
-            marginTop={moderateScale(8, 0.3)}
+            // marginTop={moderateScale(8, 0.3)}
             color={'#11A44C'}
             placeholderColor={Color.themeLightGray}
             borderRadius={moderateScale(20, 0.3)}
@@ -120,12 +183,16 @@ const AddCard = () => {
           <View style={[styles.phoneView, {marginTop: moderateScale(8, 0.3)}]}>
             <TextInputWithTitle
               titleText={'Email'}
-              placeholder={'number'}
-              setText={setPhone}
-              value={phone}
+              placeholder={'Email'}
+              setText={data => {
+                setCardData(prev => {
+                  return {...prev, email: data};
+                });
+              }}
+              value={cardData?.email}
               viewHeight={0.05}
-              viewWidth={0.47}
-              inputWidth={0.45}
+              viewWidth={0.75}
+              inputWidth={0.72}
               border={1}
               borderColor={Color.lightGrey}
               backgroundColor={'#EAEAEA'}
@@ -136,16 +203,20 @@ const AddCard = () => {
               keyboardType={'numeric'}
             />
 
-            <View style={styles.cont}>
+            {/* <View style={styles.cont}>
               <CustomText style={styles.txt4}>Scan</CustomText>
-            </View>
+            </View> */}
           </View>
           <View style={[styles.phoneView, {marginTop: moderateScale(5, 0.3)}]}>
             <TextInputWithTitle
-              titleText={'Email'}
-              placeholder={'number'}
-              setText={setPhone}
-              value={phone}
+              titleText={'contact'}
+              placeholder={'Phone'}
+              setText={data => {
+                setCardData(prev => {
+                  return {...prev, phone: data};
+                });
+              }}
+              value={cardData?.phone}
               viewHeight={0.05}
               viewWidth={0.35}
               inputWidth={0.32}
@@ -160,10 +231,14 @@ const AddCard = () => {
             />
 
             <TextInputWithTitle
-              titleText={'Email'}
-              placeholder={'number'}
-              setText={setPhone}
-              value={phone}
+              titleText={'City'}
+              placeholder={'City'}
+              setText={data => {
+                setCardData(prev => {
+                  return {...prev, city: data};
+                });
+              }}
+              value={cardData?.city}
               viewHeight={0.05}
               viewWidth={0.35}
               inputWidth={0.32}
@@ -177,30 +252,14 @@ const AddCard = () => {
               keyboardType={'numeric'}
             />
           </View>
-          <TextInputWithTitle
-            titleText={'Email'}
-            placeholder={'number'}
-            setText={setPhone}
-            value={phone}
-            viewHeight={0.05}
-            viewWidth={0.75}
-            inputWidth={0.72}
-            border={1}
-            borderColor={Color.lightGrey}
-            backgroundColor={'#EAEAEA'}
-            marginTop={moderateScale(8, 0.3)}
-            color={'#11A44C'}
-            placeholderColor={Color.themeLightGray}
-            borderRadius={moderateScale(20, 0.3)}
-            keyboardType={'numeric'}
-          />
+
           <CustomButton
             // textTransform={"capitalize"}
             text={
               isLoading ? (
                 <ActivityIndicator color={'#000'} size={'small'} />
               ) : (
-                'Send'
+                'Submit'
               )
             }
             isBold
@@ -208,19 +267,27 @@ const AddCard = () => {
             width={windowWidth * 0.75}
             height={windowHeight * 0.06}
             marginTop={moderateScale(20, 0.3)}
-            onPress={() => {
-              navigationService.navigate('SetGoals');
-            }}
+            onPress={addCard}
             bgColor={Color.green}
             borderColor={Color.white}
             borderWidth={2}
             borderRadius={moderateScale(30, 0.3)}
           />
           <CustomText
-           onPress={() => {
-            dispatch(setUserLogout());
-          }}
-          >Logout</CustomText>
+            onPress={() => {
+              dispatch(setUserLogout());
+            }}
+            style={{
+              marginTop : moderateScale(10,.3),
+              color : Color.themeBlack,
+              fontSize : moderateScale(12,0.3),
+              textDecorationLine : 'underline',
+              // fontStyle : 'italic' , 
+              fontWeight : 'bold'
+            }}
+            >
+            Logout
+          </CustomText>
         </CardContainer>
       </ScrollView>
     </ScreenBoiler>

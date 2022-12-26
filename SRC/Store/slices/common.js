@@ -5,6 +5,7 @@ const initialState = {
   categories: [],
   categoryProperties: [],
   financeBreakDown: [],
+  notification : false
 };
 
 const CommonSlice = createSlice({
@@ -28,6 +29,9 @@ const CommonSlice = createSlice({
     setFinanceBreakDown(state, action) {
       state.financeBreakDown = action.payload;
     },
+    setNotification(state,action){
+      state.notification = action.payload
+    }
   },
 });
 

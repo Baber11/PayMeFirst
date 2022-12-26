@@ -28,6 +28,7 @@ import ScreenBoiler from '../Components/ScreenBoiler';
 import {windowHeight, windowWidth} from '../Utillity/utils';
 import Modal from 'react-native-modal';
 import CustomButton from '../Components/CustomButton';
+import TextInputWithTitle from '../Components/TextInputWithTitle';
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
@@ -37,6 +38,12 @@ const PaymentMethod = props => {
   const [isModalVisible , setIsModalVisible] = useState(false);
   const [isLoading , setIsLoading] = useState(false);
   const isDelete = true;
+  const [cardData, setCardData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    city: '',
+  });
 
 
 const addCard = async ()=>{
@@ -469,45 +476,148 @@ const addCard = async ()=>{
           setIsModalVisible(false)
         }}
         >
-          <View style={{width : windowWidth , height : windowHeight * 0.5 , backgroundColor : 'red'}}>
+          <View style={{ overflow : 'hidden',borderRadius : moderateScale(5,0.3),width : windowWidth * 0.9 , height : windowHeight * 0.5 , backgroundColor : 'white' , alignItems : 'center'}}>
+            <View style={styles.header}>
+              <CustomText style={styles.headerText}>Add Card</CustomText>
+            </View>
           <CardField
+            postalCodeEnabled={false}
+            placeholders={{
+              number: '4242 4242 4242 4242',
+            }}
+            cardStyle={{
+              backgroundColor: '#EAEAEA',
+              textColor: '#000000',
+              borderRadius : moderateScale(25, 0.3),
 
-      postalCodeEnabled={false}
-      placeholders={{
-        number: '4242 4242 4242 4242',
+            }}
+            style={{
+              width: windowWidth * 0.75,
+              height: windowHeight * 0.05,
+              marginVertical: moderateScale(12,0.3),
+             marginTop : moderateScale(30,0.3),
+              borderColor : Color.lightGrey,
 
-      }}
-      
-      cardStyle={{
-        backgroundColor: '#FFFFFF',
-        textColor: '#000000',
-      }}
-      style={{
-        width: '100%',
-        height: 50,
-        marginVertical: 30,
-      }}
-      onCardChange={(cardDetails) => {
-        console.log('cardDetails', cardDetails);
-      }}
-      onFocus={(focusedField) => {
-        console.log('focusField', focusedField);
-      }}
-    />
-      <CustomButton
-            bgColor={Color.green}
-            borderColor={'white'}
-            borderWidth={1}
+            }}
+            
+            onCardChange={cardDetails => {
+              console.log('cardDetails', cardDetails);
+            }}
+            onFocus={focusedField => {
+              console.log('focusField', focusedField);
+            }}
+          />
+          <TextInputWithTitle
+            titleText={'Cardholder Name'}
+            placeholder={'Cardholder Name'}
+            setText={data => {
+              setCardData(prev => {
+                return {...prev, name: data};
+              });
+            }}
+            value={cardData?.name}
+            viewHeight={0.05}
+            viewWidth={0.75}
+            inputWidth={0.72}
+            border={1}
+            borderColor={Color.lightGrey}
+            backgroundColor={'#EAEAEA'}
+            // marginTop={moderateScale(8, 0.3)}
+            color={'#11A44C'}
+            placeholderColor={Color.themeLightGray}
+            borderRadius={moderateScale(20, 0.3)}
+            keyboardType={'numeric'}
+          />
+          <View style={[styles.phoneView, {marginTop: moderateScale(8, 0.3)}]}>
+            <TextInputWithTitle
+              titleText={'Email'}
+              placeholder={'Email'}
+              setText={data => {
+                setCardData(prev => {
+                  return {...prev, email: data};
+                });
+              }}
+              value={cardData?.email}
+              viewHeight={0.05}
+              viewWidth={0.75}
+              inputWidth={0.72}
+              border={1}
+              borderColor={Color.lightGrey}
+              backgroundColor={'#EAEAEA'}
+              //   marginTop={moderateScale(10, 0.3)}
+              color={'#11A44C'}
+              placeholderColor={Color.themeLightGray}
+              borderRadius={moderateScale(20, 0.3)}
+              keyboardType={'numeric'}
+            />
+
+           
+          </View>
+          <View style={[styles.phoneView, {marginTop: moderateScale(5, 0.3)}]}>
+            <TextInputWithTitle
+              titleText={'contact'}
+              placeholder={'Phone'}
+              setText={data => {
+                setCardData(prev => {
+                  return {...prev, phone: data};
+                });
+              }}
+              value={cardData?.phone}
+              viewHeight={0.05}
+              viewWidth={0.35}
+              inputWidth={0.32}
+              border={1}
+              borderColor={Color.lightGrey}
+              backgroundColor={'#EAEAEA'}
+              //   marginTop={moderateScale(10, 0.3)}
+              color={'#11A44C'}
+              placeholderColor={Color.themeLightGray}
+              borderRadius={moderateScale(20, 0.3)}
+              keyboardType={'numeric'}
+            />
+
+            <TextInputWithTitle
+              titleText={'City'}
+              placeholder={'City'}
+              setText={data => {
+                setCardData(prev => {
+                  return {...prev, city: data};
+                });
+              }}
+              value={cardData?.city}
+              viewHeight={0.05}
+              viewWidth={0.35}
+              inputWidth={0.32}
+              border={1}
+              borderColor={Color.lightGrey}
+              backgroundColor={'#EAEAEA'}
+              //   marginTop={moderateScale(10, 0.3)}
+              color={'#11A44C'}
+              placeholderColor={Color.themeLightGray}
+              borderRadius={moderateScale(20, 0.3)}
+              keyboardType={'numeric'}
+            />
+          </View>
+
+          <CustomButton
+            // textTransform={"capitalize"}
+            text={
+              isLoading ? (
+                <ActivityIndicator color={'#000'} size={'small'} />
+              ) : (
+                'Submit'
+              )
+            }
+            isBold
             textColor={Color.white}
+            width={windowWidth * 0.75}
+            height={windowHeight * 0.06}
+            marginTop={moderateScale(20, 0.3)}
             onPress={addCard}
-            width={width * 0.45}
-            height={height * 0.055}
-            text={"Okay"}
-            fontSize={moderateScale(16, 0.3)}
+            bgColor={Color.green}
+            borderColor={Color.white}
+            borderWidth={2}
             borderRadius={moderateScale(30, 0.3)}
-            // textTransform={'capitalize'}
-            // isGradient={true}
-            marginTop={moderateScale(12, 0.3)}
           />
 
           </View>
@@ -684,6 +794,16 @@ const styles = ScaledSheet.create({
 
     elevation: 10,
   },
+  header : {
+    justifyContent : 'center',
+    alignItems :'center',
+    width : '100%',
+    height : windowHeight * 0.06,
+    backgroundColor : Color.green,
+    borderBottomLeftRadius : moderateScale(10,0.3),
+    borderBottomRightRadius : moderateScale(10,0.3),
+
+  },
   addBtnContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -692,6 +812,14 @@ const styles = ScaledSheet.create({
     width: moderateScale(80, 0.3),
     height: moderateScale(80, 0.3),
   },
+  phoneView: {
+    width: windowWidth * 0.75,
+    paddingVertical: moderateScale(5, 0.3),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginTop: moderateScale(20, 0.3),
+    // backgroundColor: 'red',
+  }, 
   cardContainer: {
     width: windowWidth * 0.85,
     height: windowHeight * 0.33,
@@ -745,6 +873,11 @@ const styles = ScaledSheet.create({
     color: Color.white,
     fontSize: moderateScale(18, 0.3),
     textTransform: 'capitalize',
+  },
+  headerText : {
+    color : Color.white , 
+    fontSize : moderateScale(17,0.3),
+    fontWeight : 'bold'
   },
 });
 
