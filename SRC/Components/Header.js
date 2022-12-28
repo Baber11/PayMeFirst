@@ -21,7 +21,7 @@ import {setUserLogout} from '../Store/slices/auth';
 
 const Header = props => {
   const dispatch = useDispatch();
-  const notification = useSelector(state=>state.commonReducer.notification)
+  const notification = useSelector(state => state.commonReducer.notification)
   console.log("🚀 ~ file: Header.js:25 ~ Header ~ notification", notification)
   const navigationN = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);

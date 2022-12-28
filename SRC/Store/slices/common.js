@@ -41,6 +41,7 @@ export const {
   setServiceCategories,
   setCategoryProperties,
   setFinanceBreakDown,
+  setNotification,
 } = CommonSlice.actions;
 
 export default CommonSlice.reducer;
