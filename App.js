@@ -43,8 +43,8 @@ const App = () => {
 
   console.reportErrorsAsExceptions = false;
   return (
-    <StripeProvider
-    publishableKey={"pk_test_qblFNYngBkEdjEZ16jxxoWSM"}
+    <StripeProvider 
+    publishableKey={"pk_test_51JIdZVJehHGbCsaCYiCquX3mKuZDrym2d3EU31L8fDxs8886NBrqsg3rYrp8bHIdl7wvARE7vxLuNfhsrY5SFbCw00tHX5coQC"}
     // merchantIdentifier="merchant.identifier" // required for Apple Pay
     // urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
   >

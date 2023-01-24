@@ -116,7 +116,7 @@ const SignupScreen = () => {
 
     const url = 'register';
     setIsLoading(true);
-    const response = await Post(url, params, apiHeader());
+    const response = await Post(url, formData, apiHeader());
     setIsLoading(false);
     if (response != undefined) {
       console.log("response?.data", response?.data);
@@ -194,7 +194,7 @@ const SignupScreen = () => {
           value={firstName}
           viewHeight={0.07}
           viewWidth={0.9}
-          inputWidth={0.8}
+          inputWidth={0.88}
           border={2}
           borderColor={Color.themeLightGray}
           backgroundColor={'transparent'}
@@ -212,7 +212,7 @@ const SignupScreen = () => {
           value={lastName}
           viewHeight={0.07}
           viewWidth={0.9}
-          inputWidth={0.8}
+          inputWidth={0.88}
           border={2}
           borderColor={Color.themeLightGray}
           backgroundColor={'transparent'}
@@ -287,7 +287,7 @@ const SignupScreen = () => {
             value={phone}
             viewHeight={0.07}
             viewWidth={0.67}
-            inputWidth={0.55}
+            inputWidth={0.65}
             border={2}
             borderColor={Color.themeLightGray}
             backgroundColor={'transparent'}
@@ -308,7 +308,7 @@ const SignupScreen = () => {
           value={email}
           viewHeight={0.07}
           viewWidth={0.9}
-          inputWidth={0.8}
+          inputWidth={0.88}
           border={2}
           borderColor={Color.themeLightGray}
           backgroundColor={'transparent'}
@@ -327,7 +327,7 @@ const SignupScreen = () => {
           value={country}
           viewHeight={0.07}
           viewWidth={0.9}
-          inputWidth={0.8}
+          inputWidth={0.88}
           border={2}
           borderColor={Color.themeLightGray}
           backgroundColor={'transparent'}
@@ -346,7 +346,7 @@ const SignupScreen = () => {
           value={password}
           viewHeight={0.07}
           viewWidth={0.9}
-          inputWidth={0.8}
+          inputWidth={0.88}
           // marginTop={0.04}
           border={2}
           borderColor={Color.themeLightGray}
@@ -365,7 +365,7 @@ const SignupScreen = () => {
           value={confirmPassword}
           viewHeight={0.07}
           viewWidth={0.9}
-          inputWidth={0.8}
+          inputWidth={0.88}
           // marginTop={0.04}
           border={2}
           borderColor={Color.themeLightGray}

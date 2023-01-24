@@ -239,7 +239,7 @@ const SelectDate = props => {
               width: windowWidth * 0.9,
             }}
             minDate={today}
-            markingType={'period'}
+            // markingType={''}
             onDayPress={day => {
               dates.length < 2
                 ? setDates([...dates, day?.dateString])

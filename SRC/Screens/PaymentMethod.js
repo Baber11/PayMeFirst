@@ -53,10 +53,6 @@ const addCard = async ()=>{
     phone : '03112048588',
     address : {
       city : 'karachi',
-      country : 'korea',
-      state : 'sindh',
-      postalCode : '766543',
-  
     }
   };
   setIsLoading(true);
@@ -68,7 +64,7 @@ const addCard = async ()=>{
 });
   setIsLoading(false);
   if(responseData != undefined){
-    console.log( 'dfdsfdsfdf data ========>  ',JSON.stringify(responseData?.paymentMethod,null,2));
+    console.log( 'dfdsfdsfdf data ========>  ',JSON.stringify(responseData?.paymentMethod?.id,null,2));
   }
 
 }
@@ -603,7 +599,7 @@ const addCard = async ()=>{
             // textTransform={"capitalize"}
             text={
               isLoading ? (
-                <ActivityIndicator color={'#000'} size={'small'} />
+                <ActivityIndicator color={'#FFFFFF'} size={'small'} />
               ) : (
                 'Submit'
               )
