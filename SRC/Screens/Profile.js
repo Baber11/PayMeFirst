@@ -16,6 +16,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 import {FlatList, Icon, ScrollView} from 'native-base';
@@ -153,6 +154,26 @@ const Profile = () => {
           icon2type={AntDesign}
           onPress={() => {
             navigationService.navigate('Subscription');
+          }}
+        />
+          {/* <ProfileContainer
+          icon1Type={Fontisto}
+          icon1={'shopify'}
+          title={'Ecommerce Store'}
+          icon2={'right'}
+          icon2type={AntDesign}
+          onPress={() => {
+            navigationService.navigate('Category');
+          }}
+        /> */}
+          <ProfileContainer
+          icon1Type={Fontisto}
+          icon1={'history'}
+          title={'Goals History'}
+          icon2={'right'}
+          icon2type={AntDesign}
+          onPress={() => {
+            navigationService.navigate('GoalHistory');
           }}
         />
         <ProfileContainer

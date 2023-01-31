@@ -1,11 +1,14 @@
 import {Center, Icon} from 'native-base';
 import React, {useState, useEffect} from 'react';
 import {
+  ActivityIndicator,
   Alert,
   FlatList,
   Image,
   ImageBackground,
+  Platform,
   ScrollView,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -13,119 +16,130 @@ import {moderateScale, ScaledSheet} from 'react-native-size-matters';
 import Color from '../Assets/Utilities/Color';
 // import {windowHeight, windowWidth} from '../Assets/Utilities/Utils';
 import CustomText from '../Components/CustomText';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import CustomStatusBar from '../Components/CustomStatusBar';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomButton from '../Components/CustomButton';
 import CustomTable from '../Components/CustomTable';
 import navigationService from '../navigationService';
-import {useNavigation} from '@react-navigation/native';
-import {windowHeight, windowWidth} from '../Utillity/utils';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import Modal from 'react-native-modal';
-import {ToastAndroid} from 'react-native';
-import {Platform} from 'react-native';
 import DropDownSingleSelect from '../Components/DropDownSingleSelect';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
+import {Get, Post} from '../Axios/AxiosInterceptorFunction';
+import {useDispatch, useSelector} from 'react-redux';
+import numeral from 'numeral';
+import { setUserData } from '../Store/slices/common';
 
 const Wallet = () => {
+  const dispatch = useDispatch()
+  const user = useSelector((state)=>state.commonReducer.userData);
+  const focused = useIsFocused();
+  const token = useSelector(state => state.authReducer.token);
   const navigation = useNavigation();
   const [showModal, setShowModal] = useState(false);
   const [category, setCategory] = useState('');
   const [amount, setAmount] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [tableData, setTableData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [pendingAmount, setPendingAmount] = useState(0);
+  // console.log("🚀 ~ file: Wallet.js:44 ~ Wal ~ filteredData", filteredData)
   const dummyArray1 = ['Reason', 'Status', 'date', 'amount'];
-  const dummyArray = [
-    {
-      name: 'shopping',
-      Status: 'pending',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-    {
-      name: 'food',
-      Status: 'Paid',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-    {
-      name: 'gift',
-      Status: 'pending',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-    {
-      name: 'shopping',
-      Status: 'Paid',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-    {
-      name: 'food',
-      Status: 'Paid',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-    {
-      name: 'shopping',
-      Status: 'Paid',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-    {
-      name: 'shopping',
-      Status: 'Paid',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-    {
-      name: 'shopping',
-      Status: 'Paid',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-    {
-      name: 'shopping',
-      Status: 'Paid',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-    {
-      name: 'shopping',
-      Status: 'Paid',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-    {
-      name: 'shopping',
-      Status: 'Paid',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-    {
-      name: 'shopping',
-      Status: 'Paid',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-    {
-      name: 'shopping',
-      Status: 'Paid',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-    {
-      name: 'shopping',
-      Status: 'Paid',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-    {
-      name: 'food',
-      Status: 'Paid',
-      date: moment().format('ll'),
-      amount: 250,
-    },
-  ];
+  // const dummyArray = [
+  //   {
+  //     name: 'shopping',
+  //     Status: 'pending',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  //   {
+  //     name: 'food',
+  //     Status: 'Paid',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  //   {
+  //     name: 'gift',
+  //     Status: 'pending',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  //   {
+  //     name: 'shopping',
+  //     Status: 'Paid',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  //   {
+  //     name: 'food',
+  //     Status: 'Paid',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  //   {
+  //     name: 'shopping',
+  //     Status: 'Paid',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  //   {
+  //     name: 'shopping',
+  //     Status: 'Paid',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  //   {
+  //     name: 'shopping',
+  //     Status: 'Paid',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  //   {
+  //     name: 'shopping',
+  //     Status: 'Paid',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  //   {
+  //     name: 'shopping',
+  //     Status: 'Paid',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  //   {
+  //     name: 'shopping',
+  //     Status: 'Paid',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  //   {
+  //     name: 'shopping',
+  //     Status: 'Paid',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  //   {
+  //     name: 'shopping',
+  //     Status: 'Paid',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  //   {
+  //     name: 'shopping',
+  //     Status: 'Paid',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  //   {
+  //     name: 'food',
+  //     Status: 'Paid',
+  //     date: moment().format('ll'),
+  //     amount: 250,
+  //   },
+  // ];
   const categoryData = [
     'food',
     'shopping',
@@ -136,30 +150,107 @@ const Wallet = () => {
     'donation',
     'others',
   ];
+
+  const withDraw = async () => {
+    const url = 'auth/withdraw';
+    const body = {
+      amount: amount,
+      date: moment().format('ll'),
+      reason: category,
+      type: 'Debit',
+    };
+    setIsLoading(true);
+    const response = await Post(url, body, apiHeader(token));
+    setIsLoading(false);
+    if (response != undefined) {
+      console.log( 'thee data iss ==== >',response?.data);
+      dispatch(setUserData(response?.data?.user_info));
+      setFilteredData(prev => [
+        {
+          reason: response?.data?.date?.reason,
+          status: response?.data?.date?.status,
+          date: response?.data?.date?.date,
+          amount: response?.data?.date?.amount,
+        },
+        ...prev,
+      ]);
+
+      Platform.OS == 'android'
+        ? ToastAndroid.show(
+            `Withdraw request of £${amount} has been done`,
+            ToastAndroid.SHORT,
+          )
+        : Alert.alert(`Withdraw request of £${amount} has been done`);
+      setShowModal(false);
+    }
+  };
+
+  const getData = async () => {
+    const url = `auth/withdraw/list?page=${pageNumber}`;
+    setIsLoading(true);
+    const response = await Get(url, token);
+    setIsLoading(false);
+    if (response != undefined) {
+      console.log('dasdasdasdasdasdasdasdasdasdasda' ,response?.data?.date?.data);
+      setTableData(response?.data?.date?.data);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, [focused]);
+
+  useEffect(() => {
+    setFilteredData([]);
+    if (tableData.length > 0) {
+      tableData.map((data, index) => {
+        return setFilteredData(prev => [
+          {
+            reason: data?.reason,
+            status: data?.status,
+            date: data?.date,
+            amount: data?.amount,
+          },
+          ...prev,
+        ]);
+      });
+    }
+  }, [tableData]);
+
+  useEffect(() => {
+    setPendingAmount(1);
+    if (filteredData.length > 0) {
+     
+       
+          filteredData
+            .filter(x => x?.status == 'Pending')
+            .map((x, index) => {return(  setPendingAmount(
+              prev => prev + x?.amount))})
+      
+    }
+  }, [filteredData]);
+
   return (
     <View
       style={{
         height: windowHeight,
         backgroundColor: 'transparent',
-      }}
-    >
+      }}>
       <CustomStatusBar
         backgroundColor={Color.white}
         barStyle={'dark-content'}
       />
       <LinearGradient
-        colors={[Color.lightGreen, Color.green,Color.lightGreen,]}
+        colors={[Color.lightGreen, Color.green, Color.lightGreen]}
         start={{x: 0, y: 1}}
         end={{x: 1, y: 1}}
-        style={styles.header}
-      >
+        style={styles.header}>
         <View
           style={{
             width: windowWidth,
             height: windowHeight,
             alignSelf: 'center',
-          }}
-        >
+          }}>
           <CustomText style={styles.title}>Wallet</CustomText>
           {/* <Icon
             name={'left'}
@@ -169,13 +260,11 @@ const Wallet = () => {
             style={styles.arrow}
           /> */}
           <View
-            style={{marginTop: moderateScale(40, 0.3), alignSelf: 'center'}}
-          >
+            style={{marginTop: moderateScale(40, 0.3), alignSelf: 'center'}}>
             <CustomText
               isBold
-              style={[styles.title, {fontSize: moderateScale(50, 0.3)}]}
-            >
-              $2500
+              style={[styles.title, {fontSize: moderateScale(50, 0.3)}]}>
+             {numeral(user?.wallet?.amount).format('$0,0.0')}
             </CustomText>
             <CustomText
               style={[
@@ -184,8 +273,7 @@ const Wallet = () => {
                   fontSize: moderateScale(18, 0.3),
                   marginTop: moderateScale(-8, 0.3),
                 },
-              ]}
-            >
+              ]}>
               Current Balance
             </CustomText>
             <CustomButton
@@ -215,19 +303,17 @@ const Wallet = () => {
           alignItems: 'center',
           paddingTop: moderateScale(90, 0.3),
           paddingBottom: moderateScale(20, 0.3),
-        }}
-      >
+        }}>
         <View style={styles.container}>
           <CustomText
             isBold
             style={[
               styles.title,
               {color: Color.themeBlack, fontSize: moderateScale(32, 0.3)},
-            ]}
-          >
-            $250
+            ]}>
+         {numeral(user?.wallet?.withdraw).format('$0,0.0')}
           </CustomText>
-          <CustomText> Last Withdrawal Amount</CustomText>
+          <CustomText> overall Withdrawal</CustomText>
         </View>
         <View style={styles.container}>
           <CustomText
@@ -235,9 +321,8 @@ const Wallet = () => {
             style={[
               styles.title,
               {color: Color.themeBlack, fontSize: moderateScale(32, 0.3)},
-            ]}
-          >
-            $400
+            ]}>
+          {numeral(user?.wallet?.pending_amount).format('$0,0.0')}
           </CustomText>
           <CustomText>Pending Amount</CustomText>
         </View>
@@ -251,12 +336,11 @@ const Wallet = () => {
               marginLeft: moderateScale(20, 0.3),
               marginTop: moderateScale(20, 0.3),
             },
-          ]}
-        >
+          ]}>
           All Transactions
         </CustomText>
         <CustomTable
-          data={dummyArray}
+          data={filteredData}
           tableFields={dummyArray1}
           headingStyle={{
             width: windowWidth * 0.2,
@@ -277,8 +361,7 @@ const Wallet = () => {
         onBackdropPress={() => {
           setShowModal(false);
         }}
-        style={styles.Modal}
-      >
+        style={styles.Modal}>
         <View style={styles.addItem}>
           <View style={styles.headerModal}>
             <CustomText
@@ -288,8 +371,7 @@ const Wallet = () => {
                   marginTop: moderateScale(-10, 0.3),
                   fontSize: moderateScale(20, 0.3),
                 },
-              ]}
-            >
+              ]}>
               Withdraw Request
             </CustomText>
           </View>
@@ -322,20 +404,20 @@ const Wallet = () => {
 
           <CustomButton
             // textTransform={"capitalize"}
-            text={'Add'}
+            text={
+              isLoading ? (
+                <ActivityIndicator color={Color.white} size={'small'} />
+              ) : (
+                'Add'
+              )
+            }
             isBold
             textColor={Color.white}
             width={windowWidth * 0.75}
             height={windowHeight * 0.06}
             marginTop={moderateScale(20, 0.3)}
             onPress={() => {
-              Platform.OS == 'android'
-                ? ToastAndroid.show(
-                    `Withdraw request of £${amount} has been done`,
-                    ToastAndroid.SHORT,
-                  )
-                : Alert.alert(`Withdraw request of £${amount} has been done`);
-              setShowModal(false);
+              withDraw();
             }}
             bgColor={Color.green}
             borderColor={Color.white}

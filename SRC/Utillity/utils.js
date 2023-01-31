@@ -64,7 +64,6 @@ const requestWritePermission = async () => {
 };
 
 const apiHeader = (token, isFormData) => {
-  console.log("🚀 ~ file: utils.js:67 ~ apiHeader ~ token", token)
   if (token && !isFormData) {
     return {
       headers: {

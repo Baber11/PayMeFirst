@@ -8,10 +8,10 @@ import TextInputWithTitle from "./TextInputWithTitle";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { Icon } from "native-base";
 import { TextInput } from "react-native-gesture-handler";
-import { windowWidth } from "../Utillity/utils";
+import { windowHeight, windowWidth } from "../Utillity/utils";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
-const SearchContainer = ({ width, text, input, onPress, data, setData }) => {
+const SearchContainer = ({ width, text, input, onPress, data, setData , style , places , inputStyle }) => {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
       <View
@@ -19,6 +19,7 @@ const SearchContainer = ({ width, text, input, onPress, data, setData }) => {
           styles.container,
           width && { width: width },
           input && { padding: 0 },
+        style && style
         ]}
       >
         {text && (
@@ -41,7 +42,7 @@ const SearchContainer = ({ width, text, input, onPress, data, setData }) => {
             />
           </>
         )}
-        {input && (
+        {places && (
           <GooglePlacesAutocomplete
             placeholder="Enter location"
             fetchDetails={true}
@@ -56,22 +57,30 @@ const SearchContainer = ({ width, text, input, onPress, data, setData }) => {
               key: "AIzaSyDa3hGQ1LsGw7cyjCwCKx6rxU62g6vt0b8",
               language: "en",
             }}
+            />
+            )}
+           
+           {input && (
+
+             <TextInput
+             placeholder="Search"
+             placeholderTextColor={Color.themeLightGray}
+            numberOfLines={1}
+            value={data}
+            onChangeText={(text) => {
+              setData(text);
+            }}
+            style={[{
+            
+              width: windowWidth * 0.6,
+              // height : windowHeight * 0.02,
+              // fontSize: moderateScale(15, 0.3),
+              color: Color.black,
+            },
+          inputStyle && inputStyle
+          
+          ]}
           />
-          //  )
-          // <TextInput
-          //   placeholder="Enter Location"
-          //   placeholderTextColor={Color.themeLightGray}
-          //   numberOfLines={1}
-          //   value={data}
-          //   onChangeText={(text) => {
-          //     setData(text);
-          //   }}
-          //   style={{
-          //     width: windowWidth * 0.7,
-          //     fontSize: moderateScale(15, 0.3),
-          //     color: Color.black,
-          //   }}
-          // />
         )}
       </View>
     </TouchableOpacity>

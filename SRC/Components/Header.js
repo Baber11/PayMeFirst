@@ -22,7 +22,6 @@ import {setUserLogout} from '../Store/slices/auth';
 const Header = props => {
   const dispatch = useDispatch();
   const notification = useSelector(state => state.commonReducer.notification)
-  console.log("🚀 ~ file: Header.js:25 ~ Header ~ notification", notification)
   const navigationN = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
   const {
@@ -31,8 +30,7 @@ const Header = props => {
     showList,
     headerColor,
     titleColor,
-    close,
-    navigateTO,
+    orderHistory,
     headerType,
     Notify ,
   } = props;
@@ -94,6 +92,21 @@ const Header = props => {
       >
         {title}
       </CustomText>
+      {orderHistory &&
+      <Icon
+            name={'history'}
+            as={FontAwesome}
+            color={Color.black}
+            size={moderateScale(22, 0.3)}
+            style={{
+              position: 'absolute',
+              zIndex: 1,
+              right: moderateScale(20, 0.3),
+            
+              
+            }}
+          />
+}
     </View>
   ) : (
     <View
@@ -151,8 +164,9 @@ const Header = props => {
           width: moderateScale(40, 0.3),
           height: moderateScale(40, 0.3),
           borderRadius: moderateScale(20, 0.3),
-          backgroundColor: Color.green,
+          borderColor: Color.themeLightGray,
           overflow: 'hidden',
+          borderWidth : 1
         }}
       >
         <CustomImage
@@ -248,7 +262,7 @@ const styles = ScaledSheet.create({
     width: windowWidth,
     height: windowHeight * 0.1,
     backgroundColor: Color.white,
-    marginBottom: moderateScale(5, 0.3),
+    // marginBottom: moderateScale(5, 0.3),
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: {

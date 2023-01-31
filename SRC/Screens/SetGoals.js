@@ -21,7 +21,7 @@ import CustomText from '../Components/CustomText';
 import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import CustomButton from '../Components/CustomButton';
-import {setIsVerified, setUserToken} from '../Store/slices/auth';
+import {setIsVerified, setUserLogout, setUserToken} from '../Store/slices/auth';
 import {validateEmail} from '../Config';
 import {ActivityIndicator} from 'react-native';
 import {Post} from '../Axios/AxiosInterceptorFunction';
@@ -37,45 +37,18 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const SetGoals = () => {
+  const user = useSelector((state)=>state.commonReducer.userData);
+  console.log(user);
   const dispatch = useDispatch();
   const {fcmToken} = useSelector(state => state.commonReducer);
+
 
   const [price1, setPrice1] = useState(0);
   const [price2, setPrice2] = useState(2000);
   const [plan, setPlan] = useState('');
   const [name, setName] = useState('');
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  const Header = apiHeader();
-
-  const Login = async () => {
-    const params = {
-      email: email?.trim(),
-      password: password,
-    };
-    if (email == '' || password == '') {
-      return Platform.OS == 'android'
-        ? ToastAndroid.show('Required field is empty', ToastAndroid.SHORT)
-        : Alert.alert('Required field is empty');
-    }
-    if (!validateEmail(email)) {
-      return Platform.OS == 'android'
-        ? ToastAndroid.show('email is not validate', ToastAndroid.SHORT)
-        : Alert.alert('email is not validate');
-    }
-    const url = 'users/login';
-    setIsLoading(true);
-    const response = await Post(url, params, apiHeader());
-    setIsLoading(false);
-
-    if (response != undefined) {
-      // console.log("response?.data?.data?.user", response?.data);
-      dispatch(setIsVerified(response?.data?.data?.user?.isActive));
-      dispatch(setUserData(response?.data?.data?.user));
-      dispatch(setUserToken(response?.data));
-    }
-  };
+  // const cardImage = user?.
 
   return (
     <ScreenBoiler
@@ -104,8 +77,8 @@ const SetGoals = () => {
             }}
           />
           <View>
-            <CustomText style={styles.txt4}>Wallet</CustomText>
-            <CustomText style={styles.txt3}>$234</CustomText>
+            <CustomText style={styles.txt4}>{user?.pm_type}</CustomText>
+            <CustomText style={styles.txt3}>**** **** **** {user?.pm_last_four}</CustomText>
           </View>
           <Icon
             name="right"
@@ -200,8 +173,6 @@ const SetGoals = () => {
               flexDirection: 'row',
               width: windowWidth * 0.8,
               flexWrap: 'wrap',
-
-              //   backgroundColor: 'red',
             }}
           >
             <TouchableOpacity
@@ -272,12 +243,8 @@ const SetGoals = () => {
           <CustomButton
             // textTransform={"capitalize"}
             text={
-              isLoading ? (
-                <ActivityIndicator color={'#000'} size={'small'} />
-              ) : (
-                'Next'
-              )
-            }
+             'Next'
+          }
             isBold
             textColor={Color.white}
             width={windowWidth * 0.75}
@@ -302,6 +269,20 @@ const SetGoals = () => {
             borderWidth={2}
             borderRadius={moderateScale(30, 0.3)}
           />
+           <CustomText
+            onPress={() => {
+              dispatch(setUserLogout());
+            }}
+            style={{
+              marginTop: moderateScale(10, 0.3),
+              color: Color.themeBlack,
+              fontSize: moderateScale(12, 0.3),
+              textDecorationLine: 'underline',
+              // fontStyle : 'italic' ,
+              fontWeight: 'bold',
+            }}>
+            Logout
+          </CustomText>
         </CardContainer>
       </ScrollView>
     </ScreenBoiler>

@@ -14,17 +14,15 @@ import { Icon } from "native-base";
 import { windowHeight, windowWidth } from "../Utillity/utils";
 import Color from "../Assets/Utilities/Color";
 import { imageUrl } from "../Config";
+import moment from "moment";
+import StarRating from "react-native-star-rating";
 
-const ReviewCard = ({ photo, title, date, message }) => {
+const ReviewCard = ({ item ,photo, title, date, message }) => {
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "row" }}>
         <Image
-          source={
-            photo
-              ? { uri: `${imageUrl}${photo}` }
-              : require("../Assets/Images/dummyPhoto.png")
-          }
+          source={item?.image}
           style={styles.image}
         />
         <View style={{ marginLeft: moderateScale(10, 0.3) }}>
@@ -39,53 +37,65 @@ const ReviewCard = ({ photo, title, date, message }) => {
               },
             ]}
           >
-            {title}
+            {item?.name}
           </CustomText>
-          <CustomText noOfLines={1} style={[Constants.h5]}>
-            {date}
-          </CustomText>
+          <StarRating
+        disabled={true}
+        maxStars={5}
+        rating={item?.rating}
+        starSize={moderateScale(12,0.3)}
+        halfStarColor={'yellow'}
+        fullStarColor={'yellow'}
+        starStyle={{
+        }}
+        containerStyle={{
+          width : moderateScale(55,0.3)
+        }}
+        // selectedStar={(rating) => this.onStarRatingPress(rating)}
+      />
+        
         </View>
       </View>
       <CustomText
         numberOfLines={4}
         style={[
-          Constants.h3,
           {
             marginTop: moderateScale(10, 0.3),
-            width: "90%",
-            fontWeight: "400",
+            width: "80%",
+            
             color: Color.themeBlack,
-            fontFamily: "PlusJakartaDisplay-Bold",
           },
         ]}
       >
-        {message}
+        {item?.description}
       </CustomText>
+      <CustomText noOfLines={1} style={{
+        marginTop : moderateScale(10,0.3),
+        // position : 'absolute',
+        // right : 0,
+        // bottom : 0
+        width : '100%',
+        textAlign : 'right'
+      }}>
+            {moment().format('ll')}
+          </CustomText>
     </View>
   );
 };
 const styles = ScaledSheet.create({
   container: {
-    width: windowWidth * 0.83,
-    height: windowHeight * 0.3,
-    marginTop: moderateScale(20, 0.3),
+    width: windowWidth * 0.87,
+    // height: windowHeight * 0.3,
+    // marginTop: moderateScale(20, 0.3),
     marginRight: moderateScale(10, 0.3),
-    borderWidth: 0.5,
+    borderBottomWidth: 1,
     borderColor: Color.lightGrey,
-    backgroundColor: Color.white,
+    // backgroundColor: Color.green,
     borderRadius: moderateScale(10, 0.3),
     paddingTop: moderateScale(20, 0.3),
-    paddingHorizontal: moderateScale(15, 0.3),
+    // paddingHorizontal: moderateScale(15, 0.3),
     marginBottom: moderateScale(20, 0.3),
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-
-    elevation: 3,
+   
   },
   image: {
     width: windowWidth * 0.1,

@@ -60,7 +60,7 @@ export const ExpenditureComponent = ({
         ]}>
         <CustomImage
           onPress={onPress}
-          source={image}
+          source={fromGuide ? image : require('../Assets/Images/dummy.png')}
           resizeMode={fromGuide ? 'stretch' : 'cover'}
           style={{
             width: fromGuide ? '100%' : '80%',
@@ -82,9 +82,9 @@ export const ExpenditureComponent = ({
       {!fromGuide && (
           
         <Icon
-          name={type == 'credit' ? 'caretdown' : 'caretup'}
+          name={type == 'Debit' ? 'caretdown' : 'caretup'}
           as={AntDesign}
-          color={type == 'credit' ? '#F76666' : Color.lightGreen}
+          color={type == 'Debit' ? '#F76666' : Color.lightGreen}
           size={moderateScale(20, 0.3)}
         />
       )}

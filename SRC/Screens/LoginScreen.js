@@ -29,7 +29,7 @@ import CustomText from '../Components/CustomText';
 import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import CustomButton from '../Components/CustomButton';
-import {setGoalCreated, setIsVerified, setUserToken} from '../Store/slices/auth';
+import {setGoalCreated, setIsVerified, setPm_Type, setUserToken} from '../Store/slices/auth';
 import {validateEmail} from '../Config';
 import {ActivityIndicator} from 'react-native';
 import {Post} from '../Axios/AxiosInterceptorFunction';
@@ -80,11 +80,12 @@ const LoginScreen = () => {
     setIsLoading(false);
 
     if (response != undefined) {
-      console.log("response?.data?.data?.user", response?.data);
+      console.log("response?.data?.data?.user", response?.data?.user_info);
     
       dispatch(setUserData(response?.data?.user_info));
       dispatch(setUserToken(response?.data));
       dispatch(setGoalCreated(response.data?.user_info?.is_goal))
+      dispatch(setPm_Type(response?.data?.user_info?.pm_type));
     }
   };
 

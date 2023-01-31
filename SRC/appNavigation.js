@@ -31,32 +31,35 @@ import Support from './Screens/Support';
 import MyAccounts from './Screens/MyAccounts';
 import Subscription from './Screens/Subscription';
 import NotificationScreen from './Screens/NotificationScreen';
+import Category from './Screens/Category';
+import SelectedCategory from './Screens/SelectedCategory';
+import ProductDetails from './Screens/ProductDetails';
+import GoalHistory from './Screens/GoalHistory';
+import ViewCart from './Screens/ViewCart';
+import Checkout from './Screens/Checkout';
 
 const AppNavigator = () => {
+  const user = useSelector(state => state.commonReducer.userData);
+  console.log("🚀 ~ file: appNavigation.js:40 ~ AppNavigator ~ user", user)
   // const isLogin = false;
   const isGoalCreated = useSelector(state => state.authReducer.isGoalCreated);
-
+  const pm_type = useSelector(state => state.authReducer.pm_type);
+  console.log("🚀 ~ file: appNavigation.js:39 ~ AppNavigator ~ pm_type", pm_type)
   const walkThrough = useSelector(state => state.authReducer.userWalkThrough);
   const isVerified = useSelector(state => state.authReducer.isVerified);
   const token = useSelector(state => state.authReducer.token);
-  // console.log('token>>>>', token);
-  // console.log('isVerified', isGoalCreated);
-  console.log(
-    '🚀 ~ file: appNavigation.js ~ line 32 ~ AppNavigator ~ walkThrough',
-    token != null && isGoalCreated == true,
-    isGoalCreated,
-  );
-
   const RootNav = createNativeStackNavigator();
   const RootNavLogged = createNativeStackNavigator();
-
+  // 
   const AppNavigatorContainer = () => {
     const firstScreen =
       walkThrough == false
         ? 'Walkthrough'
-        : token != null && isGoalCreated == false
-        ? 'AddCard'
-        : token != null && isGoalCreated == true
+        :token != null && [null,'',undefined].includes(pm_type) ?
+        'AddCard' 
+        : token != null && isGoalCreated == false && [null,'',undefined].includes(user?.wallet?.amount)
+        ? 'SetGoals'
+        : token != null && (isGoalCreated == true ||  ![null,'',undefined].includes(user?.wallet?.amount))
         ? 'TabNavigation'
         : 'LoginScreen';
 
@@ -81,6 +84,15 @@ const AppNavigator = () => {
           <RootNav.Screen name="MyAccounts" component={MyAccounts} />
           <RootNav.Screen name="Subscription" component={Subscription} />
           <RootNav.Screen name="NotificationScreen" component={NotificationScreen} />
+          <RootNav.Screen name="Category" component={Category} />
+          <RootNav.Screen name="SelectedCategory" component={SelectedCategory} />
+          <RootNav.Screen name="ProductDetails" component={ProductDetails} />
+          <RootNav.Screen name="GoalHistory" component={GoalHistory} />
+          <RootNav.Screen name="ViewCart" component={ViewCart} />
+          <RootNav.Screen name="Checkout" component={Checkout} />
+
+
+
 
 
           <RootNav.Screen

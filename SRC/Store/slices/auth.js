@@ -7,6 +7,7 @@ const initialState = {
   isVerified: false,
   userWalkThrough: false,
   isGoalCreated : false ,
+  pm_type : ''
 };
 
 const AuthSlice = createSlice({
@@ -38,6 +39,9 @@ const AuthSlice = createSlice({
     setWalkThrough(state, action) {
       state.userWalkThrough = true;
     },
+    setPm_Type(state , action){
+      state.pm_type = action.payload
+    }
   },
 });
 
@@ -49,6 +53,7 @@ export const {
   SetFCMToken,
   setWalkThrough,
   setGoalCreated,
+  setPm_Type,
 } = AuthSlice.actions;
 
 export default AuthSlice.reducer;

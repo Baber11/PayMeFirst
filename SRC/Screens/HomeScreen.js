@@ -15,7 +15,7 @@ import {Circle, G, Rect, Text} from 'react-native-svg';
 import {useDispatch, useSelector} from 'react-redux';
 import Color from '../Assets/Utilities/Color';
 import CustomText from '../Components/CustomText';
-import { windowHeight, windowWidth} from '../Utillity/utils';
+import {windowHeight, windowWidth} from '../Utillity/utils';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import {Icon, ScrollView} from 'native-base';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -28,85 +28,112 @@ import DeviceInfo from 'react-native-device-info';
 // or ES6+ destructured imports
 
 import {getUniqueId, getManufacturer} from 'react-native-device-info';
+import numeral from 'numeral';
+import {ActivityIndicator} from 'react-native';
+import {Get} from '../Axios/AxiosInterceptorFunction';
+import {setUserData} from '../Store/slices/common';
+import CustomButton from '../Components/CustomButton';
+import navigationService from '../navigationService';
+import { useIsFocused } from '@react-navigation/native';
 
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
 
-const dummyArray = [
-  {month: 'Jan-22', value: 100},
-  {month: 'feb-22', value: 200},
-  {month: 'mar-22', value: 300},
-  {month: 'apr-22', value: 400},
-  {month: 'may-22', value: 500},
-  {month: 'June-22', value: 600},
-  {month: 'July-22', value: 700},
-  {month: 'aug-22', value: 800},
-  {month: 'sept-22', value: 900},
-  {month: 'oct-22', value: 1000},
-  {month: 'nov-22', value: 1100},
-  {month: 'dec-22', value: 1200},
-  {month: 'jan-23', value: 1300},
-  {month: 'fab-23', value: 1400},
-];
+
+// const dummyArray = [
+//   {month: '11-Jan-22', value: 100},
+//   {month: '11-feb-22', value: 200},
+//   {month: '11-mar-22', value: 0},
+//   {month: '11-apr-22', value: 0},
+//   {month: '11-may-22', value: 0},
+//   {month: '11-June-22', value: 0},
+//   {month: '11-July-22', value: 0},
+//   {month: '11-aug-22', value: 0},
+//   {month: '11-sept-22', value: 0},
+//   {month: '11-oct-22', value: 0},
+//   {month: '11-nov-22', value: 0},
+//   {month: '11-dec-22', value: 0},
+//   {month: '11-jan-23', value: 0},
+//   {month: '11-fab-23', value: 0},
+// ];
 
 const HomeScreen = ({valueFormatter, data}) => {
-  const [state, setState] = useState(null);
+  const focused = useIsFocused()
+  const token = useSelector(state => state.authReducer.token);
+  const user = useSelector(state => state.commonReducer.userData);
+  console.log('🚀 ~ file: HomeScreen.js:54 ~ HomeScreen ~ user', JSON.stringify(user , null ,2));
   const dispatch = useDispatch();
-  const {fcmToken} = useSelector(state => state.commonReducer);
 
+
+  const [state, setState] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [months, setMoths] = useState([]);
   const [cashPaid, setCashPaid] = useState([]);
+  const [tableData, setTableData] = useState([]);
+  const [ pageNumber , setPageNumber] = useState(1);
+  console.log('🚀 ~ file: HomeScreen.js:63 ~ HomeScreen ~ cashPaid', cashPaid);
 
   const [startIndex, setStartIndex] = useState(0);
-  const [endIndex, setEndIndex] = useState(6);
-  console.log(
-    'months are =>',
-    // months,
-    // months.slice(startIndex, endIndex),
-    months.slice(startIndex, endIndex)[
-      months.slice(startIndex, endIndex).length - 1
-    ],
-    months[months.length - 1],
-    months.slice(startIndex, endIndex)[
-      months.slice(startIndex, endIndex).length - 1
-    ] == months[months.length - 1],
-    // months[0],
-    // months.slice(startIndex , endIndex)[0],
-    // months.slice(startIndex , endIndex)[0] == months[0]
-  );
-  // console.log('months are =>', cashPaid, cashPaid.slice(startIndex, endIndex));
+  const [endIndex, setEndIndex] = useState(5);
+ 
 
   const breakArray = array => {
     array.map((item, index) => {
-      setMoths(data => [...data, item.month]);
-      setCashPaid(data => [...data, item.value]);
+      setMoths(data => [...data, moment(item.created_at).format('DD-MM-YY')]);
+      setCashPaid(data => [...data, item.amount]);
     });
   };
 
-  const getDeviceInfo = async () => {
-    let a = [];
+  // const getDeviceInfo = async () => {
+  //   let a = [];
 
-    a.push(DeviceInfo.getBrand());
-    a.push(DeviceInfo.getApplicationName());
-    a.push(await DeviceInfo.getDeviceName());
-    a.push(await DeviceInfo.getBatteryLevel());
-    a.push(DeviceInfo.getDeviceType());
-    a.push(await DeviceInfo.getFingerprint());
-    a.push(await DeviceInfo.getManufacturer());
-    a.push(DeviceInfo.getModel());
-    a.push(await DeviceInfo.getTotalDiskCapacity());
-    a.push(DeviceInfo.hasNotch());
+  //   a.push(DeviceInfo.getBrand());
+  //   a.push(DeviceInfo.getApplicationName());
+  //   a.push(await DeviceInfo.getDeviceName());
+  //   a.push(await DeviceInfo.getBatteryLevel());
+  //   a.push(DeviceInfo.getDeviceType());
+  //   a.push(await DeviceInfo.getFingerprint());
+  //   a.push(await DeviceInfo.getManufacturer());
+  //   a.push(DeviceInfo.getModel());
+  //   a.push(await DeviceInfo.getTotalDiskCapacity());
+  //   a.push(DeviceInfo.hasNotch());
 
-    if (a[0] != undefined) {
-      a.map(x => console.log(x));
+  //   if (a[0] != undefined) {
+  //     a.map(x => console.log(x));
+  //   }
+  // };
+  const getUserData = async () => {
+    const url = 'auth/me';
+    setIsLoading(true);
+    const response = await Get(url, token);
+    setIsLoading(false);
+
+    if (response != undefined) {
+      console.log('This is the response ', response?.data);
+      dispatch(setUserData(response?.data?.user_info));
+    }
+  };
+
+  const getData = async () => {
+    const url = `auth/withdraw/list?page=${pageNumber}`;
+    setIsLoading(true);
+    const response = await Get(url, token);
+    setIsLoading(false);
+    if (response != undefined) {
+      console.log('dasdasdasdasdasdasdasdasdasdasda' ,response?.data?.date?.data);
+      setTableData(response?.data?.date?.data);
     }
   };
 
   useEffect(() => {
+    getData();
+  }, [focused]);
+
+  useEffect(() => {
     setMoths([]);
     setCashPaid([]);
-    breakArray(dummyArray);
+    if(!['' , null , undefined].includes(user?.payments)){
+
+      breakArray(user?.payments);
+    }
     // getDeviceInfo();
   }, []);
 
@@ -119,67 +146,147 @@ const HomeScreen = ({valueFormatter, data}) => {
       headerType={2}
       showList={true}
       headerColor={'#F6F6F6'}
-      Notify
-      >
+      Notify>
       <View
         // showsVerticalScrollIndicator={false}
         style={styles.sectionContainer}>
-        <CustomText style={styles.txt4}>Total Balance</CustomText>
-        <View style={styles.row}>
-          <CustomText style={styles.txt2}>$234,12</CustomText>
-        </View>
-        {/* <CustomText style={styles.txtContainer}>+$1,234,2</CustomText> */}
-        <View style={{width: windowWidth * 0.8}}>
-          <Progress.Bar
-            width={windowWidth * 0.8}
-            progress={0.3}
-            color={Color.green}
-            style={{
-              marginTop: moderateScale(20, 0.3),
-              backgroundColor: '#000',
-            }}
-            // showsText={true}
-            // textStyle={{color: 'red', backgroundColor: 'red'}}
-            // formatText={progress => {
-            //   <CustomText>{progress}</CustomText>;
-            // }}
-          />
-          <View
-            style={{
-              flexDirection: 'row',
-              width: windowWidth * 0.8,
-              // backgroundColor: 'red',
-              justifyContent: 'space-between',
+          {!user?.is_goal &&
+
+            <View  style={{
+              width : windowWidth,
+              // height : moderateScale(30,0.3),
+              justifyContent: 'center',
+              alignItems :   'center',
+              backgroundColor : 'rgba(255, 0, 0,0.9)',
+              marginBottom : moderateScale(10,0.3),
+              paddingHorizontal : moderateScale(5,0.3)
+
             }}>
-            <CustomText style={{color: Color.green}}>30%</CustomText>
-            <CustomText style={{color: Color.black}}>70%</CustomText>
-          </View>
-        </View>
+              <CustomText style={{
+                fontSize : moderateScale(11,0.3),
+                color : Color.white,
+                textAlign : 'center'
+
+              }}>it seems Like your last goal is completed so click the button following to create a new one!!</CustomText>
+            </View>
+          }
+        <TouchableOpacity
+          onPress={() => {
+            getUserData();
+          }}
+          style={{
+            alignSelf: 'flex-end',
+            paddingHorizontal: moderateScale(10, 0.3),
+            paddingVertical: moderateScale(5, 0.3),
+            borderWidth: 1,
+            borderColor: Color.green,
+            marginRight: moderateScale(10, 0.3),
+            borderRadius: moderateScale(5, 0.3),
+            backgroundColor: Color.white,
+          }}>
+          <CustomText
+            style={{
+              color: Color.green,
+            }}>
+            {isLoading ? (
+              <ActivityIndicator color={Color.green} size={'small'} />
+            ) : (
+              'Refresh'
+            )}{' '}
+          </CustomText>
+        </TouchableOpacity>
+        {user?.is_goal ? (
+          <>
+        <CustomText
+          style={[
+            styles.txt4,
+            
+          ]}>
+          {'Current Goal Amount'}
+        </CustomText>
+      
+            <View style={styles.row}>
+              <CustomText style={styles.txt2}>
+                {numeral(user?.temporary_wallet?.amount).format('$0,0.00')}
+              </CustomText>
+            </View>
+            <CustomText style={styles.txt5}>
+              last updated :{' '}
+              {moment(user?.temporary_wallet?.created_at).format('ll')}
+            </CustomText>
+            {/* <CustomText style={styles.txtContainer}>+$1,234,2</CustomText> */}
+            <View style={{width: windowWidth * 0.8}}>
+              <Progress.Bar
+                width={windowWidth * 0.8}
+                progress={
+                  user?.temporary_wallet?.amount / user?.goal?.amount_save
+                }
+                color={Color.green}
+                style={{
+                  marginTop: moderateScale(20, 0.3),
+                  backgroundColor: '#000',
+                }}
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: windowWidth * 0.8,
+                  // backgroundColor: 'red',
+                  justifyContent: 'space-between',
+                }}>
+                <CustomText
+                  style={{color: Color.green, width: windowWidth * 0.35}}>
+                  {Math.round(
+                    (user?.temporary_wallet?.amount / user?.goal?.amount_save) *
+                      100,
+                  )}
+                  %
+                  {`(${numeral(user?.temporary_wallet?.amount).format(
+                    '$0,0.0',
+                  )})`}
+                </CustomText>
+                <CustomText
+                  style={{
+                    color: Color.black,
+                    width: windowWidth * 0.35,
+                    textAlign: 'right',
+                  }}>
+                  {100 -
+                    Math.round(
+                      (user?.temporary_wallet?.amount /
+                        user?.goal?.amount_save) *
+                        100,
+                    )}
+                  %
+                  {`(${numeral(
+                    user?.goal?.amount_save - user?.temporary_wallet?.amount,
+                  ).format('$0,0.0')})`}
+                </CustomText>
+              </View>
+            </View>
+          </>
+        ) : (
+          <CustomButton
+       
+          text={'Start New Goal'}
+          isBold
+          textColor={Color.white}
+          width={windowWidth * 0.5}
+          height={windowHeight * 0.07}
+          marginTop={moderateScale(20, 0.3)}
+          onPress={()=>{
+
+          navigationService.navigate('SetGoals')}}
+          
+          bgColor={Color.green}
+          borderColor={Color.white}
+          borderWidth={2}
+          borderRadius={moderateScale(10, 0.3)}
+        />
+        )}
 
         <View style={styles.subcontainer}>
-          {/* <View
-            style={{
-              //   backgroundColor: 'red',
-              width: windowWidth,
-              height: moderateScale(80, 0.3),
-              marginTop: moderateScale(-30, 0.3),
-              justifyContent: 'center',
-              flexDirection: 'row',
-            }}
-          >
-            <IncomeContainer
-              backgroundColor={'#7DEE6B'}
-              text1={'$1.264'}
-              text2={'total income'}
-              icon={'plus'}
-            />
-            <IncomeContainer
-              backgroundColor={'#F66565'}
-              text1={'$307'}
-              text2={'expenditure'}
-              icon={'minus'}
-            />
-          </View> */}
+         
           <ScrollView
             showsVerticalScrollIndicator={false}
             style={{width: windowWidth}}
@@ -206,12 +313,14 @@ const HomeScreen = ({valueFormatter, data}) => {
                 />
               </TouchableOpacity>
             )}
-            {Object.keys(months).length > 0 && (
+            {
+              user?.is_goal &&  Object.keys(months).length > 0 ? (
               <LineChart
                 data={{
                   labels: months.slice(startIndex, endIndex),
                   datasets: [
                     {
+                      // data : [100.8]
                       data: cashPaid.slice(startIndex, endIndex),
                     },
                   ],
@@ -219,9 +328,6 @@ const HomeScreen = ({valueFormatter, data}) => {
                 width={Dimensions.get('window').width * 0.9} // from react-native
                 height={windowHeight * 0.22}
                 yAxisLabel="$"
-                // withDots={false}
-                // yAxisSuffix='70'
-                //   yAxisSuffix="k"
                 withHiddenDots={true}
                 yAxisInterval={2} // optional, defaults to 1
                 chartConfig={{
@@ -245,7 +351,9 @@ const HomeScreen = ({valueFormatter, data}) => {
                 //   {...props}
                 decorator={tooltipDecorators(state, data, valueFormatter)}
               />
-            )}
+            ) :  user?.is_goal &&  Object.keys(months).length > 0 ?  (
+              <ActivityIndicator color={Color.lightGreen} />
+            ) : <View></View>}
             {months.slice(startIndex, endIndex)[
               months.slice(startIndex, endIndex).length - 1
             ] != months[months.length - 1] && (
@@ -269,45 +377,13 @@ const HomeScreen = ({valueFormatter, data}) => {
               contentContainerStyle={{
                 alignItems: 'center',
               }}
-              data={[
-                {
-                  image: require('../Assets/Images/dummy.png'),
-                  title: 'shopping',
-                  date: moment().format('ll'),
-                  amount: '$100',
-                  type :'credit',
-                },
-                {
-                  image: require('../Assets/Images/dummy.png'),
-                  title: 'gift',
-                  date: moment(new Date('2022-11-22')).format('ll'),
-                  amount: '$80',
-                  type :'deposit',
-
-                },
-                {
-                  image: require('../Assets/Images/dummy.png'),
-                  title: 'shopping',
-                  date: moment().format('ll'),
-                  amount: '$100',
-                  type :'credit',
-
-                },
-                {
-                  image: require('../Assets/Images/dummy.png'),
-                  title: 'shopping',
-                  date: moment().format('ll'),
-                  amount: '$100',
-                  type :'deposit',
-
-                },
-              ]}
+              data={tableData.reverse()}
               renderItem={({item, index}) => {
                 return (
                   <ExpenditureComponent
                     amount={item.amount}
                     image={item.image}
-                    text1={item.title}
+                    text1={item.reason}
                     text2={item.date}
                     type={item.type}
                   />
@@ -330,18 +406,7 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
     width: windowWidth,
   },
-  Txt: {
-    marginTop: moderateScale(10, 0.3),
-    color: Color.themeBlack,
-    fontSize: moderateScale(22, 0.6),
-    textAlign: 'center',
-  },
-  tou: {
-    marginTop: height * 0.03,
-    width: width * 0.9,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
   smallContainer: {
     paddingHorizontal: moderateScale(15, 0.3),
     width: windowWidth * 0.38,
@@ -362,15 +427,7 @@ const styles = ScaledSheet.create({
 
     elevation: 14,
   },
-  iconContainer: {
-    width: windowWidth * 0.75,
-    paddingVertical: moderateScale(5, 0.3),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: moderateScale(15, 0.3),
-    marginTop: moderateScale(10, 0.3),
-    backgroundColor: 'orange',
-  },
+
   subcontainer: {
     overflow: 'hidden',
     paddingBottom: moderateScale(20, 0.3),
@@ -398,20 +455,10 @@ const styles = ScaledSheet.create({
     padding: moderateScale(5, 0.3),
     paddingHorizontal: moderateScale(15, 0.3),
   },
-  cont: {
-    height: windowHeight * 0.05,
-    width: windowWidth * 0.23,
-    borderRadius: moderateScale(20, 0.3),
-    // opacity: 0.6,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    backgroundColor: 'orange',
-  },
 
   row: {
     width: windowWidth,
-    height: moderateScale(60, 0.3),
+    // height: moderateScale(60, 0.3),
     marginTop: moderateScale(10, 0.3),
     // backgroundColor: 'red',
     alignItems: 'center',
@@ -440,8 +487,8 @@ const styles = ScaledSheet.create({
     // borderStyle : 'dashed',
   },
   txt5: {
-    color: Color.black,
-    fontSize: moderateScale(12, 0.6),
+    color: Color.themeLightGray,
+    fontSize: moderateScale(11, 0.6),
   },
 
   absolute: {

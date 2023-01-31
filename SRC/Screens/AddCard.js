@@ -20,23 +20,28 @@ import CustomText from '../Components/CustomText';
 import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import CustomButton from '../Components/CustomButton';
-import {setIsVerified, setUserLogout, setUserToken} from '../Store/slices/auth';
+import {setIsVerified, setPm_Type, setUserLogout, setUserToken} from '../Store/slices/auth';
 import {validateEmail} from '../Config';
 import {ActivityIndicator} from 'react-native';
 import {Post} from '../Axios/AxiosInterceptorFunction';
 import {setUserData} from '../Store/slices/common';
 import {Icon, ScrollView} from 'native-base';
 import CardContainer from '../Components/CardContainer';
-import {CardField, createPaymentMethod,BillingDetails, createToken} from '@stripe/stripe-react-native';
+import {
+  CardField,
+  createPaymentMethod,
+  BillingDetails,
+  createToken,
+} from '@stripe/stripe-react-native';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const AddCard = () => {
-  const token = useSelector((state)=>state.authReducer.token);
+  const token = useSelector(state => state.authReducer.token);
   const dispatch = useDispatch();
   const {userData} = useSelector(state => state.commonReducer);
-  console.log("🚀 ~ file: AddCard.js:39 ~ AddCard ~ userData", userData)
+  // console.log('🚀 ~ file: AddCard.js:39 ~ AddCard ~ userData', userData);
 
   const [isLoading, setIsLoading] = useState(false);
   const [cardData, setCardData] = useState({
@@ -48,86 +53,65 @@ const AddCard = () => {
   // const [cardDataForBackend , setCardDataForBackend] = useState({})
   // console.log('🚀 ~ file: AddCard.js:45 ~ AddCard ~ cardData', cardData);
 
-  const Header = apiHeader();
+ 
 
-  const Login = async () => {
-    const params = {
-      email: email?.trim(),
-      password: password,
-    };
-    if (email == '' || password == '') {
-      return Platform.OS == 'android'
-        ? ToastAndroid.show('Required field is empty', ToastAndroid.SHORT)
-        : Alert.alert('Required field is empty');
-    }
-    if (!validateEmail(email)) {
-      return Platform.OS == 'android'
-        ? ToastAndroid.show('email is not validate', ToastAndroid.SHORT)
-        : Alert.alert('email is not validate');
-    }
-    const url = 'users/login';
-    setIsLoading(true);
-    const response = await Post(url, params, apiHeader());
-    setIsLoading(false);
-
-    if (response != undefined) {
-      // console.log("response?.data?.data?.user", response?.data);
-      dispatch(setIsVerified(response?.data?.data?.user?.isActive));
-      dispatch(setUserData(response?.data?.data?.user));
-      dispatch(setUserToken(response?.data));
-    }
-  };
-
-
-
-  const addCard = async ()=>{
-
+  const addCard = async () => {
     const url = 'auth/addcard';
 
     const billingDetails: BillingDetails = {
       email: cardData.email,
-      name : cardData.name,
-      phone : cardData.phone,
-      address : {
-        city : cardData.city,
-        // country : 'PK'
-      }
+      name: cardData.name,
+      phone: cardData.phone,
+      // address : {
+      city: cardData.city,
+      // country : 'PK'
+      // }
     };
-    console.log("🚀 ~ file: AddCard.js:91 ~ addCard ~ billingDetails", billingDetails)
-    setIsLoading(true);
-    const responseData = await createToken({type: 'Card' ,
-    name : cardData.name,
-    address : {
-      city : cardData?.city,
-      
-    }
-   
-    // paymentMethodData : {
-    //   billingDetails,
+    // for (let key in billingDetails) {
+    //   if (billingDetails[key] == '') {
+    //     return Platform.OS == 'android'
+    //       ? ToastAndroid.show(`${key} is required`, ToastAndroid.SHORT)
+    //       : alert(`${key} is required`);
+    //   }
     // }
-    
-  });
-   
-    if(responseData.error){
+    // console.log("🚀 ~ file: AddCard.js:91 ~ addCard ~ billingDetails", billingDetails)
+    setIsLoading(true);
+    const responseData = await createToken({
+      type: 'Card',
+      name: cardData.name,
+      address: {
+        city: cardData?.city,
+      },
+
+      // paymentMethodData : {
+      //   billingDetails,
+      // }
+    });
+
+    if (responseData.error) {
       setIsLoading(false);
       console.log(responseData.error);
     }
-    if(responseData != undefined){
-      console.log( 'dfdsfdsfdf data ========>  ',JSON.stringify(responseData,null,2));
-    const responseApi = await Post(url , responseData , apiHeader(token) )
-    setIsLoading(false);
-    if(responseApi != undefined){
-      console.log('response >>>>>>>' , responseApi?.data);
-      dispatch(setUserData(responseApi?.data));
-      Platform.OS == 'android' ? 
-      ToastAndroid.show('Card Saved', ToastAndroid.SHORT) : alert('Card Saved');
+    if (responseData != undefined) {
+      // console.log(
+      //   'dfdsfdsfdf data ========>  ',
+      //   JSON.stringify(responseData, null, 2),
+      // );
+      const responseApi = await Post(url, responseData, apiHeader(token));
+      setIsLoading(false);
+      if (responseApi != undefined) {
+        // console.log('response >>>>>>>', responseApi?.data);
+        dispatch(setUserData(responseApi?.data));
+        dispatch(setPm_Type(responseApi?.data?.pm_type));
 
-      navigationService.navigate('SetGoals');
-    }
-    }
+        Platform.OS == 'android'
+          ? ToastAndroid.show('Card Saved', ToastAndroid.SHORT)
+          : alert('Card Saved');
 
-  
-  }
+        // navigationService.navigate('SetGoals');
+      }
+    }
+  };
   return (
     <ScreenBoiler
       showHeader={false}
@@ -167,18 +151,15 @@ const AddCard = () => {
             cardStyle={{
               backgroundColor: '#EAEAEA',
               textColor: '#000000',
-              borderRadius : moderateScale(25, 0.3),
-
+              borderRadius: moderateScale(25, 0.3),
             }}
             style={{
               width: windowWidth * 0.75,
               height: windowHeight * 0.05,
-              marginVertical: moderateScale(12,0.3),
-             
-              borderColor : Color.lightGrey,
+              marginVertical: moderateScale(12, 0.3),
 
+              borderColor: Color.lightGrey,
             }}
-            
             onCardChange={cardDetails => {
               console.log('cardDetails', cardDetails);
             }}
@@ -186,7 +167,7 @@ const AddCard = () => {
               console.log('focusField', focusedField);
             }}
           />
-         
+
           <TextInputWithTitle
             titleText={'Cardholder Name'}
             placeholder={'Cardholder Name'}
@@ -285,7 +266,7 @@ const AddCard = () => {
             // textTransform={"capitalize"}
             text={
               isLoading ? (
-                <ActivityIndicator color={'#000'} size={'small'} />
+                <ActivityIndicator color={'#ffffff'} size={'small'} />
               ) : (
                 'Submit'
               )
@@ -306,14 +287,13 @@ const AddCard = () => {
               dispatch(setUserLogout());
             }}
             style={{
-              marginTop : moderateScale(10,.3),
-              color : Color.themeBlack,
-              fontSize : moderateScale(12,0.3),
-              textDecorationLine : 'underline',
-              // fontStyle : 'italic' , 
-              fontWeight : 'bold'
-            }}
-            >
+              marginTop: moderateScale(10, 0.3),
+              color: Color.themeBlack,
+              fontSize: moderateScale(12, 0.3),
+              textDecorationLine: 'underline',
+              // fontStyle : 'italic' ,
+              fontWeight: 'bold',
+            }}>
             Logout
           </CustomText>
         </CardContainer>

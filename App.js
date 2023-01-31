@@ -27,6 +27,8 @@ import AppNavigator, {DrawerRoot} from './SRC/appNavigation';
 import {NavigationContainer} from '@react-navigation/native';
 import LoginScreen from './SRC/Screens/LoginScreen';
 import NetworkErrorAlert from './SRC/Components/NetworkErrorAlert';
+import Color from './SRC/Assets/Utilities/Color';
+import { Get } from './SRC/Axios/AxiosInterceptorFunction';
 
 const App = () => {
   const [publishableKey, setPublishableKey] = useState('');
@@ -36,9 +38,7 @@ const App = () => {
     setPublishableKey(key);
   };
 
-  // useEffect(() => {
-  //   fetchPublishableKey();
-  // }, []);
+  
 
 
   console.reportErrorsAsExceptions = false;

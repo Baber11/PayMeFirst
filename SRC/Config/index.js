@@ -1,5 +1,6 @@
-// export const baseUrl = "https://www.amazing-grothendieck.23-83-37-162.plesk.page";
-export const baseUrl = "https://4817-113-203-241-40.eu.ngrok.io";
+export const baseUrl = "https://www.amazing-grothendieck.23-83-37-162.plesk.page";
+// export const baseUrl = "https://851f-113-203-241-37.in.ngrok.io";
+
 export const imageUrl = `${baseUrl}/api/images/`;
 export const profilePicUrl = `${baseUrl}/uploads`;
 

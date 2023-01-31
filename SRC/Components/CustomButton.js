@@ -38,7 +38,7 @@ const CustomButton = (props) => {
     textTransform,
     text,
     isBold,
-    disabled = false,
+    disabled ,
     alignSelf,
 
     // value
@@ -169,7 +169,13 @@ const styles = StyleSheet.create({
     // marginBottom: 10,
     flexDirection: "row",
     borderRadius: 5,
-    justifyContent: "center",
+    _justifyContent: "center",
+    get justifyContent() {
+      return this._justifyContent;
+    },
+    set justifyContent(value) {
+      this._justifyContent = value;
+    },
     alignItems: "center",
     alignSelf: "center",
     // overflow: 'hidden',

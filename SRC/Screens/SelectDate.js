@@ -22,7 +22,7 @@ import CustomText from '../Components/CustomText';
 import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import CustomButton from '../Components/CustomButton';
-import {setIsVerified, setUserLogin, setUserToken} from '../Store/slices/auth';
+import {setGoalCreated, setIsVerified, setUserLogin, setUserLogout, setUserToken} from '../Store/slices/auth';
 import {validateEmail} from '../Config';
 import {ActivityIndicator} from 'react-native';
 import {Post} from '../Axios/AxiosInterceptorFunction';
@@ -34,6 +34,7 @@ import {useEffect} from 'react';
 import moment from 'moment/moment';
 import numeral from 'numeral';
 import {round} from 'react-native-reanimated';
+import { Token } from '@stripe/stripe-react-native';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -42,46 +43,21 @@ let markedDay = {};
 let daysdifference = null;
 
 const SelectDate = props => {
+  const token = useSelector((state)=>state.authReducer.token)
   const dispatch = useDispatch();
   const {selectedPlan, amount, planName} = props.route.params;
-  console.log('selected Plan =>', selectedPlan);
+  // console.log('selected Plan =>', selectedPlan);
 
   const [isLoading, setIsLoading] = useState(false);
   const [dates, setDates] = useState([]);
   const [selectedPlanInNumber, setSelectedPlanInNumber] = useState(0);
   const [betWeenDates, setBetweenDates] = useState([]);
-  console.log(betWeenDates);
+  // console.log(betWeenDates);
   const [toDisable, setDisAble] = useState({});
 
-  console.log('it is here disablee === > ', toDisable);
+  // console.log('it is here disablee === > ', toDisable);
 
-  const Login = async () => {
-    const params = {
-      email: email?.trim(),
-      password: password,
-    };
-    if (email == '' || password == '') {
-      return Platform.OS == 'android'
-        ? ToastAndroid.show('Required field is empty', ToastAndroid.SHORT)
-        : Alert.alert('Required field is empty');
-    }
-    if (!validateEmail(email)) {
-      return Platform.OS == 'android'
-        ? ToastAndroid.show('email is not validate', ToastAndroid.SHORT)
-        : Alert.alert('email is not validate');
-    }
-    const url = 'users/login';
-    setIsLoading(true);
-    const response = await Post(url, params, apiHeader());
-    setIsLoading(false);
-
-    if (response != undefined) {
-      // console.log("response?.data?.data?.user", response?.data);
-      dispatch(setIsVerified(response?.data?.data?.user?.isActive));
-      dispatch(setUserData(response?.data?.data?.user));
-      dispatch(setUserToken(response?.data));
-    }
-  };
+ 
   let dateDifferenceInDays =
     dates.length == 2
       ? moment.duration(moment(dates[1]).diff(moment(dates[0]))).asDays()
@@ -93,18 +69,47 @@ const SelectDate = props => {
       ? moment.duration(moment(dates[1]).diff(moment(dates[0]))).asHours()
       : 0;
 
-  console.log(daysdifference, dateDifferenceInDays, dates.length);
-
-  // const getRecommendations = () =>{
-
-  // }
+      const SetGoal = async () => {
+        const body = {
+          amount_save : amount,
+          goal_name  : planName,
+            plan :  selectedPlan,
+            starting_date : dates[0],
+            ending_date : dates[1],
+            number_deduction : Math.round(dateDifferenceInDays / selectedPlanInNumber)+1,
+            amount_per_deduction : (amount /(Math.round(dateDifferenceInDays / selectedPlanInNumber)+1))
+            }
+            console.log("🚀 ~ file: SelectDate.js:80 ~ SetGoal ~ body", body)
+            
+       for(let key in body){
+        if(['' , null , undefined].includes(body[key])){
+          return Platform.OS == 'android'
+          ? ToastAndroid.show(`${body[key]} is required ` , ToastAndroid.SHORT)
+          : Alert.alert(`${body[key]} is required ` );
+        }
+       }
+      //  https://d40c-113-203-241-21.in.ngrok.io/api/set_goal
+        
+          const url = 'auth/set_goal';
+          setIsLoading(true);
+          const response = await Post(url, body, apiHeader(token));
+          setIsLoading(false);
+      
+          if (response != undefined) {
+            console.log(response?.data);
+            // dispatch(setIsVerified(response?.data?.data?.user?.isActive));
+            dispatch(setUserData(response?.data?.data));
+            dispatch(setGoalCreated(response.data?.data?.is_goal))
+            // dispatch(setUserToken(response?.data));
+          }
+        };
 
   useEffect(() => {
     setDisAble([]);
     markedDay = {};
     if (Object.keys(betWeenDates).length > 0) {
       betWeenDates.map(item => {
-        console.log('in map');
+        // console.log('in map');
         markedDay[moment(item).format('YYYY-MM-DD')] = {
           selected: true,
           //   startingDay: true,
@@ -119,7 +124,7 @@ const SelectDate = props => {
   useEffect(() => {
     if (dates.length == 2) {
       for (let index = 1; index < daysdifference; index++) {
-        console.log('here', index);
+        // console.log('here', index);
         setBetweenDates(x => [
           ...x,
           moment(dates[0]).add(index, 'days').format('YYYY-MM-DD'),
@@ -204,7 +209,7 @@ const SelectDate = props => {
             <CustomText style={styles.subHeading}>
               No of deductions{' '}
               <CustomText style={styles.text}>
-                {Math.round(dateDifferenceInDays / selectedPlanInNumber)}
+                {Math.round(dateDifferenceInDays / selectedPlanInNumber)+1}
               </CustomText>
             </CustomText>
             <CustomText style={styles.subHeading}>
@@ -212,7 +217,7 @@ const SelectDate = props => {
               <CustomText style={styles.text}>
                 {numeral(
                   amount /
-                    Math.round(dateDifferenceInDays / selectedPlanInNumber),
+                    (Math.round(dateDifferenceInDays / selectedPlanInNumber)+1),
                 ).format('$0,0.00')}
               </CustomText>
             </CustomText>
@@ -251,7 +256,7 @@ const SelectDate = props => {
               textSectionTitleColor: Color.green,
               textSectionTitleDisabledColor: '#d9e1e8',
               selectedDayBackgroundColor: Color.green,
-              selectedDayTextColor: Color.lightGreen,
+              selectedDayTextColor: Color.white,
               todayTextColor: Color.green,
               dayTextColor: '#2d4150',
               textDisabledColor: '#d9e1e8',
@@ -296,7 +301,7 @@ const SelectDate = props => {
             // textTransform={"capitalize"}
             text={
               isLoading ? (
-                <ActivityIndicator color={'#000'} size={'small'} />
+                <ActivityIndicator color={'#ffffff'} size={'small'} />
               ) : (
                 'Complete'
               )
@@ -308,7 +313,7 @@ const SelectDate = props => {
             marginTop={moderateScale(20, 0.3)}
             onPress={() => {
               dates.length == 2
-                ? dispatch(setUserToken({token: true}))
+                ? SetGoal()
                 : Platform.OS == 'android'
                 ? ToastAndroid.show(
                     'Please Complete Duration',
@@ -321,6 +326,7 @@ const SelectDate = props => {
             borderWidth={2}
             borderRadius={moderateScale(30, 0.3)}
           />
+          
         </CardContainer>
       </ScrollView>
     </ScreenBoiler>
