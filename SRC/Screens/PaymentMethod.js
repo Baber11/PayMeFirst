@@ -20,6 +20,7 @@ import {
   createPaymentMethod,
   useStripe,
   BillingDetails,
+  createToken,
 } from '@stripe/stripe-react-native';
 import {Icon, Toast} from 'native-base';
 import {moderateScale, ScaledSheet} from 'react-native-size-matters';
@@ -30,7 +31,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import moment from 'moment';
 import {userData} from '../Store/Actions/authAction';
 import ScreenBoiler from '../Components/ScreenBoiler';
-import {windowHeight, windowWidth} from '../Utillity/utils';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import Modal from 'react-native-modal';
 import CustomButton from '../Components/CustomButton';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
@@ -43,7 +44,9 @@ const width = Dimensions.get('window').width;
 
 const PaymentMethod = props => {
   const user = useSelector(state => state.commonReducer.userData);
-  console.log('🚀 ~ file: PaymentMethod.js:37 ~ PaymentMethod ~ user', JSON.stringify(user,null,2));
+  const token = useSelector(state => state.authReducer.token);
+
+  // console.log('🚀 ~ file: PaymentMethod.js:37 ~ PaymentMethod ~ user', JSON.stringify(user,null,2));
   const dispatch = useDispatch();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -70,30 +73,45 @@ const PaymentMethod = props => {
       ? require('../Assets/Images/unionPay.png')
       : (imageUrl = require('../Assets/Images/otherCards.png'));
 
-  const addCard = async () => {
-    const billingDetails: BillingDetails = {
-      email: 'syedbaber115@gmail.com',
-      name: 'Syed Baber Ali',
-      phone: '03112048588',
-      address: {
-        city: 'karachi',
-      },
-    };
-    setIsLoading(true);
-    const responseData = await createPaymentMethod({
-      type: 'Card',
-      paymentMethodData: {
-        billingDetails,
-      },
-    });
-    setIsLoading(false);
-    if (responseData != undefined) {
-      console.log(
-        'dfdsfdsfdf data ========>  ',
-        JSON.stringify(responseData?.paymentMethod?.id, null, 2),
-      );
-    }
-  };
+      const addCard = async () => {
+        const url = 'auth/updatecard';
+    
+        const billingDetails: BillingDetails = {
+          email: cardData.email,
+          name: cardData.name,
+          phone: cardData.phone,
+          city: cardData.city,
+          // country : 'PK'
+          // }
+        };
+        setIsLoading(true);
+        const responseData = await createToken({
+          type: 'Card',
+        
+        });
+        console.log("🚀 ~ file: AddCard.js:90 ~ addCard ~ responseData", responseData)
+    
+        if (responseData.error) {
+          setIsLoading(false);
+          console.log(responseData.error);
+        }
+        if (responseData != undefined) {
+        const responseApi = await Post(url, responseData, apiHeader(token));
+          console.log("🚀 ~ file: PaymentMethod.js:100 ~ PaymentMethod ~ responseApi", responseApi)
+          setIsLoading(false);
+          if (responseApi != undefined) {
+            console.log('response >>>>>>>', responseApi?.data);
+            // dispatch(setUserData(responseApi?.data));
+            // dispatch(setPm_Type(responseApi?.data?.pm_type));
+    
+            Platform.OS == 'android'
+              ? ToastAndroid.show('Card Saved', ToastAndroid.SHORT)
+              : alert('Card Saved');
+    
+            // navigationService.navigate('SetGoals');
+          }
+        }
+      };
 
   //   const {
   //     isDelete,
