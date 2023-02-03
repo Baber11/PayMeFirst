@@ -1,5 +1,6 @@
 import {
   ImageBackground,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -320,7 +321,18 @@ const ProfileContainer = ({
   return (
     <TouchableOpacity
       activeOpacity={0.9}
-      style={styles.container}
+      style={[styles.container,Platform.OS == 'ios' && {
+        shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
+  
+      }]}
       onPress={onPress}>
       <Icon
         name={icon1}
