@@ -10,16 +10,21 @@ import {
   Alert,
   ImageBackground,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import Color from '../Assets/Utilities/Color';
 import {useDispatch, useSelector} from 'react-redux';
 import {Get, Patch, Post} from '../Axios/AxiosInterceptorFunction';
-import {CardField, createPaymentMethod, useStripe , BillingDetails} from '@stripe/stripe-react-native';
-import {Icon} from 'native-base';
+import {
+  CardField,
+  createPaymentMethod,
+  useStripe,
+  BillingDetails,
+} from '@stripe/stripe-react-native';
+import {Icon, Toast} from 'native-base';
 import {moderateScale, ScaledSheet} from 'react-native-size-matters';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomText from '../Components/CustomText';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment';
@@ -29,14 +34,19 @@ import {windowHeight, windowWidth} from '../Utillity/utils';
 import Modal from 'react-native-modal';
 import CustomButton from '../Components/CustomButton';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
+import { ToastAndroid } from 'react-native';
+import CustomAlertModal from '../Components/CustomAlertModal';
+import navigationService from '../navigationService';
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 
 const PaymentMethod = props => {
+  const user = useSelector(state => state.commonReducer.userData);
+  console.log('🚀 ~ file: PaymentMethod.js:37 ~ PaymentMethod ~ user', JSON.stringify(user,null,2));
   const dispatch = useDispatch();
-  const [isModalVisible , setIsModalVisible] = useState(false);
-  const [isLoading , setIsLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const isDelete = true;
   const [cardData, setCardData] = useState({
     name: '',
@@ -44,30 +54,46 @@ const PaymentMethod = props => {
     email: '',
     city: '',
   });
+  const [alertModalVisible,setAlertModalVisible] = useState(false)
 
+  const cardName =user?.pm_type == 'Visa'
+      ? require('../Assets/Images/visa.png')
+      : user?.pm_type.toLowerCase() == 'mastercard'
+      ? require('../Assets/Images/master.png')
+      : user?.pm_type.toLowerCase() == 'amex'
+      ? require('../Assets/Images/americanExpress.png')
+      : user?.pm_type.toLowerCase() == 'discover'
+      ? require('../Assets/Images/discover.png')
+      : user?.pm_type.toLowerCase() == 'jcb'
+      ? require('../Assets/Images/jcb.png')
+      : user?.pm_type.toLowerCase() == 'UnionPay'
+      ? require('../Assets/Images/unionPay.png')
+      : (imageUrl = require('../Assets/Images/otherCards.png'));
 
-const addCard = async ()=>{
-  const billingDetails: BillingDetails = {
-    email: 'syedbaber115@gmail.com',
-    name : 'Syed Baber Ali',
-    phone : '03112048588',
-    address : {
-      city : 'karachi',
+  const addCard = async () => {
+    const billingDetails: BillingDetails = {
+      email: 'syedbaber115@gmail.com',
+      name: 'Syed Baber Ali',
+      phone: '03112048588',
+      address: {
+        city: 'karachi',
+      },
+    };
+    setIsLoading(true);
+    const responseData = await createPaymentMethod({
+      type: 'Card',
+      paymentMethodData: {
+        billingDetails,
+      },
+    });
+    setIsLoading(false);
+    if (responseData != undefined) {
+      console.log(
+        'dfdsfdsfdf data ========>  ',
+        JSON.stringify(responseData?.paymentMethod?.id, null, 2),
+      );
     }
   };
-  setIsLoading(true);
-  const responseData = await createPaymentMethod({type: 'Card' ,
-  paymentMethodData : {
-    billingDetails,
-  }
-  
-});
-  setIsLoading(false);
-  if(responseData != undefined){
-    console.log( 'dfdsfdsfdf data ========>  ',JSON.stringify(responseData?.paymentMethod?.id,null,2));
-  }
-
-}
 
   //   const {
   //     isDelete,
@@ -377,19 +403,15 @@ const addCard = async ()=>{
       statusBarContentStyle={'dark-content'}>
       <View style={{width: windowWidth, height: windowHeight * 0.88}}>
         <ImageBackground
-          source={require('../Assets/Images/master.png')}
+          source={cardName}
           resizeMode="contain"
           style={[styles?.cardContainer]}>
-          {/* <CustomText style={[styles.cardNumberText]}>{'1234'}</CustomText>
-        <CustomText style={[styles.cardExpireText]}>
-          {'02'}/{'26'}
-        </CustomText> */}
-          {/* {isOthers && (
-          <CustomText style={[styles.cardBrand]} isBold>
-            {'Visa'}
-          </CustomText> */}
-          {/* )} */}
-          <TouchableOpacity
+          <CustomText style={[user?.pm_type == 'Visa' ? styles.cardNumberText : styles.cardNumberText1]}>{user?.pm_last_four}</CustomText>
+        <CustomText style={[user?.pm_type == 'Visa' ?  styles.cardExpireText : styles.cardExpireText1]}>
+          {user?.exp_month == null ? '02/26' : `${moment(user?.exp_month).format('DD')} / ${moment(user?.exp_year).format('YY')}`}
+        </CustomText>
+        
+          {/* <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => {
               //   isDelete
@@ -415,18 +437,16 @@ const addCard = async ()=>{
               start={{x: 0, y: 0}}
               end={{x: 1, y: 0}}
               colors={[Color.lightGreen, Color.green]}>
-              {/* {cardloading && item?.id == selectedCardId ? (
-                <ActivityIndicator size="small" color={Color.white} />
-              ) : ( */}
+            
               <Icon
                 as={isDelete ? MaterialCommunityIcons : AntDesign}
                 name={isDelete ? 'delete' : 'right'}
                 style={[{color: Color.white}]}
                 size={moderateScale(27, 0.6)}
               />
-              {/* )} */}
+          
             </LinearGradient>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </ImageBackground>
         <TouchableOpacity
           activeOpacity={1}
@@ -434,7 +454,10 @@ const addCard = async ()=>{
             // alert(
             //   'AddCard Modal Will open after connecting to stripe but only if above card is detached ',
             // );
-            setIsModalVisible(true)
+            user?.current_plan == 'basic' ? 
+            setAlertModalVisible(true)
+            :
+            setIsModalVisible(true);
             // setShowCardModal(true);
           }}
           style={[
@@ -468,14 +491,21 @@ const addCard = async ()=>{
           alignItems: 'center',
         }}
         isVisible={isModalVisible}
-        onBackdropPress={()=>{
-          setIsModalVisible(false)
-        }}
-        >
-          <View style={{ overflow : 'hidden',borderRadius : moderateScale(5,0.3),width : windowWidth * 0.9 , height : windowHeight * 0.5 , backgroundColor : 'white' , alignItems : 'center'}}>
-            <View style={styles.header}>
-              <CustomText style={styles.headerText}>Add Card</CustomText>
-            </View>
+        onBackdropPress={() => {
+          setIsModalVisible(false);
+        }}>
+        <View
+          style={{
+            overflow: 'hidden',
+            borderRadius: moderateScale(5, 0.3),
+            width: windowWidth * 0.9,
+            height: windowHeight * 0.5,
+            backgroundColor: 'white',
+            alignItems: 'center',
+          }}>
+          <View style={styles.header}>
+            <CustomText style={styles.headerText}>Add Card</CustomText>
+          </View>
           <CardField
             postalCodeEnabled={false}
             placeholders={{
@@ -484,18 +514,15 @@ const addCard = async ()=>{
             cardStyle={{
               backgroundColor: '#EAEAEA',
               textColor: '#000000',
-              borderRadius : moderateScale(25, 0.3),
-
+              borderRadius: moderateScale(25, 0.3),
             }}
             style={{
               width: windowWidth * 0.75,
               height: windowHeight * 0.05,
-              marginVertical: moderateScale(12,0.3),
-             marginTop : moderateScale(30,0.3),
-              borderColor : Color.lightGrey,
-
+              marginVertical: moderateScale(12, 0.3),
+              marginTop: moderateScale(30, 0.3),
+              borderColor: Color.lightGrey,
             }}
-            
             onCardChange={cardDetails => {
               console.log('cardDetails', cardDetails);
             }}
@@ -546,8 +573,6 @@ const addCard = async ()=>{
               borderRadius={moderateScale(20, 0.3)}
               keyboardType={'numeric'}
             />
-
-           
           </View>
           <View style={[styles.phoneView, {marginTop: moderateScale(5, 0.3)}]}>
             <TextInputWithTitle
@@ -615,9 +640,26 @@ const addCard = async ()=>{
             borderWidth={2}
             borderRadius={moderateScale(30, 0.3)}
           />
-
-          </View>
-        </Modal>
+        </View>
+      </Modal>
+      <CustomAlertModal
+      isModalVisible={alertModalVisible}
+      onClose={() => {
+        
+        setAlertModalVisible(false);
+      }}
+      onOKPress={() => {
+        
+        setAlertModalVisible(false);
+        navigationService.navigate('Subscription',{fromStores : true});
+      }}
+      title={'Hold On !!'}
+      message={
+        'You are on Basic plan , please upgrade it to avail this feature'
+      }
+      iconType={2}
+      areYouSureAlert
+    />
     </ScreenBoiler>
     // <>
     //   <CustomStatusBar
@@ -790,15 +832,14 @@ const styles = ScaledSheet.create({
 
     elevation: 10,
   },
-  header : {
-    justifyContent : 'center',
-    alignItems :'center',
-    width : '100%',
-    height : windowHeight * 0.06,
-    backgroundColor : Color.green,
-    borderBottomLeftRadius : moderateScale(10,0.3),
-    borderBottomRightRadius : moderateScale(10,0.3),
-
+  header: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: windowHeight * 0.06,
+    backgroundColor: Color.green,
+    borderBottomLeftRadius: moderateScale(10, 0.3),
+    borderBottomRightRadius: moderateScale(10, 0.3),
   },
   addBtnContainer: {
     justifyContent: 'center',
@@ -815,7 +856,7 @@ const styles = ScaledSheet.create({
     justifyContent: 'space-between',
     // marginTop: moderateScale(20, 0.3),
     // backgroundColor: 'red',
-  }, 
+  },
   cardContainer: {
     width: windowWidth * 0.85,
     height: windowHeight * 0.33,
@@ -832,15 +873,31 @@ const styles = ScaledSheet.create({
   cardNumberText: {
     color: Color.white,
     position: 'absolute',
-    right: '15%',
-    top: '45%',
+    right: '27%',
+    top: '49%',
+    letterSpacing : 3,
+    fontSize: moderateScale(15, 0.3),
+  },
+  cardNumberText1 : {
+    color: Color.white,
+    position: 'absolute',
+    right: '13%',
+    top: '46%',
+    letterSpacing : 3,
+    fontSize: moderateScale(13, 0.3),
+  },
+  cardExpireText1 : {
+    color: Color.white,
+    position: 'absolute',
+    left: '21%',
+    bottom: '29%',
     fontSize: moderateScale(15, 0.3),
   },
   cardExpireText: {
     color: Color.white,
     position: 'absolute',
-    left: '5%',
-    bottom: '10%',
+    right: '12%',
+    bottom: '28%',
     fontSize: moderateScale(15, 0.3),
   },
   cardBrand: {
@@ -870,10 +927,10 @@ const styles = ScaledSheet.create({
     fontSize: moderateScale(18, 0.3),
     textTransform: 'capitalize',
   },
-  headerText : {
-    color : Color.white , 
-    fontSize : moderateScale(17,0.3),
-    fontWeight : 'bold'
+  headerText: {
+    color: Color.white,
+    fontSize: moderateScale(17, 0.3),
+    fontWeight: 'bold',
   },
 });
 

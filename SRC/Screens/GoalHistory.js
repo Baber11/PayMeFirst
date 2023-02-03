@@ -1,4 +1,4 @@
-import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import {windowHeight, windowWidth} from '../Utillity/utils';
@@ -14,11 +14,15 @@ import {useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import numeral from 'numeral';
 import moment from 'moment/moment';
+import CustomImage from '../Components/CustomImage';
 
 const GoalHistory = () => {
   const token = useSelector(state => state.authReducer.token);
+  const user = useSelector(state => state.commonReducer.userData);
+
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState([]);
+  console.log("🚀 ~ file: GoalHistory.js:25 ~ GoalHistory ~ history", JSON.stringify(history?.flat(),null,2))
   const getHistory = async () => {
     const url = 'auth/goal/list';
     setIsLoading(true);
@@ -26,7 +30,7 @@ const GoalHistory = () => {
     setIsLoading(false);
     if (response != undefined) {
       console.log(JSON.stringify(response?.data?.data, null, 2));
-      setHistory(response?.data?.data);
+      setHistory([user?.goal , response?.data?.data]);
     }
   };
 
@@ -43,8 +47,20 @@ const GoalHistory = () => {
       // headerColor={Color.white}
       headerType={1}
       showBack={true}>
+        {
+          isLoading ? 
+          <View style={{
+            height : windowHeight * 0.9 ,
+            width : windowWidth,
+            justifyContent : 'center',
+            alignItems : 'center',
+            backgroundColor : '#FFFFFF'
+          }}>
+              <ActivityIndicator color={'green'} size={'large'} />
+          </View>
+       :
       <FlatList
-        data={history}
+        data={history?.flat()}
         showsVerticalScrollIndicator={false}
         style={{
           width: windowWidth,
@@ -58,7 +74,37 @@ const GoalHistory = () => {
         renderItem={({item, index}) => {
           return <GoalCard item={item} />;
         }}
+        ListEmptyComponent={()=>{
+          return(
+
+            <View style={{
+              width : windowWidth ,
+              height : windowHeight * 0.5 ,
+              justifyContent : 'center',
+              alignItems : 'center',
+              // backgroundColor : 'green'
+            }}>
+               <CustomImage
+              resizeMode={'contain'}
+              source={require('../Assets/Images/notfound.png')}
+              style={{
+                width: windowWidth * 0.5,
+                height: windowHeight * 0.3,
+                // backgroundColor : 'red',
+                alignSelf: 'center',
+              }}
+              />
+              <CustomText style={{
+                fontSize : moderateScale(16,0.3),
+                color : Color.black
+                // backgroundColor : 'yellow'
+            }}>No Record Found</CustomText>
+          </View>
+            )
+        }}
+      
       />
+    }
     </ScreenBoiler>
   );
 };
@@ -67,7 +113,7 @@ export default GoalHistory;
 
 const styles = ScaledSheet.create({
   container: {
-    marginVertical: moderateScale(5, 0.3),
+    marginVertical: moderateScale(10, 0.3),
     width: windowWidth * 0.95,
 
     alignItems: 'center',
@@ -108,7 +154,7 @@ const styles = ScaledSheet.create({
 
 const GoalCard = ({item}) => {
   const [show, setShow] = useState(false);
-  console.log('🚀 ~ file: GoalHistory.js:85 ~ GoalCard ~ show', show);
+  // console.log('🚀 ~ file: GoalHistory.js:85 ~ GoalCard ~ show', show);
   return (
     <TouchableOpacity
       activeOpacity={0.9}
@@ -118,7 +164,7 @@ const GoalCard = ({item}) => {
       style={styles.container}>
       <View style={styles.nameContainer}>
         {!show ? (
-          <CustomText>
+          <CustomText isBold>
             {item?.goal_name ? item?.goal_name : 'Goal For Saving'}
           </CustomText>
         ) : (
@@ -139,7 +185,7 @@ const GoalCard = ({item}) => {
             fontSize: moderateScale(10, 0.3),
             color: Color.lightGreen,
           }}>
-          completed
+          {moment(item?.ending_date).format('ll') <= moment().format('ll') ? 'Completed' : 'Ongoing'}
         </CustomText>
         <Icon
           name={show ? 'minus' : 'plus'}

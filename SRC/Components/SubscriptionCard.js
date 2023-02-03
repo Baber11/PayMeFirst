@@ -134,7 +134,7 @@ const SubscriptionCard = ({
             'Please Wait'
           ) : currentPlan == type ? (
             'Subscribed'
-          ) : (
+          ) : currentPlan == 'premium' ? ('Upgraded to Premium') : (
             'Subscribe'
           )
         }
@@ -148,7 +148,7 @@ const SubscriptionCard = ({
         borderColor={Color.white}
         borderWidth={2}
         borderRadius={moderateScale(30, 0.3)}
-        disabled={loader || currentPlan == type}
+        disabled={loader || currentPlan == type || currentPlan == 'premium'}
       />
     </View>
   );

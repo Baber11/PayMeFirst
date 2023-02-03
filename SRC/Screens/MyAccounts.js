@@ -99,9 +99,9 @@ const MyAccounts = props => {
     <ScreenBoiler
       showHeader={true}
       title={'Account Info'}
-      statusBarBackgroundColor={Color.black}
-      statusBarContentStyle={'light-content'}
-      headerColor={Color.white}
+      statusBarBackgroundColor={Color.white}
+      statusBarContentStyle={'dark-content'}
+      // headerColor={Color.white}
       headerType={1}
       showBack={true}
     >
@@ -175,7 +175,7 @@ const MyAccounts = props => {
           backgroundColor={'#F8F8F8'}
           marginTop={moderateScale(30, 0.3)}
           placeholderColor={Color.black}
-          color={Color.themeDarkGray}
+          color={Color.green}
         />
         <TextInputWithTitle
           iconName={'user'}
@@ -193,7 +193,7 @@ const MyAccounts = props => {
           backgroundColor={'#F8F8F8'}
           marginTop={moderateScale(15, 0.3)}
           placeholderColor={Color.black}
-          color={Color.themeDarkGray}
+          color={Color.green}
         />
         <TextInputWithTitle
           iconName={'phone'}
@@ -211,7 +211,7 @@ const MyAccounts = props => {
           backgroundColor={'#F8F8F8'}
           marginTop={moderateScale(15, 0.3)}
           placeholderColor={Color.black}
-       color={Color.themeDarkGray}
+       color={Color.green}
           disable={true}
         />
         <TextInputWithTitle
@@ -231,7 +231,7 @@ const MyAccounts = props => {
           backgroundColor={'#F8F8F8'}
           marginTop={moderateScale(15, 0.3)}
           placeholderColor={Color.black}
-       color={Color.themeDarkGray}
+       color={Color.green}
           disable
         />
         <TextInputWithTitle
@@ -251,7 +251,7 @@ const MyAccounts = props => {
           backgroundColor={'#F8F8F8'}
           marginTop={moderateScale(15, 0.3)}
           placeholderColor={Color.black}
-       color={Color.themeDarkGray}
+       color={Color.green}
         
         />
         {/* <TextInputWithTitle
@@ -292,8 +292,7 @@ const MyAccounts = props => {
           marginTop={moderateScale(20, 0.3)}
           onPress={EditProfile}
           bgColor={Color.green}
-          borderColor={Color.white}
-          borderWidth={2}
+        
           borderRadius={moderateScale(30, 0.3)}
         />
       </ScrollView>

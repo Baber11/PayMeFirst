@@ -107,7 +107,7 @@ const SetGoals = () => {
             sliderLength={windowWidth * 0.75}
             customLabel={'baber'}
             min={0}
-            max={100002}
+            max={user?.current_plan == 'basic' ? 1000 : 100002}
             // enabledOne={true}
             markerStyle={{backgroundColor: Color.green}}
             step={2}

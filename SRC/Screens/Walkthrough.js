@@ -27,17 +27,23 @@ const Walkthrough = props => {
   const slides = [
     {
       key: '1',
-      title: 'Buy or Sell Residential',
+      title: 'Save Your Card And Set Goal',
       text:
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ',
+        'Attach your card Into PayMeFirst And set Your goal to save Money purposly',
       logo: require('../Assets/Images/walkthrough1.png'),
     },
     {
       key: '2',
-      title: 'Buy or Sell Residential',
+      title: 'Ecommerce Store Access',
       text:
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ',
+        'Get premium membership to avail access to Famous third party E-commerce Applications as well as free PayMe E-commerce store',
       logo: require('../Assets/Images/walkthrough2.png'),
+    },
+    {
+      key: '3',
+      title: 'Finance Breakdown',
+      text: 'make record of your daily cash flow from your account in a centralized manner',
+      logo: require('../Assets/Images/walkhthrough3.png'),
     },
   ];
 
@@ -61,7 +67,7 @@ const Walkthrough = props => {
               alignItems: 'center',
             }}
           >
-            <Text numberOfLines={1} style={styles.title}>
+            <Text numberOfLines={2} style={styles.title}>
               {item.title}
             </Text>
             <Text numberOfLines={4} style={styles.subText}>

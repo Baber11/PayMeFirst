@@ -67,7 +67,7 @@ const Subscription = (props) => {
           price={0}
           featuresArray={[
             'no access to e-commerce sites',
-            '15% will be fined on upto $100 and 5% on more than $100 after due date payment',
+            '5% will be fined after due date payment',
             'only in app reminder',
             'can not change card',
             'can set plan for upto $1000',
@@ -83,7 +83,7 @@ const Subscription = (props) => {
             'get access to various well known e-commerce sites',
             'get leverage 2 times on late payment deduction',
             'get reminder on phone and email before deadline',
-            'can change card 2 times (after discussing with backend',
+            'can change card 2 times',
             'can save unlimited money',
           ]}
           onPress={getSubscription}

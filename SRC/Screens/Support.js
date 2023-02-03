@@ -264,8 +264,8 @@ const Support = () => {
               marginTop={moderateScale(20, 0.3)}
               onPress={sendQuestion}
               bgColor={Color.green}
-              borderColor={Color.white}
-              borderWidth={2}
+              // borderColor={Color.white}
+              // borderWidth={2}
               borderRadius={moderateScale(30, 0.3)}
             />
           </View>

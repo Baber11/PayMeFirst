@@ -12,7 +12,6 @@ import LinearGradient from "react-native-linear-gradient";
 
 const CategoriesSelector = ({ item , onPress }) => {
   const [tintColor, setTintColor] = useState("");
-  // console.log("hereeeeeeeeeeee", data, item?._id);
 
   return (
     <TouchableOpacity

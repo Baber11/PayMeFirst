@@ -52,7 +52,6 @@ const CategoryPropertyModal = ({
   const category = useSelector(
     (state) => state.commonReducer.categoryProperties
   );
-  console.log(JSON.stringify(category, null, 2));
 
   return (
     <Modal

@@ -7,6 +7,7 @@ import {mode} from 'native-base/lib/typescript/theme/tools';
 import Color from '../Assets/Utilities/Color';
 import numeral from 'numeral';
 import {windowHeight, windowWidth} from '../Utillity/utils';
+import CustomImage from './CustomImage';
 
 const CustomTable = ({
   data,
@@ -73,6 +74,36 @@ const CustomTable = ({
             </View>
           );
         }}
+        ListEmptyComponent={()=>{
+          return(
+
+            <View style={{
+              width : windowWidth ,
+              height : windowHeight * 0.4 ,
+              justifyContent : 'center',
+              alignItems : 'center',
+              // backgroundColor : 'green'
+            }}>
+               <CustomImage
+              resizeMode={'contain'}
+              source={require('../Assets/Images/notfound.png')}
+              style={{
+                width: windowWidth * 0.5,
+                height: windowHeight * 0.2,
+                // backgroundColor : 'red',
+                alignSelf: 'center',
+              }}
+              />
+              <CustomText style={{
+                fontSize : moderateScale(16,0.3),
+                color : Color.black
+                
+                // backgroundColor : 'yellow'
+            }}>No Transaction yet</CustomText>
+          </View>
+            )
+        }}
+
       />
     </View>
   );

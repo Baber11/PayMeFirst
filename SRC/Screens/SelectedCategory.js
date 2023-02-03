@@ -20,16 +20,16 @@ var categoryData = [
   {
     id: 1,
     quantity: 1,
-    image: require('../Assets/Images/dummyData/sandle.jpg'),
-    name: 'Sandle',
+    image: require('../Assets/Images/shoes2.jpg'),
+    name: 'shoes2',
     price: 200,
-    array : [require('../Assets/Images/dummyData/sandle.jpg'),
-    require('../Assets/Images/dummyData/shoes2.jpg'),
-    require('../Assets/Images/dummyData/woman1.jpg'),
-    require('../Assets/Images/dummyData/man3.jpg')
+    array : [require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg')
 
     ],
-    description : 'Best Sandle up so far in the market with the comfort',
+    description : 'Best shoes2 up so far in the market with the comfort',
     brandName : 'Nike',
     availbleSizes : ['8','8.5','9','9.5','10'],
     Reviews : [
@@ -69,18 +69,18 @@ var categoryData = [
 
   },
   {
-    image: require('../Assets/Images/dummyData/shoes2.jpg'),
+    image: require('../Assets/Images/shoes2.jpg'),
     name: 'Shoes nike',
     id: 2,
     quantity: 1,
     price: 200,
-      array : [require('../Assets/Images/dummyData/sandle.jpg'),
-    require('../Assets/Images/dummyData/shoes2.jpg'),
-    require('../Assets/Images/dummyData/woman1.jpg'),
-    require('../Assets/Images/dummyData/man3.jpg')
+      array : [require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg')
 
     ],
-    description : 'Best Sandle up so far in the market with the comfort',
+    description : 'Best shoes2 up so far in the market with the comfort',
     brandName : 'Nike',
     availbleSizes : ['8','8.5','9','9.5','10'],
   Reviews : [
@@ -119,18 +119,18 @@ var categoryData = [
 
   },
   {
-    image: require('../Assets/Images/dummyData/shoes3.jpg'),
+    image: require('../Assets/Images/shoes2.jpg'),
     name: 'Addidas',
     id: 3,
     quantity: 1,
     price: 200,
-      array : [require('../Assets/Images/dummyData/sandle.jpg'),
-    require('../Assets/Images/dummyData/shoes2.jpg'),
-    require('../Assets/Images/dummyData/woman1.jpg'),
-    require('../Assets/Images/dummyData/man3.jpg')
+      array : [require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg')
 
     ],
-    description : 'Best Sandle up so far in the market with the comfort',
+    description : 'Best shoes2 up so far in the market with the comfort',
     brandName : 'Nike',
     availbleSizes : ['8','8.5','9','9.5','10'],
   Reviews : [
@@ -169,18 +169,18 @@ var categoryData = [
 
   },
   {
-    image: require('../Assets/Images/dummyData/woman3.jpg'),
+    image: require('../Assets/Images/shoes2.jpg'),
     name: 'Training Suit',
     id: 4,
     quantity: 1,
     price: 200,
-      array : [require('../Assets/Images/dummyData/sandle.jpg'),
-    require('../Assets/Images/dummyData/shoes2.jpg'),
-    require('../Assets/Images/dummyData/woman1.jpg'),
-    require('../Assets/Images/dummyData/man3.jpg')
+      array : [require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg')
 
     ],
-    description : 'Best Sandle up so far in the market with the comfort',
+    description : 'Best shoes2 up so far in the market with the comfort',
     brandName : 'Nike',
     availbleSizes : ['L','M','xl','xxl'],
   Reviews : [
@@ -204,16 +204,16 @@ var categoryData = [
   {
     id: 5,
     quantity: 1,
-    image: require('../Assets/Images/dummyData/sandle.jpg'),
-    name: 'Sandle',
+    image: require('../Assets/Images/shoes2.jpg'),
+    name: 'shoes2',
     price: 200,
-      array : [require('../Assets/Images/dummyData/sandle.jpg'),
-    require('../Assets/Images/dummyData/shoes2.jpg'),
-    require('../Assets/Images/dummyData/woman1.jpg'),
-    require('../Assets/Images/dummyData/man3.jpg')
+      array : [require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg')
 
     ],
-    description : 'Best Sandle up so far in the market with the comfort',
+    description : 'Best shoes2 up so far in the market with the comfort',
     brandName : 'Nike',
     availbleSizes : ['8','8.5','9','9.5','10'],
   Reviews : [
@@ -252,18 +252,18 @@ var categoryData = [
 
   },
   {
-    image: require('../Assets/Images/dummyData/shoes2.jpg'),
+    image: require('../Assets/Images/shoes2.jpg'),
     name: 'Shoes nike',
     id: 6,
     quantity: 1,
     price: 200,
-      array : [require('../Assets/Images/dummyData/sandle.jpg'),
-    require('../Assets/Images/dummyData/shoes2.jpg'),
-    require('../Assets/Images/dummyData/woman1.jpg'),
-    require('../Assets/Images/dummyData/man3.jpg')
+      array : [require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg'),
+    require('../Assets/Images/shoes2.jpg')
 
     ],
-    description : 'Best Sandle up so far in the market with the comfort',
+    description : 'Best shoes2 up so far in the market with the comfort',
     brandName : 'Nike',
     availbleSizes : ['8','8.5','9','9.5','10'],
   Reviews : [

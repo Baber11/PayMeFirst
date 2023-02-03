@@ -23,11 +23,7 @@ import {LineChart} from 'react-native-chart-kit';
 import moment from 'moment';
 import * as Progress from 'react-native-progress';
 import {ExpenditureComponent} from '../Components/ExpenditureComponent';
-import DeviceInfo from 'react-native-device-info';
 
-// or ES6+ destructured imports
-
-import {getUniqueId, getManufacturer} from 'react-native-device-info';
 import numeral from 'numeral';
 import {ActivityIndicator} from 'react-native';
 import {Get} from '../Axios/AxiosInterceptorFunction';
@@ -35,25 +31,10 @@ import {setUserData} from '../Store/slices/common';
 import CustomButton from '../Components/CustomButton';
 import navigationService from '../navigationService';
 import { useIsFocused } from '@react-navigation/native';
+import CustomImage from '../Components/CustomImage';
 
 
 
-// const dummyArray = [
-//   {month: '11-Jan-22', value: 100},
-//   {month: '11-feb-22', value: 200},
-//   {month: '11-mar-22', value: 0},
-//   {month: '11-apr-22', value: 0},
-//   {month: '11-may-22', value: 0},
-//   {month: '11-June-22', value: 0},
-//   {month: '11-July-22', value: 0},
-//   {month: '11-aug-22', value: 0},
-//   {month: '11-sept-22', value: 0},
-//   {month: '11-oct-22', value: 0},
-//   {month: '11-nov-22', value: 0},
-//   {month: '11-dec-22', value: 0},
-//   {month: '11-jan-23', value: 0},
-//   {month: '11-fab-23', value: 0},
-// ];
 
 const HomeScreen = ({valueFormatter, data}) => {
   const focused = useIsFocused()
@@ -82,24 +63,7 @@ const HomeScreen = ({valueFormatter, data}) => {
     });
   };
 
-  // const getDeviceInfo = async () => {
-  //   let a = [];
-
-  //   a.push(DeviceInfo.getBrand());
-  //   a.push(DeviceInfo.getApplicationName());
-  //   a.push(await DeviceInfo.getDeviceName());
-  //   a.push(await DeviceInfo.getBatteryLevel());
-  //   a.push(DeviceInfo.getDeviceType());
-  //   a.push(await DeviceInfo.getFingerprint());
-  //   a.push(await DeviceInfo.getManufacturer());
-  //   a.push(DeviceInfo.getModel());
-  //   a.push(await DeviceInfo.getTotalDiskCapacity());
-  //   a.push(DeviceInfo.hasNotch());
-
-  //   if (a[0] != undefined) {
-  //     a.map(x => console.log(x));
-  //   }
-  // };
+ 
   const getUserData = async () => {
     const url = 'auth/me';
     setIsLoading(true);
@@ -195,7 +159,7 @@ const HomeScreen = ({valueFormatter, data}) => {
             )}{' '}
           </CustomText>
         </TouchableOpacity>
-        {user?.is_goal ? (
+         {user?.is_goal ? (
           <>
         <CustomText
           style={[
@@ -205,21 +169,22 @@ const HomeScreen = ({valueFormatter, data}) => {
           {'Current Goal Amount'}
         </CustomText>
       
-            <View style={styles.row}>
+           <View style={styles.row}>
               <CustomText style={styles.txt2}>
                 {numeral(user?.temporary_wallet?.amount).format('$0,0.00')}
               </CustomText>
-            </View>
+              </View>
             <CustomText style={styles.txt5}>
               last updated :{' '}
               {moment(user?.temporary_wallet?.created_at).format('ll')}
             </CustomText>
-            {/* <CustomText style={styles.txtContainer}>+$1,234,2</CustomText> */}
             <View style={{width: windowWidth * 0.8}}>
               <Progress.Bar
                 width={windowWidth * 0.8}
                 progress={
+                  
                   user?.temporary_wallet?.amount / user?.goal?.amount_save
+                
                 }
                 color={Color.green}
                 style={{
@@ -263,10 +228,10 @@ const HomeScreen = ({valueFormatter, data}) => {
                   ).format('$0,0.0')})`}
                 </CustomText>
               </View>
-            </View>
-          </>
-        ) : (
-          <CustomButton
+            </View> 
+          </> 
+         ) : (  
+           <CustomButton
        
           text={'Start New Goal'}
           isBold
@@ -282,12 +247,12 @@ const HomeScreen = ({valueFormatter, data}) => {
           borderColor={Color.white}
           borderWidth={2}
           borderRadius={moderateScale(10, 0.3)}
-        />
-        )}
+        /> 
+        )} 
 
-        <View style={styles.subcontainer}>
+        <View style={styles.subcontainer}> 
          
-          <ScrollView
+           <ScrollView
             showsVerticalScrollIndicator={false}
             style={{width: windowWidth}}
             contentContainerStyle={{
@@ -389,11 +354,41 @@ const HomeScreen = ({valueFormatter, data}) => {
                   />
                 );
               }}
+              ListEmptyComponent={()=>{
+                return(
+
+                  <View style={{
+                    width : windowWidth ,
+                    height : windowHeight * 0.3 ,
+                    // justifyContent : 'center',
+                    alignItems : 'center',
+                    // backgroundColor : 'green'
+                  }}>
+                     <CustomImage
+                    resizeMode={'contain'}
+                    source={require('../Assets/Images/notfound.png')}
+                    style={{
+                      width: windowWidth * 0.5,
+                      height: windowHeight * 0.2,
+                      // backgroundColor : 'red',
+                      alignSelf: 'center',
+                    }}
+                    />
+                    <CustomText style={{
+                      fontSize : moderateScale(16,0.3),
+                      color : Color.black
+                      
+                      // backgroundColor : 'yellow'
+                  }}>No Transaction yet</CustomText>
+                </View>
+                  )
+              }}
             />
-          </ScrollView>
-        </View>
+          </ScrollView> 
+         </View>
       </View>
     </ScreenBoiler>
+    // <View></View>
   );
 };
 

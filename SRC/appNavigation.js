@@ -37,11 +37,11 @@ import ProductDetails from './Screens/ProductDetails';
 import GoalHistory from './Screens/GoalHistory';
 import ViewCart from './Screens/ViewCart';
 import Checkout from './Screens/Checkout';
+import OrderHistory from './Screens/OrderHistory';
 
 const AppNavigator = () => {
   const user = useSelector(state => state.commonReducer.userData);
-  console.log("🚀 ~ file: appNavigation.js:40 ~ AppNavigator ~ user", user)
-  // const isLogin = false;
+  console.log("🚀 ~ file: appNavigation.js:40 ~ AppNavigator ~ user", user?.wallet?.amount , [null,'',undefined ,0].includes(user?.wallet?.amount))
   const isGoalCreated = useSelector(state => state.authReducer.isGoalCreated);
   const pm_type = useSelector(state => state.authReducer.pm_type);
   console.log("🚀 ~ file: appNavigation.js:39 ~ AppNavigator ~ pm_type", pm_type)
@@ -57,9 +57,9 @@ const AppNavigator = () => {
         ? 'Walkthrough'
         :token != null && [null,'',undefined].includes(pm_type) ?
         'AddCard' 
-        : token != null && isGoalCreated == false && [null,'',undefined].includes(user?.wallet?.amount)
+        : token != null && isGoalCreated == false && user?.wallet?.amount == 0
         ? 'SetGoals'
-        : token != null && (isGoalCreated == true ||  ![null,'',undefined].includes(user?.wallet?.amount))
+        : token != null && (isGoalCreated == true ||  user?.wallet?.amount != 0)
         ? 'TabNavigation'
         : 'LoginScreen';
 
@@ -90,6 +90,8 @@ const AppNavigator = () => {
           <RootNav.Screen name="GoalHistory" component={GoalHistory} />
           <RootNav.Screen name="ViewCart" component={ViewCart} />
           <RootNav.Screen name="Checkout" component={Checkout} />
+          <RootNav.Screen name="OrderHistory" component={OrderHistory} />
+
 
 
 

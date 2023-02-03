@@ -24,10 +24,8 @@ const SplashScreen = () => {
           duration={2500}
           useNativeDriver
           style={[styles?.textContainer]}
-          onAnimationEnd={() => {
-            console.log("hello");
-          }}
-          o
+        
+          
         >
           <CustomImage
             source={backgroundImage}

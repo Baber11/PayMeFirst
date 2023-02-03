@@ -21,7 +21,7 @@ var categoryData = [
     title: 'New Collection',
   },
   {
-    image: require('../Assets/Images/women.jpg'),
+    image: require('../Assets/Images/shoesCover.jpg'),
     title: 'Woman Clothes',
   },
   {

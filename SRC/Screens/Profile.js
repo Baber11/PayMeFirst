@@ -48,8 +48,8 @@ const Profile = () => {
           style={{
             // position: 'absolute',
             left: 0,
-            height: windowHeight * 0.2,
-            width: windowWidth,
+            height: windowHeight * 0.18,
+            width: windowWidth ,
             zIndex: -1,
           }}
         >
@@ -140,12 +140,12 @@ const Profile = () => {
             navigationService.navigate('MyAccounts');
           }}
         />
-        <ProfileContainer
+        {/* <ProfileContainer
           icon1Type={Entypo}
           icon1={'bell'}
           title={'notifications'}
           notification={true}
-        />
+        /> */}
         <ProfileContainer
           icon1Type={MaterialCommunityIcons}
           icon1={'wallet-membership'}
@@ -156,7 +156,7 @@ const Profile = () => {
             navigationService.navigate('Subscription');
           }}
         />
-          {/* <ProfileContainer
+          <ProfileContainer
           icon1Type={Fontisto}
           icon1={'shopify'}
           title={'Ecommerce Store'}
@@ -165,7 +165,7 @@ const Profile = () => {
           onPress={() => {
             navigationService.navigate('Category');
           }}
-        /> */}
+        />
           <ProfileContainer
           icon1Type={Fontisto}
           icon1={'history'}
@@ -253,7 +253,7 @@ export default Profile;
 
 const styles = StyleSheet.create({
   header: {
-    height: windowHeight * 0.45,
+    height: windowHeight * 0.42,
     width: windowWidth,
     backgroundColor: Color.green,
     borderBottomLeftRadius: moderateScale(30, 0.3),

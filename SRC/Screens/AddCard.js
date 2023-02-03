@@ -78,29 +78,26 @@ const AddCard = () => {
     setIsLoading(true);
     const responseData = await createToken({
       type: 'Card',
-      name: cardData.name,
-      address: {
-        city: cardData?.city,
-      },
+      // name: cardData.name,
+      // address: {
+      //   city: cardData?.city,
+      // },
 
       // paymentMethodData : {
       //   billingDetails,
       // }
     });
+    console.log("🚀 ~ file: AddCard.js:90 ~ addCard ~ responseData", responseData)
 
     if (responseData.error) {
       setIsLoading(false);
       console.log(responseData.error);
     }
     if (responseData != undefined) {
-      // console.log(
-      //   'dfdsfdsfdf data ========>  ',
-      //   JSON.stringify(responseData, null, 2),
-      // );
-      const responseApi = await Post(url, responseData, apiHeader(token));
+    const responseApi = await Post(url, responseData, apiHeader(token));
       setIsLoading(false);
       if (responseApi != undefined) {
-        // console.log('response >>>>>>>', responseApi?.data);
+        console.log('response >>>>>>>', responseApi?.data);
         dispatch(setUserData(responseApi?.data));
         dispatch(setPm_Type(responseApi?.data?.pm_type));
 

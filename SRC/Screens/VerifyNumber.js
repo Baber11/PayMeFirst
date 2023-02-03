@@ -172,7 +172,7 @@ const VerifyNumber = props => {
             // textTransform={"capitalize"}
             text={
               isLoading ? (
-                <ActivityIndicator color={'#000'} size={'small'} />
+                <ActivityIndicator color={'#ffffff'} size={'small'} />
               ) : (
                 'Verify now'
               )

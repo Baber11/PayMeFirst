@@ -15,10 +15,7 @@ import CustomText from '../Components/CustomText';
 
 import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 
-import {Icon, ScrollView} from 'native-base';
-import CardContainer from '../Components/CardContainer';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import {LineChart} from 'react-native-chart-kit';
+
 import CustomImage from './CustomImage';
 
 const width = Dimensions.get('window').width;

@@ -42,7 +42,7 @@ const Header = props => {
   const statusArray = [
     {label: 'Change Password', value: 'ChangePassword'},
 
-    {label: 'Terms & Conditions', value: 'TermsAndConditions'},
+    {label: 'Goal history', value: 'GoalHistory'},
     {label: 'Financial Breakdown', value: 'FinancialBreakDown'},
     {label: 'Logout', value: 'Logout'},
   ];
@@ -104,6 +104,9 @@ const Header = props => {
               right: moderateScale(20, 0.3),
             
               
+            }}
+            onPress={()=>{
+              navigationN.navigate('OrderHistory')
             }}
           />
 }

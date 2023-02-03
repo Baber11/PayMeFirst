@@ -22,7 +22,6 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomText from '../Components/CustomText';
 import {windowHeight, windowWidth} from '../Utillity/utils';
 import Color from '../Assets/Utilities/Color';
-import ImagePicker from 'react-native-image-crop-picker';
 
 const requestCameraPermission = async () => {
   try {

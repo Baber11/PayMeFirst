@@ -10,7 +10,7 @@ const requestLocationPermission = async () => {
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       {
         title: 'Location Access Required',
-        message: 'This App needs to Access your location',
+        message: 'App needs to Access your location',
       },
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -30,7 +30,7 @@ const requestCameraPermission = async () => {
       {
         title: 'Camera Permission',
         message:
-          'Breakaway App needs access to your camera ' +
+          'App needs access to your camera ' +
           'so you can take awesome pictures.',
       },
     );
@@ -50,7 +50,7 @@ const requestWritePermission = async () => {
       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
       {
         title: 'Storage Access Required',
-        message: 'This App needs to Access your Storage',
+        message: 'App needs to Access your Storage',
       },
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {

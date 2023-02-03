@@ -31,7 +31,7 @@ import numeral from 'numeral';
 import ShowMoreAndShowLessText from '../Components/ShowMoreAndShowLessText';
 import ReviewCard from '../Components/ReviewCard';
 import CustomButton from '../Components/CustomButton';
-import Share from 'react-native-share';
+// import Share from 'react-native-share';
 import navigationService from '../navigationService';
 
 const ProductDetails = props => {
@@ -42,6 +42,7 @@ const ProductDetails = props => {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedIndex, setIndex] = useState();
+  console.log("🚀 ~ file: ProductDetails.js:41 ~ ProductDetails ~ detail", {...detail , selectedSize  : selectedSize , selectedColor : selectedColor})
 
   // console.log(
   //   '🚀 ~ file: SelectedCategory.js:50 ~ SelectedCategory ~ cartData',
@@ -214,7 +215,7 @@ const ProductDetails = props => {
             }}>
             {numeral(detail?.price).format('$0,0.0')}
           </CustomText>
-          <Icon
+          {/* <Icon
             name={'share'}
             as={MaterialIcons}
             size={moderateScale(25, 0.3)}
@@ -231,7 +232,7 @@ const ProductDetails = props => {
                   err && console.log(err);
                 });
             }}
-          />
+          /> */}
         </View>
         <ShowMoreAndShowLessText
           style={{
@@ -439,10 +440,7 @@ const ProductDetails = props => {
           />
         )}
         <CustomButton
-          text={
-            cartData.some(x => x?.id == detail?.id)
-              ? 'Added To cart'
-              : 'Add To Cart'
+          text={ cartData.some(x => x?.id == detail?.id)? 'Added To cart': 'Add To Cart'
           }
           isBold
           textColor={Color.white}
@@ -458,7 +456,7 @@ const ProductDetails = props => {
                   )
                 : alert('Please Select Size and Color Both');
             } else {
-              dispatch(setCartData(detail));
+              dispatch(setCartData({...detail , selectedSize  : selectedSize , selectedColor : selectedColor}));
             }
           }}
           bgColor={Color.green}

@@ -88,7 +88,10 @@ const SignupScreen = () => {
       }
       formData.append(key , params[key]);
     }
-    formData.append('photo',image)
+    if(Object.keys(image).length > 0 ){
+
+      formData.append('photo',image)
+    }
     console.log(JSON.stringify(formData,null,2))
     if (isNaN(phone)) {
       return Platform.OS == 'android'
@@ -136,13 +139,26 @@ const SignupScreen = () => {
       statusBarBackgroundColor={Color.green}
       statusBarContentStyle={'light-content'}
     >
+       <ImageBackground
+        source={require('../Assets/Images/chatBackground.png')}
+        // imageStyle={{flex: 1}}
+        style={{
+          height : windowHeight *1,
+          // flex: 1,
+          backgroundColor: '#E8E8E9',
+          // marginTop: moderateScale(-20, 0.3),
+          zIndex: -1,
+          // backgroundColor : 'red'
+        }}
+      >
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           alignItems: 'center',
           paddingBottom: moderateScale(50, 0.3),
           paddingTop: moderateScale(30, 0.3),
-          // backgroundColor : 'red'
+
+          // backgroundColor : '#FFFFFF'
         }}
       >
         <CustomText style={styles.Txt}>
@@ -151,9 +167,10 @@ const SignupScreen = () => {
             isBold
             style={{
               // lineHeight: moderateScale(50, 0.3),
-              fontSize: moderateScale(40, 0.3),
-              color: Color.green,
+              fontSize: moderateScale(35, 0.3),
+              color: Color.themeGreen,
               fontWeight: 'bold',
+              // textTransform : 'uppercase'
             }}
           >
             PayMeFirst
@@ -195,11 +212,11 @@ const SignupScreen = () => {
           viewHeight={0.07}
           viewWidth={0.9}
           inputWidth={0.88}
-          border={2}
+          border={1}
           borderColor={Color.themeLightGray}
           backgroundColor={'transparent'}
           marginTop={moderateScale(30, 0.3)}
-          color={Color.themeLightGray}
+          color={Color.green}
           placeholderColor={Color.themeLightGray}
         />
         <TextInputWithTitle
@@ -213,11 +230,11 @@ const SignupScreen = () => {
           viewHeight={0.07}
           viewWidth={0.9}
           inputWidth={0.88}
-          border={2}
+          border={1}
           borderColor={Color.themeLightGray}
           backgroundColor={'transparent'}
           marginTop={moderateScale(15, 0.3)}
-          color={Color.themeLightGray}
+          color={Color.green}
           placeholderColor={Color.themeLightGray}
         />
         <View
@@ -264,13 +281,13 @@ const SignupScreen = () => {
               visible={showNumberModal}
               containerButtonStyle={{
                 borderRadius: moderateScale(8, 0.3),
-                borderWidth: 2,
+                borderWidth: 1,
                 borderColor: Color.themeLightGray,
                 color: Color.lightGrey,
                 width: width * 0.2,
-                marginLeft: -15,
+                marginLeft: -moderateScale(15,0.3),
                 height: height * 0.07,
-                marginTop: 15,
+                marginTop: moderateScale(15,0.3),
                 justifyContent: 'center',
                 alignItems: 'center',
                 marginRight: moderateScale(10, 0.3),
@@ -288,11 +305,11 @@ const SignupScreen = () => {
             viewHeight={0.07}
             viewWidth={0.67}
             inputWidth={0.65}
-            border={2}
+            border={1}
             borderColor={Color.themeLightGray}
             backgroundColor={'transparent'}
             marginTop={moderateScale(15, 0.3)}
-            color={Color.themeLightGray}
+            color={Color.green}
             placeholderColor={Color.themeLightGray}
             keyboardType={'phone-pad'}
           />
@@ -309,11 +326,11 @@ const SignupScreen = () => {
           viewHeight={0.07}
           viewWidth={0.9}
           inputWidth={0.88}
-          border={2}
+          border={1}
           borderColor={Color.themeLightGray}
           backgroundColor={'transparent'}
           marginTop={moderateScale(15, 0.3)}
-          color={Color.themeLightGray}
+          color={Color.green}
           placeholderColor={Color.themeLightGray}
           keyboardType={'email-address'}
         />
@@ -328,11 +345,11 @@ const SignupScreen = () => {
           viewHeight={0.07}
           viewWidth={0.9}
           inputWidth={0.88}
-          border={2}
+          border={1}
           borderColor={Color.themeLightGray}
           backgroundColor={'transparent'}
           marginTop={moderateScale(15, 0.3)}
-          color={Color.themeLightGray}
+          color={Color.green}
           placeholderColor={Color.themeLightGray}
         />
 
@@ -348,11 +365,11 @@ const SignupScreen = () => {
           viewWidth={0.9}
           inputWidth={0.88}
           // marginTop={0.04}
-          border={2}
+          border={1}
           borderColor={Color.themeLightGray}
           backgroundColor={'transparent'}
           marginTop={moderateScale(15, 0.3)}
-          color={Color.themeLightGray}
+          color={Color.green}
           placeholderColor={Color.themeLightGray}
         />
         <TextInputWithTitle
@@ -367,11 +384,11 @@ const SignupScreen = () => {
           viewWidth={0.9}
           inputWidth={0.88}
           // marginTop={0.04}
-          border={2}
+          border={1}
           borderColor={Color.themeLightGray}
           backgroundColor={'transparent'}
           marginTop={moderateScale(15, 0.3)}
-          color={Color.themeLightGray}
+          color={Color.green}
           placeholderColor={Color.themeLightGray}
         />
 
@@ -392,7 +409,8 @@ const SignupScreen = () => {
           onPress={SignUp}
           bgColor={Color.green}
           borderColor={Color.green}
-          borderWidth={2}
+          // borderWidth={1}
+
           borderRadius={moderateScale(10, 0.3)}
         />
 
@@ -413,6 +431,7 @@ const SignupScreen = () => {
         setFileObject={setImage}
       />
       </ScrollView>
+      </ImageBackground>
     </ScreenBoiler>
   );
 };
@@ -425,7 +444,7 @@ const styles = ScaledSheet.create({
   },
   Txt: {
     marginTop: moderateScale(10, 0.3),
-    color: Color.green,
+    color: Color.themeGreen,
     fontSize: moderateScale(22, 0.6),
     textAlign: 'center',
   },
