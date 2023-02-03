@@ -51,6 +51,17 @@ const Header = props => {
     <View
       style={[
         styles.header1,
+        Platform.OS == 'android' &&{
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 5,
+          },
+          shadowOpacity: 0.36,
+          shadowRadius: 6.68,
+      
+          elevation: 11,
+        },
         headerColor && {
           backgroundColor: headerColor,
           borderWidth: 0.5,
@@ -267,15 +278,7 @@ const styles = ScaledSheet.create({
     backgroundColor: Color.white,
     // marginBottom: moderateScale(5, 0.3),
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.36,
-    shadowRadius: 6.68,
-
-    elevation: 11,
+   
   },
   statusModal: {
     alignSelf: 'flex-end',

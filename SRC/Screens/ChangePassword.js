@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {ScaledSheet, moderateScale} from 'react-native-size-matters';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
 
 import TextInputWithTitle from '../Components/TextInputWithTitle';
@@ -146,7 +146,7 @@ const ChangePassword = props => {
         <View style={{marginTop: moderateScale(50, 0.3)}}>
           <TextInputWithTitle
             iconName="lock"
-            iconType={FontAwesome5}
+            iconType={FontAwesome}
             titleText={'Current Password'}
             secureText={true}
             placeholder={'Current Password'}
@@ -164,7 +164,7 @@ const ChangePassword = props => {
           />
           <TextInputWithTitle
             iconName="lock"
-            iconType={FontAwesome5}
+            iconType={FontAwesome}
             titleText={'New Password'}
             secureText={true}
             placeholder={'New Password'}
@@ -182,7 +182,7 @@ const ChangePassword = props => {
           />
           <TextInputWithTitle
             iconName="lock"
-            iconType={FontAwesome5}
+            iconType={FontAwesome}
             titleText={'Confirm Password'}
             secureText={true}
             placeholder={'Confirm Password'}

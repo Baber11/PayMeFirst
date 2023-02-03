@@ -18,7 +18,7 @@ import {Icon} from 'native-base';
 import Modal from 'react-native-modal';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Entypo from 'react-native-vector-icons/Entypo';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import CustomText from '../Components/CustomText';
 import {windowHeight, windowWidth} from '../Utillity/utils';
 import Color from '../Assets/Utilities/Color';
@@ -188,10 +188,12 @@ const ImagePickerModal = props => {
             style={styles.modalContentBtn}>
             <Icon
               name={'camera'}
-              as={FontAwesome5}
+              as={Entypo}
               size={moderateScale(25, 0.3)}
               style={{
                 color: Color.white,
+                // backgroundColor : 'red',
+                // paddingHorizontal : 10
               }}
             />
             <CustomText style={styles.modalBtnText}>Camera</CustomText>

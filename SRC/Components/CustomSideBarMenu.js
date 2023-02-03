@@ -16,7 +16,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Color from "../Assets/Utilities/Color";
 import CustomText from "./CustomText";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -92,7 +91,7 @@ const CustomSidebarMenu = (props) => {
               >
                 <Icon
                   name={"pen"}
-                  as={FontAwesome5}
+                  as={FontAwesome}
                   size={moderateScale(13, 0.3)}
                   color={Color.black}
                   style={{ marginTop: moderateScale(2, 0.3) }}
@@ -179,7 +178,7 @@ const CustomSidebarMenu = (props) => {
                 icon={() => (
                   <Icon
                     name="hand-point-up"
-                    as={FontAwesome5}
+                    as={FontAwesome}
                     size={moderateScale(20, 0.3)}
                     style={styles.iconStyle}
                   />
@@ -260,7 +259,7 @@ const CustomSidebarMenu = (props) => {
             icon={() => (
               <Icon
                 name="file-signature"
-                as={FontAwesome5}
+                as={FontAwesome}
                 size={moderateScale(20, 0.3)}
                 style={styles.iconStyle}
               />

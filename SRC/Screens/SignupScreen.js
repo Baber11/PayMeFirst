@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import {ScaledSheet, moderateScale} from 'react-native-size-matters';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {useDispatch, useSelector} from 'react-redux';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
@@ -355,7 +354,7 @@ const SignupScreen = () => {
 
         <TextInputWithTitle
           iconName="lock"
-          iconType={FontAwesome5}
+          iconType={FontAwesome}
           titleText={'Password'}
           secureText={true}
           placeholder={'Password'}
@@ -374,7 +373,7 @@ const SignupScreen = () => {
         />
         <TextInputWithTitle
           iconName="lock"
-          iconType={FontAwesome5}
+          iconType={FontAwesome}
           titleText={'Confirm Password'}
           secureText={true}
           placeholder={'Confirm Password'}
