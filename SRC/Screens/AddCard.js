@@ -39,6 +39,7 @@ const height = Dimensions.get('window').height;
 
 const AddCard = () => {
   const token = useSelector(state => state.authReducer.token);
+  console.log("🚀 ~ file: AddCard.js:42 ~ AddCard ~ token", token)
   const dispatch = useDispatch();
   const {userData} = useSelector(state => state.commonReducer);
   // console.log('🚀 ~ file: AddCard.js:39 ~ AddCard ~ userData', userData);
@@ -58,15 +59,15 @@ const AddCard = () => {
   const addCard = async () => {
     const url = 'auth/addcard';
 
-    const billingDetails: BillingDetails = {
-      email: cardData.email,
-      name: cardData.name,
-      phone: cardData.phone,
-      // address : {
-      city: cardData.city,
-      // country : 'PK'
-      // }
-    };
+    // const billingDetails: BillingDetails = {
+    //   email: cardData.email,
+    //   name: cardData.name,
+    //   phone: cardData.phone,
+    //   // address : {
+    //   city: cardData.city,
+    //   // country : 'PK'
+    //   // }
+    // };
     // for (let key in billingDetails) {
     //   if (billingDetails[key] == '') {
     //     return Platform.OS == 'android'
@@ -87,19 +88,20 @@ const AddCard = () => {
       //   billingDetails,
       // }
     });
-    console.log("🚀 ~ file: AddCard.js:90 ~ addCard ~ responseData", responseData)
+    console.log("🚀 ~ file: AddCard.js:90 ~ addCard ~ responseData", JSON.stringify(responseData,null,2))
 
     if (responseData.error) {
       setIsLoading(false);
       console.log(responseData.error);
     }
     if (responseData != undefined) {
+      // return console.log(responseData?.token?.id);
     const responseApi = await Post(url, responseData, apiHeader(token));
       setIsLoading(false);
       if (responseApi != undefined) {
-        console.log('response >>>>>>>', responseApi?.data);
-        dispatch(setUserData(responseApi?.data));
-        dispatch(setPm_Type(responseApi?.data?.pm_type));
+        console.log('response >>>>>>>', JSON.stringify(responseApi?.data,null,2));
+        dispatch(setUserData(responseApi?.data?.data));
+        dispatch(setPm_Type(responseApi?.data?.data?.pm_type));
 
         Platform.OS == 'android'
           ? ToastAndroid.show('Card Saved', ToastAndroid.SHORT)

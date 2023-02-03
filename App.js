@@ -44,7 +44,7 @@ const App = () => {
   console.reportErrorsAsExceptions = false;
   return (
     <StripeProvider 
-    publishableKey={"pk_test_51JIdZVJehHGbCsaCYiCquX3mKuZDrym2d3EU31L8fDxs8886NBrqsg3rYrp8bHIdl7wvARE7vxLuNfhsrY5SFbCw00tHX5coQC"}
+    publishableKey={"pk_test_51LCrVHHNvw3AIrpxbW6YRt474JjQ4PpqMivtUwvxeSTVunzUBUPdSlVgkMcJYUD52ffHIgjAxHJDW52o1B2almWu00exPb0ci6"}
     // merchantIdentifier="merchant.identifier" // required for Apple Pay
     // urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
   >
