@@ -9,7 +9,6 @@ import {windowHeight, windowWidth} from '../Utillity/utils';
 import CustomText from './CustomText';
 import CustomImage from './CustomImage';
 const {height, width} = Dimensions.get('window');
-import Foundation from 'react-native-vector-icons/Foundation';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 

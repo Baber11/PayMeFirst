@@ -35,9 +35,11 @@ import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import Modal from 'react-native-modal';
 import CustomButton from '../Components/CustomButton';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
-import { ToastAndroid } from 'react-native';
+import {ToastAndroid} from 'react-native';
 import CustomAlertModal from '../Components/CustomAlertModal';
 import navigationService from '../navigationService';
+import {setUserData} from '../Store/slices/common';
+import {setPm_Type} from '../Store/slices/auth';
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
@@ -57,9 +59,10 @@ const PaymentMethod = props => {
     email: '',
     city: '',
   });
-  const [alertModalVisible,setAlertModalVisible] = useState(false)
+  const [alertModalVisible, setAlertModalVisible] = useState(false);
 
-  const cardName =user?.pm_type == 'Visa'
+  const cardName =
+    user?.pm_type == 'Visa'
       ? require('../Assets/Images/visa.png')
       : user?.pm_type.toLowerCase() == 'mastercard'
       ? require('../Assets/Images/master.png')
@@ -73,45 +76,47 @@ const PaymentMethod = props => {
       ? require('../Assets/Images/unionPay.png')
       : (imageUrl = require('../Assets/Images/otherCards.png'));
 
-      const addCard = async () => {
-        const url = 'auth/updatecard';
-    
-        const billingDetails: BillingDetails = {
-          email: cardData.email,
-          name: cardData.name,
-          phone: cardData.phone,
-          city: cardData.city,
-          // country : 'PK'
-          // }
-        };
-        setIsLoading(true);
-        const responseData = await createToken({
-          type: 'Card',
-        
-        });
-        console.log("🚀 ~ file: AddCard.js:90 ~ addCard ~ responseData", responseData)
-    
-        if (responseData.error) {
-          setIsLoading(false);
-          console.log(responseData.error);
-        }
-        if (responseData != undefined) {
-        const responseApi = await Post(url, responseData, apiHeader(token));
-          console.log("🚀 ~ file: PaymentMethod.js:100 ~ PaymentMethod ~ responseApi", responseApi)
-          setIsLoading(false);
-          if (responseApi != undefined) {
-            console.log('response >>>>>>>', responseApi?.data);
-            // dispatch(setUserData(responseApi?.data));
-            // dispatch(setPm_Type(responseApi?.data?.pm_type));
-    
-            Platform.OS == 'android'
-              ? ToastAndroid.show('Card Saved', ToastAndroid.SHORT)
-              : alert('Card Saved');
-    
-            // navigationService.navigate('SetGoals');
-          }
-        }
-      };
+  const addCard = async () => {
+    const url = 'auth/updatecard';
+
+    // const billingDetails: BillingDetails = {
+    //   email: cardData.email,
+    //   name: cardData.name,
+    //   phone: cardData.phone,
+    //   city: cardData.city,
+    //   // country : 'PK'
+    //   // }
+    // };
+    setIsLoading(true);
+    const responseData = await createToken({
+      type: 'Card',
+    });
+    console.log(
+      '🚀 ~ file: AddCard.js:90 ~ addCard ~ responseData',
+      responseData,
+    );
+
+    if (responseData.error) {
+      setIsLoading(false);
+      console.log(responseData.error);
+    }
+    if (responseData != undefined) {
+      const responseApi = await Post(url, responseData, apiHeader(token));
+      // console.log("🚀 ~ file: PaymentMethod.js:100 ~ PaymentMethod ~ responseApi", responseApi)
+      setIsLoading(false);
+      if (responseApi != undefined) {
+        console.log('response >>>>>>>', responseApi?.data);
+        dispatch(setUserData(responseApi?.data?.data));
+        dispatch(setPm_Type(responseApi?.data?.data?.pm_type));
+
+        Platform.OS == 'android'
+          ? ToastAndroid.show('Card Saved', ToastAndroid.SHORT)
+          : alert('Card Saved');
+
+        // navigationService.navigate('SetGoals');
+      }
+    }
+  };
 
   //   const {
   //     isDelete,
@@ -424,11 +429,27 @@ const PaymentMethod = props => {
           source={cardName}
           resizeMode="contain"
           style={[styles?.cardContainer]}>
-          <CustomText style={[user?.pm_type == 'Visa' ? styles.cardNumberText : styles.cardNumberText1]}>{user?.pm_last_four}</CustomText>
-        <CustomText style={[user?.pm_type == 'Visa' ?  styles.cardExpireText : styles.cardExpireText1]}>
-          {user?.exp_month == null ? '02/26' : `${moment(user?.exp_month).format('DD')} / ${moment(user?.exp_year).format('YY')}`}
-        </CustomText>
-        
+          <CustomText
+            style={[
+              user?.pm_type == 'Visa'
+                ? styles.cardNumberText
+                : styles.cardNumberText1,
+            ]}>
+            {user?.pm_last_four}
+          </CustomText>
+          <CustomText
+            style={[
+              user?.pm_type == 'Visa'
+                ? styles.cardExpireText
+                : styles.cardExpireText1,
+            ]}>
+            {user?.exp_month == null
+              ? '02/26'
+              : `${moment(user?.exp_month).format('DD')} / ${moment(
+                  user?.exp_year,
+                ).format('YY')}`}
+          </CustomText>
+
           {/* <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => {
@@ -472,10 +493,10 @@ const PaymentMethod = props => {
             // alert(
             //   'AddCard Modal Will open after connecting to stripe but only if above card is detached ',
             // );
-            user?.current_plan == 'basic' ? 
-            setAlertModalVisible(true)
-            :
-            setIsModalVisible(true);
+            user?.current_plan == 'basic' ||
+            [0, null, ''].includes(user?.card_change_limit)
+              ? setAlertModalVisible(true)
+              : setIsModalVisible(true);
             // setShowCardModal(true);
           }}
           style={[
@@ -661,23 +682,23 @@ const PaymentMethod = props => {
         </View>
       </Modal>
       <CustomAlertModal
-      isModalVisible={alertModalVisible}
-      onClose={() => {
-        
-        setAlertModalVisible(false);
-      }}
-      onOKPress={() => {
-        
-        setAlertModalVisible(false);
-        navigationService.navigate('Subscription',{fromStores : true});
-      }}
-      title={'Hold On !!'}
-      message={
-        'You are on Basic plan , please upgrade it to avail this feature'
-      }
-      iconType={2}
-      areYouSureAlert
-    />
+        isModalVisible={alertModalVisible}
+        onClose={() => {
+          setAlertModalVisible(false);
+        }}
+        onOKPress={() => {
+          setAlertModalVisible(false);
+          navigationService.navigate('Subscription', {fromStores: true});
+        }}
+        title={'Hold On !!'}
+        message={
+          user?.current_plan == 'basic'
+            ? 'You are on Basic plan , please upgrade it to avail this feature'
+            : 'You have reached your card change limit wait till your premium membership expires'
+        }
+        iconType={2}
+        areYouSureAlert
+      />
     </ScreenBoiler>
     // <>
     //   <CustomStatusBar
@@ -893,18 +914,18 @@ const styles = ScaledSheet.create({
     position: 'absolute',
     right: '27%',
     top: '49%',
-    letterSpacing : 3,
+    letterSpacing: 3,
     fontSize: moderateScale(15, 0.3),
   },
-  cardNumberText1 : {
+  cardNumberText1: {
     color: Color.white,
     position: 'absolute',
     right: '13%',
     top: '46%',
-    letterSpacing : 3,
+    letterSpacing: 3,
     fontSize: moderateScale(13, 0.3),
   },
-  cardExpireText1 : {
+  cardExpireText1: {
     color: Color.white,
     position: 'absolute',
     left: '21%',
