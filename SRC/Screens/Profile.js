@@ -34,6 +34,9 @@ import { profilePicUrl } from '../Config';
 const Profile = () => {
   const dispatch = useDispatch();
   const user = useSelector((state)=>state.commonReducer.userData);
+  const points = useSelector((state)=>state.commonReducer.points);
+  console.log("🚀 ~ file: Profile.js:38 ~ Profile ~ points", points)
+
   const [isVisible , setIsVisible] = useState(false);
 
   return (
@@ -123,6 +126,25 @@ const Profile = () => {
           >
            {user?.email}
           </CustomText>
+          <View style={{
+            flexDirection : 'row',
+            marginTop : moderateScale(5,0.3),
+            alignItems : 'center'
+          }}>
+            <Icon
+            name={'trophy'}
+            as={Entypo}
+            size={moderateScale(17,0.3)}
+            color={'#FFD700'}
+            />
+            <CustomText isBold style={
+              {
+                marginLeft : moderateScale(5,0.3),
+                color : Color.white ,
+                fontSize : moderateScale(11,0.3)
+              }
+            }>{points} points</CustomText>
+          </View>
         </View>
       </View>
       <ScrollView

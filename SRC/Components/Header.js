@@ -21,6 +21,9 @@ import {setUserLogout} from '../Store/slices/auth';
 const Header = props => {
   const dispatch = useDispatch();
   const notification = useSelector(state => state.commonReducer.notification)
+  const cartData = useSelector(state => state.commonReducer.cartData)
+  // console.log("🚀 ~ file: Header.js:25 ~ Header ~ cartData", cartData)
+
   const navigationN = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
   const {
@@ -116,7 +119,7 @@ const Header = props => {
               
             }}
             onPress={()=>{
-              navigationN.navigate('OrderHistory')
+              cartData?.length > 0 && navigationN.navigate('OrderHistory')
             }}
           />
 }

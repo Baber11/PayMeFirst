@@ -44,12 +44,14 @@ const ReviewCard = ({ item ,photo, title, date, message }) => {
         maxStars={5}
         rating={item?.rating}
         starSize={moderateScale(12,0.3)}
-        halfStarColor={'yellow'}
-        fullStarColor={'yellow'}
+        halfStarColor={'#FF9529'}
+        fullStarColor={'#FF9529'}
         starStyle={{
+          marginRight :moderateScale(2.5,0.3)
+        
         }}
         containerStyle={{
-          width : moderateScale(55,0.3)
+          width : windowWidth * 0.05,
         }}
         // selectedStar={(rating) => this.onStarRatingPress(rating)}
       />

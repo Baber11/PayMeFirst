@@ -6,7 +6,8 @@ const initialState = {
   categoryProperties: [],
   financeBreakDown: [],
   notification : false,
-  cartData : []
+  cartData : [],
+  points : 0 ,
 
 };
 
@@ -68,6 +69,9 @@ const CommonSlice = createSlice({
     setNotification(state,action){
       state.notification = action.payload
     },
+    setPoints(state,action){
+      state.points = action.payload
+    }
   
   },
 });
@@ -85,7 +89,8 @@ export const {
   setProductColor,
   setProductSize,
   subQuantity,
-  addQuantity
+  addQuantity,
+  setPoints
   
 } = CommonSlice.actions;
 

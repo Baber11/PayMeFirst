@@ -92,7 +92,7 @@ const LoginScreen = () => {
   return (
     <ScreenBoiler
       showHeader={true}
-      showBack={true}
+      // showBack={true}
       statusBarBackgroundColor={Color.white}
       statusBarContentStyle={'dark-content'}
       headerType={1}

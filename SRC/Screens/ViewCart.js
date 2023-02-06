@@ -16,8 +16,9 @@ import navigationService from '../navigationService'
 const ViewCart = () => {
   const dispatch = useDispatch();
   const cartData = useSelector(state => state.commonReducer.cartData);
+  console.log("🚀 ~ file: ViewCart.js:19 ~ ViewCart ~ cartData", cartData)
   const [finalAmount , setFinalAmount] = useState(0);
-  console.log("🚀 ~ file: ViewCart.js:20 ~ ViewCart ~ finalAmount", finalAmount)
+  // console.log("🚀 ~ file: ViewCart.js:20 ~ ViewCart ~ finalAmount", finalAmount)
 
   useEffect(() => {
     setFinalAmount(0)
@@ -89,13 +90,14 @@ const ViewCart = () => {
               <TouchableOpacity 
               activeOpacity={0.9}
               onPress={async()=>{
-                let goAhead = false ;
-                await cartData.map((x,index)=>{
+                const response = await cartData.filter((x,index)=>{
                   return(
-                    [x?.selectedColor , x?.selectedSize]?.includes(undefined) ? goAhead = false : goAhead = true
+                    x?.selectedColor == undefined  || x?.selectedSize == undefined
                   )
                 })
-               goAhead == false ? alert('Please Select Sizes and Colors of all products in the cart') :
+
+                console.log('dasdasdasdasdsdsa', response);
+                response?.length > 0 ? alert('Please Select Sizes and Colors of all products in the cart') :
                navigationService.navigate('Checkout',{subTotal : finalAmount})
               }}
               style={{

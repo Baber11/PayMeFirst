@@ -31,6 +31,7 @@ const CustomTable = ({
         renderItem={({item, index}) => {
           return (
             <TouchableOpacity
+            key={index}
               activeOpacity={0.9}
               onPress={onPress && onPress}
               style={styles.row}
