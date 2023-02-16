@@ -19,11 +19,7 @@ import moment from 'moment';
 
 const OrderHistory = () => {
   const orderHistory = useSelector(state => state.commonReducer.cartData);
-  // console.log(
-  //   '🚀 ~ file: OrderHistory.js:9 ~ OrderHistory ~ orderHistory',
-  //   JSON.stringify(orderHistory, null, 2),
-  // );
-  const [filterArray, setFilterArray] = useState([]);
+   const [filterArray, setFilterArray] = useState([]);
   console.log("🚀 ~ file: OrderHistory.js:27 ~ OrderHistory ~ filterArray", filterArray)
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [filter, setFilter] = useState('');
@@ -45,8 +41,10 @@ const OrderHistory = () => {
         horizontal
         style={styles.filter}
         contentContainerStyle={{
-          paddingVertical: moderateScale(10, 0.3),
+          // height : moderateScale(50,0.3),
+          // paddingVertical: moderateScale(10, 0.3),
           alignItems: 'center',
+          // backgroundColor : 'red'
         }}>
         <TouchableOpacity
           onPress={() => {
@@ -307,6 +305,7 @@ const styles = ScaledSheet.create({
     // width : windowWidth ,
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
+    flexGrow : 0
   },
   modalUpperView: {
     backgroundColor: Color.green,
