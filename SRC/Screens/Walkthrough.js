@@ -132,11 +132,7 @@ const Walkthrough = props => {
       statusBarContentStyle={'dark-content'}
     >
       <View style={styles.container}>
-        {/* <CustomImage
-          source={backgroundImage}
-          resizeMode="contain"
-          style={styles.bgImage}
-        /> */}
+      
         <AppIntroSlider
           renderItem={RenderSlider}
           data={slides}
@@ -161,6 +157,7 @@ const Walkthrough = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // backgroundColor : 'red'
   },
   bgImage: {
     flex: 1,

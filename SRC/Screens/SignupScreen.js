@@ -142,11 +142,11 @@ const SignupScreen = () => {
         source={require('../Assets/Images/chatBackground.png')}
         // imageStyle={{flex: 1}}
         style={{
-          height : windowHeight *1,
+          // height : windowHeight *1,
           // flex: 1,
           backgroundColor: '#E8E8E9',
           // marginTop: moderateScale(-20, 0.3),
-          zIndex: -1,
+          // zIndex: -1,
           // backgroundColor : 'red'
         }}
       >

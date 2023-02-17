@@ -64,7 +64,7 @@ const Rewards = () => {
     var pointsTotal = 0;  
     if(state.length > 0){
 
-      state.map((x)=>pointsTotal += x?.points);
+      state.map((x)=>pointsTotal += parseInt(x?.points));
       dispatch(setPoints(pointsTotal))
         
     }
