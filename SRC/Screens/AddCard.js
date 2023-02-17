@@ -39,7 +39,7 @@ const height = Dimensions.get('window').height;
 
 const AddCard = () => {
   const token = useSelector(state => state.authReducer.token);
-  console.log("🚀 ~ file: AddCard.js:42 ~ AddCard ~ token", token)
+  // console.log("🚀 ~ file: AddCard.js:42 ~ AddCard ~ token", token)
   const dispatch = useDispatch();
   const {userData} = useSelector(state => state.commonReducer);
   // console.log('🚀 ~ file: AddCard.js:39 ~ AddCard ~ userData', userData);
@@ -186,7 +186,6 @@ const AddCard = () => {
             color={'#11A44C'}
             placeholderColor={Color.themeLightGray}
             borderRadius={moderateScale(20, 0.3)}
-            keyboardType={'numeric'}
           />
           <View style={[styles.phoneView, {marginTop: moderateScale(8, 0.3)}]}>
             <TextInputWithTitle
@@ -208,7 +207,6 @@ const AddCard = () => {
               color={'#11A44C'}
               placeholderColor={Color.themeLightGray}
               borderRadius={moderateScale(20, 0.3)}
-              keyboardType={'numeric'}
             />
 
             {/* <View style={styles.cont}>
@@ -257,7 +255,6 @@ const AddCard = () => {
               color={'#11A44C'}
               placeholderColor={Color.themeLightGray}
               borderRadius={moderateScale(20, 0.3)}
-              keyboardType={'numeric'}
             />
           </View>
 

@@ -21,7 +21,7 @@
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
     "@reduxjs/toolkit": "^1.8.2",
-    "@stripe/stripe-react-native": "^0.23.0",
+    "@stripe/stripe-react-native": "^0.23.3",
     "axios": "^0.21.4",
     "babel-plugin-r-if": "^0.0.3",
     "moment": "^2.29.3",

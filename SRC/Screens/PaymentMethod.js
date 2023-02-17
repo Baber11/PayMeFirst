@@ -48,7 +48,7 @@ const PaymentMethod = props => {
   const user = useSelector(state => state.commonReducer.userData);
   const token = useSelector(state => state.authReducer.token);
 
-  // console.log('🚀 ~ file: PaymentMethod.js:37 ~ PaymentMethod ~ user', JSON.stringify(user,null,2));
+  console.log('🚀 ~ file: PaymentMethod.js:37 ~ PaymentMethod ~ user', JSON.stringify(user,null,2));
   const dispatch = useDispatch();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -105,7 +105,7 @@ const PaymentMethod = props => {
       // console.log("🚀 ~ file: PaymentMethod.js:100 ~ PaymentMethod ~ responseApi", responseApi)
       setIsLoading(false);
       if (responseApi != undefined) {
-        console.log('response >>>>>>>', responseApi?.data);
+       console.log('response >>>>>>>', responseApi?.data);
         dispatch(setUserData(responseApi?.data?.data));
         dispatch(setPm_Type(responseApi?.data?.data?.pm_type));
 
@@ -588,7 +588,7 @@ const PaymentMethod = props => {
             color={'#11A44C'}
             placeholderColor={Color.themeLightGray}
             borderRadius={moderateScale(20, 0.3)}
-            keyboardType={'numeric'}
+          
           />
           <View style={[styles.phoneView, {marginTop: moderateScale(8, 0.3)}]}>
             <TextInputWithTitle
@@ -610,7 +610,7 @@ const PaymentMethod = props => {
               color={'#11A44C'}
               placeholderColor={Color.themeLightGray}
               borderRadius={moderateScale(20, 0.3)}
-              keyboardType={'numeric'}
+            
             />
           </View>
           <View style={[styles.phoneView, {marginTop: moderateScale(5, 0.3)}]}>
@@ -655,7 +655,7 @@ const PaymentMethod = props => {
               color={'#11A44C'}
               placeholderColor={Color.themeLightGray}
               borderRadius={moderateScale(20, 0.3)}
-              keyboardType={'numeric'}
+             
             />
           </View>
 

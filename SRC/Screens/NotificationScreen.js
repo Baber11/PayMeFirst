@@ -1,12 +1,27 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ScreenBoiler from '../Components/ScreenBoiler'
 import moment from 'moment'
 import { FlatList } from 'native-base'
 import { moderateScale } from 'react-native-size-matters'
 import NotificationCard from '../Components/NotificationCard'
+import { Get } from '../Axios/AxiosInterceptorFunction'
+import { useSelector } from 'react-redux'
 
 const NotificationScreen = () => {
+    const token = useSelector((state)=>state.authReducer.token)
+    const [isLoading , setIsLoading] = useState(false);
+
+    
+    const GetNotification =async()=>{
+        const url = 'auth/notification';
+        setIsLoading(true)
+        const response = await Get(url , token)
+        setIsLoading(false)
+        if(response != undefined){
+            console.log('fdfasdasdas=>', response?.data)
+        }
+    }
 
 
 
@@ -60,6 +75,12 @@ const NotificationScreen = () => {
                onPress : ()=>{console.log('no action yet')}
         }
     ]
+
+
+useEffect(() => {
+    GetNotification()
+}, [])
+
 
   return (
     <ScreenBoiler

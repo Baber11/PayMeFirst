@@ -1,4 +1,4 @@
-export const baseUrl = "https://www.amazing-grothendieck.23-83-37-162.plesk.page";
+export const baseUrl = "https://paymefirst.ad-wize.com";
 // export const baseUrl = "https://851f-113-203-241-37.in.ngrok.io";
 
 export const imageUrl = `${baseUrl}/api/images/`;
