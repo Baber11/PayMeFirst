@@ -84,6 +84,7 @@ const TextInputWithTitle = props => {
             style={[
               {
                 width: windowWidth * props.inputWidth,
+                height : windowHeight * props.viewHeight ,
               },
               Platform.OS === 'android'
                 ? styles.inputBox
@@ -131,6 +132,8 @@ const TextInputWithTitle = props => {
           style={[
             {
               width: windowWidth * props.inputWidth,
+              height : windowHeight * props.viewHeight ,
+              // textAlign : 'center'
             },
             Platform.OS === 'android'
               ? styles.inputBox
@@ -177,6 +180,7 @@ const styles = ScaledSheet.create({
     width: Dimensions.get('window').width * 0.9,
     height: Dimensions.get('window').height * 0.06,
     backgroundColor: Color.white,
+
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
@@ -186,11 +190,13 @@ const styles = ScaledSheet.create({
     // textTransform: 'capitalize',
   },
   inputBox: {
+    
     paddingLeft: moderateScale(8, 0.6),
-    borderRadius: 8,
+    // borderRadius: 8,
     fontSize: moderateScale(12, 0.3),
+    // margin :2,
     // textTransform: 'capitalize',
-
+    // backgroundColor : 'red',
     // fontFamily: 'PlusJakartaDisplay-Regular',
     textAlign: I18nManager.isRTL ? 'right' : 'left',
     color: Color.themeLightGray,

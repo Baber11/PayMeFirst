@@ -35,11 +35,13 @@ import {setUserData} from '../Store/slices/common';
 import ImagePickerModal from '../Components/ImagePickerModal';
 import CustomImage from '../Components/CustomImage';
 import {Icon} from 'native-base';
+import { useNavigation } from '@react-navigation/native';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const SignupScreen = () => {
+  const navigation = useNavigation()
   const dispatch = useDispatch();
   const {fcmToken} = useSelector(state => state.commonReducer);
   const [firstName, setFirstName] = useState('');
@@ -125,9 +127,10 @@ const SignupScreen = () => {
       Platform.OS === 'android'
         ? ToastAndroid.show('User Registered Succesfully', ToastAndroid.SHORT)
         : Alert.alert("User Registered Succesfully");
-        dispatch(setUserData(response?.data?.user_info));
-        dispatch(setUserToken(response?.data));
-        dispatch(setGoalCreated(response?.data?.user_info?.is_goal))
+        navigation.goBack()
+        // dispatch(setUserData(response?.data?.user_info));
+        // dispatch(setUserToken(response?.data));
+        // dispatch(setGoalCreated(response?.data?.user_info?.is_goal))
     }
   };
   return (

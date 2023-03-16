@@ -276,7 +276,8 @@ export default Profile;
 
 const styles = StyleSheet.create({
   header: {
-    height: windowHeight * 0.42,
+    // height: windowHeight * 0.42,
+    paddingBottom : moderateScale(10,0.6),
     width: windowWidth,
     backgroundColor: Color.green,
     borderBottomLeftRadius: moderateScale(30, 0.3),
@@ -284,16 +285,16 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   image: {
-    height: windowWidth * 0.31,
-    width: windowWidth * 0.31,
-    borderRadius: moderateScale((windowWidth * 0.31) / 2, 0.3),
+    height: windowWidth * 0.3,
+    width: windowWidth * 0.3,
+    borderRadius: moderateScale((windowWidth * 0.3) / 2, 0.3),
     // right: moderateScale(15, 0.3),
     // marginTop: moderateScale(20, 0.3),
   },
   image1: {
-    height: windowWidth * 0.32,
-    width: windowWidth * 0.32,
-    borderRadius: moderateScale((windowWidth * 0.32) / 2, 0.3),
+    height: windowWidth * 0.3,
+    width: windowWidth * 0.3,
+    borderRadius: moderateScale((windowWidth * 0.3) / 2, 0.3),
     // right: moderateScale(15, 0.3),
     // marginTop: moderateScale(20, 0.3),
     backgroundColor: 'white',

@@ -291,7 +291,7 @@ const HomeScreen = ({valueFormatter, data}) => {
                   ],
                 }}
                 width={Dimensions.get('window').width * 0.9} // from react-native
-                height={windowHeight * 0.22}
+                height={windowHeight * 0.24}
                 yAxisLabel="$"
                 withHiddenDots={true}
                 yAxisInterval={2} // optional, defaults to 1
@@ -303,13 +303,13 @@ const HomeScreen = ({valueFormatter, data}) => {
                   color: (opacity = 1) => `rgba(90,146,14, ${opacity})`,
                   labelColor: (opacity = 1) => `rgba(0,0,0, ${opacity})`,
                   style: {
-                    borderRadius: 16,
+                    borderRadius: moderateScale(16,0.6),
                   },
                 }}
                 bezier
                 style={{
-                  marginVertical: 8,
-                  borderRadius: 16,
+                  marginVertical: moderateScale(8,0.3),
+                  borderRadius: moderateScale(16,0.6),
                 }}
                 onDataPointClick={setState}
                 withShadow={true}
