@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import { Platform } from 'react-native';
 
 const initialState = {
   userData: {},
@@ -20,7 +21,7 @@ const CommonSlice = createSlice({
       // console.log("reduxxxx", state.categoryProperties);
     },
     setCartData(state, action) {
-      state.cartData.push(action.payload)
+      state.cartData.push({selectedQuantity : 1 ,...action.payload})
       console.log("reduxxxx", state.cartData);
     },
     setRemoveCardData(state, action) {
@@ -45,12 +46,25 @@ const CommonSlice = createSlice({
     },
     addQuantity(state , action){
       let index = state.cartData.findIndex((x)=>x?.id == action.payload.id);
-      state.cartData[index].quantity += 1
+      state.cartData[index].quantity == state.cartData[index].selectedQuantity ? 
+      alert('Stock quantity exceeds')
+      :
+      state.cartData[index].selectedQuantity += 1
 
     },
     subQuantity(state , action){
+      
       let index = state.cartData.findIndex((x)=>x?.id == action.payload.id);
-      state.cartData[index].quantity -= 1
+      if(state.cartData[index].selectedQuantity == 1){
+
+        
+        let newData = [...state.cartData] ;
+        newData.splice(index , 1);
+        state.cartData = newData ; 
+      }
+      else{ 
+        state.cartData[index].selectedQuantity -= 1
+      }
 
     },
     setUserData(state, action) {

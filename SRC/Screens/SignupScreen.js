@@ -36,6 +36,7 @@ import ImagePickerModal from '../Components/ImagePickerModal';
 import CustomImage from '../Components/CustomImage';
 import {Icon} from 'native-base';
 import { useNavigation } from '@react-navigation/native';
+import DropDownSingleSelect from '../Components/DropDownSingleSelect';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -52,6 +53,12 @@ const SignupScreen = () => {
   const [description, setDescription] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [passCode, setPassCode] = useState('');
+  const [confirmPassCode, setConfirmPassCode] = useState('');
+  const [childName , setChildName] = useState('');
+  const [childAge , setChildAge] = useState('');
+  console.log("🚀 ~ file: SignupScreen.js:60 ~ SignupScreen ~ childAge:", childAge)
+  const [childGender , setChildGender] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCode] = useState('');
   const [image, setImage] = useState({});
@@ -78,6 +85,12 @@ const SignupScreen = () => {
       c_password: confirmPassword,
       phone: `${countryCode}${phone}`,
       country: country,
+      passcode : confirmPassCode ,
+      child_name : childName ,
+      child_age : childAge ,
+      child_gander : childGender ,
+
+
     
     };
     
@@ -116,6 +129,21 @@ const SignupScreen = () => {
       return Platform.OS == 'android'
         ? ToastAndroid.show('Password does not match', ToastAndroid.SHORT)
         : Alert.alert('Password does not match');
+    }
+    if(passCode.length > 4 || passCode.length < 4){
+      return Platform.OS == 'android'
+      ? ToastAndroid.show('Passcode should be of 4 digit only', ToastAndroid.SHORT)
+      : Alert.alert('Passcode should be of 4 digit only');
+    }
+    if (passCode != confirmPassCode) {
+      return Platform.OS == 'android'
+        ? ToastAndroid.show('PassCode does not match', ToastAndroid.SHORT)
+        : Alert.alert('PassCode does not match');
+    }
+    if(isNaN(childAge)){
+      return Platform.OS == 'android'
+      ? ToastAndroid.show('Age should be in numberic only', ToastAndroid.SHORT)
+      : Alert.alert('Age should be in numberic only');
     }
 
     const url = 'register';
@@ -347,6 +375,115 @@ const SignupScreen = () => {
           viewHeight={0.07}
           viewWidth={0.9}
           inputWidth={0.88}
+          border={1}
+          borderColor={Color.themeLightGray}
+          backgroundColor={'transparent'}
+          marginTop={moderateScale(15, 0.3)}
+          color={Color.green}
+          placeholderColor={Color.themeLightGray}
+        />
+          <TextInputWithTitle
+          iconName="user"
+          iconType={FontAwesome}
+          titleText={'Child Name'}
+          secureText={false}
+          placeholder={'Child Name'}
+          setText={setChildName}
+          value={childName}
+          viewHeight={0.07}
+          viewWidth={0.9}
+          inputWidth={0.88}
+          border={1}
+          borderColor={Color.themeLightGray}
+          backgroundColor={'transparent'}
+          marginTop={moderateScale(15, 0.3)}
+          color={Color.green}
+          placeholderColor={Color.themeLightGray}
+        />
+         <TextInputWithTitle
+          iconName="calendar"
+          iconType={FontAwesome}
+          titleText={'Child Age'}
+          secureText={false}
+          placeholder={'Child Age'}
+          setText={setChildAge}
+          value={childAge}
+          viewHeight={0.07}
+          viewWidth={0.9}
+          inputWidth={0.88}
+          border={1}
+          borderColor={Color.themeLightGray}
+          backgroundColor={'transparent'}
+          marginTop={moderateScale(15, 0.3)}
+          color={Color.green}
+          placeholderColor={Color.themeLightGray}
+        />
+         {/* <TextInputWithTitle
+          iconName="user"
+          iconType={FontAwesome}
+          titleText={'Child Gender'}
+          secureText={false}
+          placeholder={'Child Gender'}
+          setText={setChildName}
+          value={childName}
+          viewHeight={0.07}
+          viewWidth={0.9}
+          inputWidth={0.88}
+          border={1}
+          borderColor={Color.themeLightGray}
+          backgroundColor={'transparent'}
+          marginTop={moderateScale(15, 0.3)}
+          color={Color.green}
+          placeholderColor={Color.themeLightGray}
+        /> */}
+          <DropDownSingleSelect
+            array={['Male' , 'Female']}
+            item={childGender}
+            setItem={setChildGender}
+            placeholder={'Select Child Gender'}
+            width={windowWidth * 0.9}
+            dropDownHeight={windowHeight * 0.07}
+            dropdownStyle={{
+              width: windowWidth * 0.9,
+              // borderBottomWidth: 0,
+              marginTop: moderateScale(15, 0.3),
+              borderColor : Color.themeLightGray,
+              borderWidth : 1 ,
+              borderRadius : moderateScale(10,0.6),
+              height : windowHeight * 0.07,
+            }}
+          />
+         <TextInputWithTitle
+          iconName="lock"
+          iconType={FontAwesome}
+          titleText={'Enter 4 digit Passcode'}
+          secureText={true}
+          placeholder={'Enter 4 digit Passcode'}
+          setText={setPassCode}
+          value={passCode}
+          viewHeight={0.07}
+          viewWidth={0.9}
+          inputWidth={0.88}
+          // marginTop={0.04}
+          border={1}
+          borderColor={Color.themeLightGray}
+          backgroundColor={'transparent'}
+          marginTop={moderateScale(5, 0.3)}
+          color={Color.green}
+          placeholderColor={Color.themeLightGray}
+        />
+        <TextInputWithTitle
+          iconName="lock"
+          iconType={FontAwesome}
+          titleText={'Confirm Passcode'}
+          secureText={true}
+          placeholder={'Confirm Passcode'}
+          setText={setConfirmPassCode}
+          value={confirmPassCode}
+          viewHeight={0.07}
+          viewWidth={0.9}
+          inputWidth={0.88}
+          // marginTop={0.04}
           border={1}
           borderColor={Color.themeLightGray}
           backgroundColor={'transparent'}

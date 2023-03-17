@@ -19,6 +19,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const CartItem = ({item, fromCheckout}) => {
   const cartData = useSelector(state => state.commonReducer.cartData);
+  console.log("🚀 ~ file: CartItem.js:22 ~ CartItem ~ cartData:", cartData)
   const dispatch = useDispatch();
 
   return (
@@ -63,7 +64,7 @@ const CartItem = ({item, fromCheckout}) => {
               <CustomText>Selected Size : {item?.selectedSize}</CustomText>
             ) : (
               // <></>
-              item?.availbleSizes.map((item1, index) => {
+             JSON.parse(item?.availbleSizes).map((item1, index) => {
                 return (
                   <TouchableOpacity
                     activeOpacity={0.9}
@@ -103,7 +104,7 @@ const CartItem = ({item, fromCheckout}) => {
                 width: windowWidth * 0.45,
                 marginTop: moderateScale(5, 0.3),
               }}>
-              {item?.availbleColor.map((item1, index) => {
+              { JSON.parse(item?.availbleColor).map((item1, index) => {
                 return (
                   <TouchableOpacity
                     activeOpacity={0.9}
@@ -143,7 +144,7 @@ const CartItem = ({item, fromCheckout}) => {
               },
             ]}>
             <CustomText style={styles.amount}>
-              {numeral(item?.price * item?.quantity).format('$0,0.00')}
+              {numeral(item?.price * item?.selectedQuantity).format('$0,0.00')}
             </CustomText>
             {
               fromCheckout ? 
@@ -153,7 +154,7 @@ const CartItem = ({item, fromCheckout}) => {
                 marginHorizontal: moderateScale(5, 0.3),
                 fontSize: moderateScale(12, 0.3),
               }}>
-              Quantity : {item?.quantity}
+              Quantity : {item?.selectedQuantity}
             </CustomText>
               :
             
@@ -178,7 +179,7 @@ const CartItem = ({item, fromCheckout}) => {
                   marginHorizontal: moderateScale(5, 0.3),
                   fontSize: moderateScale(12, 0.3),
                 }}>
-                {item?.quantity}
+                {item?.selectedQuantity}
               </CustomText>
               <Icon
                 name={'circle-with-minus'}

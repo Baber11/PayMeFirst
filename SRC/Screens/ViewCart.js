@@ -22,13 +22,13 @@ const ViewCart = () => {
 
   useEffect(() => {
     setFinalAmount(0)
-    if(cartData.find(x=>x?.quantity == 0)){
-    let newData =  cartData.filter((x,index)=> x?.quantity != 0);
+    if(cartData.find(x=>x?.selectedQuantity == 0)){
+    let newData =  cartData.filter((x,index)=> x?.selectedQuantity != 0);
     dispatch(setWholeCart(newData))
     }
 
   cartData.map((data , index)=>{
-      return   setFinalAmount(prev=>prev + data?.price * data?.quantity)
+      return   setFinalAmount(prev=>prev + data?.price * data?.selectedQuantity)
   })
 
   }, [cartData])

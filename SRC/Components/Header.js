@@ -119,7 +119,7 @@ const Header = props => {
               
             }}
             onPress={()=>{
-              cartData?.length > 0 && navigationN.navigate('OrderHistory')
+              navigationN.navigate('OrderHistory')
             }}
           />
 }

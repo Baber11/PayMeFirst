@@ -41,8 +41,6 @@ const AddCard = () => {
   const token = useSelector(state => state.authReducer.token);
   // const userData = useSelector(state => state.commonReducer.userData);
 
-  console.log("🚀 ~ file: AddCard.js:42 ~ AddCard ~ token:", token)
-  // console.log("🚀 ~ file: AddCard.js:42 ~ AddCard ~ token", token)
   const dispatch = useDispatch();
   const {userData} = useSelector(state => state.commonReducer);
   console.log('🚀 ~ file: AddCard.js:39 ~ AddCard ~ userData', userData);

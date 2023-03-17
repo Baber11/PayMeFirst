@@ -96,7 +96,7 @@ const SelectDate = props => {
           setIsLoading(false);
       
           if (response != undefined) {
-            console.log(response?.data);
+            console.log( 'Goal setted =======>', response?.data);
             // dispatch(setIsVerified(response?.data?.data?.user?.isActive));
             dispatch(setUserData(response?.data?.data));
             dispatch(setGoalCreated(response.data?.data?.is_goal))

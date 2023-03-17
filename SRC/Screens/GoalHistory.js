@@ -153,6 +153,7 @@ const styles = ScaledSheet.create({
 });
 
 const GoalCard = ({item}) => {
+  // console.log( moment(item?.ending_date).diff(moment('2023-04-30') , 'days') > 0 ,  moment(item?.ending_date).diff(moment('2023-04-29'), 'days'))
   const [show, setShow] = useState(false);
   // console.log('🚀 ~ file: GoalHistory.js:85 ~ GoalCard ~ show', show);
   return (
@@ -185,7 +186,7 @@ const GoalCard = ({item}) => {
             fontSize: moderateScale(10, 0.3),
             color: Color.lightGreen,
           }}>
-          {moment(item?.ending_date).format('ll') <= moment().format('ll') ? 'Completed' : 'Ongoing'}
+          {moment(item?.ending_date).diff(moment() , 'days') > 0 ? 'Ongoing' : 'Completed'}
         </CustomText>
         <Icon
           name={show ? 'minus' : 'plus'}

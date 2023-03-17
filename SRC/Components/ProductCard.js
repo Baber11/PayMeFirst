@@ -37,7 +37,7 @@ const ProductCard = ({item, onPress, style , height}) => {
             },
             shadowOpacity: 0.32,
             shadowRadius: 5.46,
-
+            width : windowWidth * 0.43,
             elevation: 9,
             backgroundColor: Color.white,
           
@@ -50,7 +50,7 @@ const ProductCard = ({item, onPress, style , height}) => {
         <View style={[styles.cardContainer,{height : height}]}>
           <CustomImage
             onPress={onPress}
-            source={item?.image}
+            source={item?.photo ? {uri : item?.photo} : require('../Assets/Images/shoes2.jpg')}
             resizeMode={'cover'}
             style={{
               height: height ? height : windowHeight * 0.26,
@@ -59,16 +59,18 @@ const ProductCard = ({item, onPress, style , height}) => {
           />
         </View>
         <CustomText
+        numberOfLines={1}
           style={{
             color: Color.black,
             marginTop: moderateScale(5, 0.3),
             marginLeft : moderateScale(10,0.3),
-            fontSize : moderateScale(15,0.3)
+            fontSize : moderateScale(14,0.6),
+            width : windowWidth *0.38,
           }}>
           {item?.name}
         </CustomText>
-        <CustomText isBold style={{color: Color.green ,marginLeft : moderateScale(10,0.3),
-            fontSize : moderateScale(15,0.3)}}>
+        <CustomText isBold style={{ width : '45%',color: Color.green ,marginLeft : moderateScale(10,0.3),
+            fontSize : moderateScale(14,0.6)}}>
           {numeral(item?.price).format('$0,0.0')}
         </CustomText>
         <CustomText onPress={()=>{
@@ -77,7 +79,7 @@ const ProductCard = ({item, onPress, style , height}) => {
           position : 'absolute',
           bottom : 2 ,
           right : 7,
-          fontSize : moderateScale(11,0.3),
+          fontSize : moderateScale(10,0.6),
           color : Color.themeLightGray,
           textDecorationLine : 'underline',
         
@@ -112,7 +114,7 @@ export default ProductCard;
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: windowWidth * 0.4,
+    width: windowWidth * 0.43,
     height: windowHeight * 0.26,
     backgroundColor: 'white',
     borderRadius: moderateScale(10, 0.3),

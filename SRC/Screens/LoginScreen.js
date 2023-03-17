@@ -29,7 +29,12 @@ import CustomText from '../Components/CustomText';
 import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import CustomButton from '../Components/CustomButton';
-import {setGoalCreated, setIsVerified, setPm_Type, setUserToken} from '../Store/slices/auth';
+import {
+  setGoalCreated,
+  setIsVerified,
+  setPm_Type,
+  setUserToken,
+} from '../Store/slices/auth';
 import {validateEmail} from '../Config';
 import {ActivityIndicator} from 'react-native';
 import {Post} from '../Axios/AxiosInterceptorFunction';
@@ -37,6 +42,7 @@ import {setUserData} from '../Store/slices/common';
 import {Icon, ScrollView} from 'native-base';
 import CustomImage from '../Components/CustomImage';
 import CardContainer from '../Components/CardContainer';
+import DropDownSingleSelect from '../Components/DropDownSingleSelect';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -46,7 +52,7 @@ const LoginScreen = () => {
   const {fcmToken} = useSelector(state => state.commonReducer);
 
   const [email, setEmail] = useState('');
-  // console.log(email.toLowerCase())
+  const [role, setRole] = useState('Parent');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -61,9 +67,10 @@ const LoginScreen = () => {
     const params = {
       email: email?.trim().toLowerCase(),
       password: password,
+      current_role: role,
     };
     console.log(params);
-    
+
     if (email == '' || password == '') {
       return Platform.OS == 'android'
         ? ToastAndroid.show('Required field is empty', ToastAndroid.SHORT)
@@ -80,12 +87,23 @@ const LoginScreen = () => {
     setIsLoading(false);
 
     if (response != undefined) {
-      console.log("response?.data?.data?.user", response?.data?.user_info);
-    
-      dispatch(setUserData(response?.data?.user_info));
-      dispatch(setUserToken(response?.data));
-      dispatch(setGoalCreated(response.data?.user_info?.is_goal))
-      dispatch(setPm_Type(response?.data?.user_info?.pm_type));
+    //  return console.log('response?.data?.data?.user', response?.data?.user_info);
+      if (
+        [null, '', undefined].includes(response?.data?.user_info?.pm_type) &&
+        response?.data?.user_info?.current_role == 'Child'
+      ) {
+        return Platform.OS == 'android'
+          ? ToastAndroid.show('Parent Card is Not Attached', ToastAndroid.SHORT)
+          : Alert.alert('Parent Card is Not Attached yet');
+      }
+      else{
+        dispatch(setUserData(response?.data?.user_info));
+        dispatch(setUserToken(response?.data));
+        dispatch(setGoalCreated(response.data?.user_info?.is_goal))
+        dispatch(setPm_Type(response?.data?.user_info?.pm_type));
+
+      }
+
     }
   };
 
@@ -97,13 +115,11 @@ const LoginScreen = () => {
       statusBarContentStyle={'dark-content'}
       headerType={1}
       title={'Sign in'}
-      showList={true}
-    >
+      showList={true}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.sectionContainer}
-        contentContainerStyle={{paddingBottom: moderateScale(20, 0.3)}}
-      >
+        contentContainerStyle={{paddingBottom: moderateScale(20, 0.3)}}>
         <Image
           source={require('../Assets/Images/login.png')}
           resizeMode={'contain'}
@@ -113,6 +129,24 @@ const LoginScreen = () => {
           }}
         />
         <CardContainer>
+          <DropDownSingleSelect
+            array={['Parent', 'Child']}
+            item={role}
+            setItem={setRole}
+            placeholder={'Select User Role'}
+            width={windowWidth * 0.75}
+            dropDownHeight={windowHeight * 0.05}
+            dropdownStyle={{
+              width: windowWidth * 0.75,
+              borderBottomWidth: 0,
+              marginTop: moderateScale(15, 0.3),
+              // borderColor : Color.themeLightGray,
+              // borderWidth : 1 ,
+              borderRadius: moderateScale(20, 0.6),
+              height: windowHeight * 0.05,
+              backgroundColor: Color.lightGrey,
+            }}
+          />
           <TextInputWithTitle
             iconName="envelope"
             iconType={FontAwesome}
@@ -127,7 +161,7 @@ const LoginScreen = () => {
             border={1}
             borderColor={Color.lightGrey}
             backgroundColor={'#EAEAEA'}
-            marginTop={moderateScale(30, 0.3)}
+            // marginTop={moderateScale(30, 0.3)}
             color={'#11A44C'}
             placeholderColor={Color.themeLightGray}
             borderRadius={moderateScale(20, 0.3)}
@@ -155,8 +189,7 @@ const LoginScreen = () => {
             onPress={() => {
               navigationService.navigate('EnterPhone', {fromForgot: true});
             }}
-            style={styles.txt3}
-          >
+            style={styles.txt3}>
             {'Forgot Password ?'}
           </CustomText>
           {/* <View style={styles.iconContainer}>
@@ -189,7 +222,6 @@ const LoginScreen = () => {
             </View>
           </View> */}
           <CustomButton
-       
             text={
               isLoading ? (
                 <ActivityIndicator color={'#FFFFFF'} size={'small'} />
@@ -215,15 +247,12 @@ const LoginScreen = () => {
             </CustomText>
             <TouchableOpacity
               style={{marginLeft: width * 0.01}}
-              onPress={() => navigationService.navigate('SignupScreen')}
-            >
+              onPress={() => navigationService.navigate('SignupScreen')}>
               <CustomText style={styles.txt4}>{'Sign Up'}</CustomText>
             </TouchableOpacity>
           </View>
         </CardContainer>
       </ScrollView>
-
-    
     </ScreenBoiler>
   );
 };

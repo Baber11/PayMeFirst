@@ -3,6 +3,7 @@ import {
   Platform,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -30,6 +31,7 @@ import {setUserLogout} from '../Store/slices/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import ImageView from 'react-native-image-viewing';
 import { profilePicUrl } from '../Config';
+import { Alert } from 'react-native';
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -112,7 +114,7 @@ const Profile = () => {
             isBold
             style={[styles.text, {fontSize: moderateScale(17, 0.3)}]}
           >
-          {`${user?.first_name} ${user?.last_name}`}
+          {user?.current_role == 'Child' ? user?.child?.name: `${user?.first_name} ${user?.last_name}`}
           </CustomText>
           <CustomText
             isBold
@@ -176,6 +178,11 @@ const Profile = () => {
           icon2={'right'}
           icon2type={AntDesign}
           onPress={() => {
+            if(user?.current_role == 'Child'){
+              return  Platform.OS === 'android'
+              ? ToastAndroid.show('Access Denied', ToastAndroid.SHORT)
+              : Alert.alert("Access Denied");
+            }
             navigationService.navigate('Subscription');
           }}
         />
@@ -189,6 +196,20 @@ const Profile = () => {
             navigationService.navigate('Category');
           }}
         />
+        {
+          user?.current_role == 'Parent' &&
+        
+          <ProfileContainer
+          icon1Type={Fontisto}
+          icon1={'shopify'}
+          title={'Order Approvals'}
+          icon2={'right'}
+          icon2type={AntDesign}
+          onPress={() => {
+            navigationService.navigate('OrderHistory',{forApproval : true});
+          }}
+          />
+        }
           <ProfileContainer
           icon1Type={Fontisto}
           icon1={'history'}
@@ -217,9 +238,32 @@ const Profile = () => {
           icon2={'right'}
           icon2type={AntDesign}
           onPress={() => {
+            if(user?.current_role == 'Child'){
+              return  Platform.OS === 'android'
+              ? ToastAndroid.show('Access Denied', ToastAndroid.SHORT)
+              : Alert.alert("Access Denied");
+            }
             navigationService.navigate('ChangePassword');
           }}
         />
+        { user?.current_role != 'Child' &&
+
+          <ProfileContainer
+          icon1Type={FontAwesome}
+          icon1={'lock'}
+          title={'change PassCode'}
+          icon2={'right'}
+          icon2type={AntDesign}
+          onPress={() => {
+            if(user?.current_role == 'Child'){
+              return  Platform.OS === 'android'
+              ? ToastAndroid.show('Access Denied', ToastAndroid.SHORT)
+              : Alert.alert("Access Denied");
+            }
+            navigationService.navigate('ChangePassword');
+          }}
+          />
+        }
         <ProfileContainer
           icon1Type={AntDesign}
           icon1={'creditcard'}
@@ -227,6 +271,11 @@ const Profile = () => {
           icon2={'right'}
           icon2type={AntDesign}
           onPress={() => {
+            if(user?.current_role == 'Child'){
+              return  Platform.OS === 'android'
+              ? ToastAndroid.show('Access Denied', ToastAndroid.SHORT)
+              : Alert.alert("Access Denied");
+            }
             navigationService.navigate('PaymentMethod');
           }}
         />

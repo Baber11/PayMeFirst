@@ -15,6 +15,7 @@ import ProductCard from '../Components/ProductCard';
 import {setCartData} from '../Store/slices/common';
 import {useDispatch, useSelector} from 'react-redux';
 import navigationService from '../navigationService';
+import { Get } from '../Axios/AxiosInterceptorFunction';
 
 var categoryData = [
   {
@@ -302,25 +303,47 @@ var categoryData = [
 
   },
 ];
-const SelectedCategory = () => {
+
+
+const SelectedCategory = (props) => {
     const dispatch = useDispatch();
   const cartData = useSelector(state => state.commonReducer.cartData);
-  console.log(
-    '🚀 ~ file: SelectedCategory.js:50 ~ SelectedCategory ~ cartData',
-    cartData,
-  );
+  const token = useSelector((state)=>state.authReducer.token);
+  const categoryId = props?.route?.params?._id
+  // console.log("🚀 ~ file: SelectedCategory.js:311 ~ SelectedCategory ~ categoryId:", categoryId)
+  // console.log(
+  //   '🚀 ~ file: SelectedCategory.js:50 ~ SelectedCategory ~ cartData',
+  //   cartData,
+  // );
   const [searchData, setSearchData] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [flatListData, setFlatListData] = useState([]);
+  const [isLoading , setIsLoading] = useState(false);
+
+  const getCategoryProducts = async()=>{
+    const url = `auth/product/${categoryId}`;
+    setIsLoading(true)
+    const response = await Get(url , token);
+    setIsLoading(false)
+    if(response != undefined){
+      console.log(response?.data)
+      setFlatListData(response?.data?.data)
+    }
+  }
+
+  // useEffect(() => {
+  //   if (searchData == '') {
+  //     setFlatListData(categoryData);
+  //   }
+  //   if (searchData != '') {
+  //     setFlatListData(categoryData.filter(x => x?.name == searchData));
+  //   }
+  // }, [searchData]);
 
   useEffect(() => {
-    if (searchData == '') {
-      setFlatListData(categoryData);
-    }
-    if (searchData != '') {
-      setFlatListData(categoryData.filter(x => x?.name == searchData));
-    }
-  }, [searchData]);
+    getCategoryProducts()
+  }, [])
+  
 
   return (
     <ScreenBoiler
@@ -331,26 +354,14 @@ const SelectedCategory = () => {
       // headerColor={Color.white}
       headerType={1}
       showBack={true}>
-      {/* <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{
-          width: windowWidth,
-          backgroundColor: 'white',
-          // maxHeight : windowHeight * 0.8
-        }}
-        contentContainerStyle={{
-          paddingTop: moderateScale(50, 0.3),
-          alignItems: 'center',
-        }}> */}
+     
         <View 
         
         style={{
             width: windowWidth,
             backgroundColor: 'white',
-            // paddingTop: moderateScale(50, 0.3),
             alignItems: 'center',
             paddingTop: moderateScale(40,0.3)
-            // minHeight : windowHeight * 0.8
           }}>
         <CustomText
           isBold

@@ -8,7 +8,7 @@ import {
 import React from 'react';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import {moderateScale, ScaledSheet} from 'react-native-size-matters';
-import {windowHeight, windowWidth} from '../Utillity/utils';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import Color from '../Assets/Utilities/Color';
 import CartItem from '../Components/CartItem';
 import CustomText from '../Components/CustomText';
@@ -21,40 +21,106 @@ import CustomButton from '../Components/CustomButton';
 import {ActivityIndicator} from 'react-native';
 import {setWholeCart} from '../Store/slices/common';
 import navigationService from '../navigationService';
+import {useEffect} from 'react';
+import { Get, Post } from '../Axios/AxiosInterceptorFunction';
 
 const Checkout = ({route}) => {
   const dispatch = useDispatch();
   const cartData = useSelector(state => state.commonReducer.cartData);
+  const user = useSelector(state => state.commonReducer.userData);
+  const token = useSelector((state)=>state.authReducer.token)
+  // console.log('🚀 ~ file: Checkout.js:29 ~ Checkout ~ user:', user);
   const [finalAmount, setFinalAmount] = useState(0);
   const [shipping, setShipping] = useState({});
-  const [paymentType, setPaymentType] = useState('wallet');
-  const [isLoading , setIsLoading] = useState(false);
-  console.log('🚀 ~ file: Checkout.js:20 ~ Checkout ~ shipping', shipping);
+  const [shippingArray , setShippingArray] = useState([]);
+  console.log("🚀 ~ file: Checkout.js:36 ~ Checkout ~ shippingArray:", shippingArray)
+  // console.log("🚀 ~ file: Checkout.js:35 ~ Checkout ~ shipping:", shipping)
+  const [paymentType, setPaymentType] = useState('card');
+  const [isLoading, setIsLoading] = useState(false);
+  const [productsForCard, setProdctsForCart] = useState([]);
+  // console.log("🚀 ~ file: Checkout.js:36 ~ Checkout ~ productsForCard:", productsForCard)
+  // console.log('🚀 ~ file: Checkout.js:20 ~ Checkout ~ shipping', shipping);
   const subTotal = route?.params?.subTotal;
-  console.log('🚀 ~ file: Checkout.js:22 ~ Checkout ~ subTotal', subTotal);
+  // console.log('🚀 ~ file: Checkout.js:22 ~ Checkout ~ subTotal', subTotal);
 
-  const ShippingArray = [
-    {
-      name: 'Cargo',
-      duration: '60 days',
-      price: 5,
-    },
-    {
-      name: 'Deluxe',
-      duration: '6 days',
-      price: 25,
-    },
-    {
-      name: 'Express',
-      duration: '3 days',
-      price: 50,
-    },
-    {
-      name: 'Local',
-      duration: '2 days',
-      price: 15,
-    },
-  ];
+  // const ShippingArray = [
+  //   {
+  //     id : 1 ,
+  //     name: 'Cargo',
+  //     duration: '60 days',
+  //     price: 5,
+  //   },
+  //   {
+  //     id : 2 ,
+  //     name: 'Deluxe',
+  //     duration: '6 days',
+  //     price: 25,
+  //   },
+  //   {
+  //     id : 3 ,
+  //     name: 'Express',
+  //     duration: '3 days',
+  //     price: 50,
+  //   },
+  //   {
+  //     id : 4 ,
+  //     name: 'Local',
+  //     duration: '2 days',
+  //     price: 15,
+  //   },
+  // ];
+
+  const getShippingTypes = async()=>{
+    const url = 'auth/shipping';
+    const response = await Get(url , token);
+    if(response != undefined){
+      console.log(response?.data)
+      setShippingArray(response?.data?.data)
+    }
+    
+  }
+
+  const BookOrder = async () => {
+    const url = 'auth/checkout';
+    const body = {
+     product : productsForCard ,
+     total_amount : subTotal + shipping?.price ,
+     address : 'xyz road' ,
+     method : paymentType ,
+     shipping_id : shipping?.id ,
+    };
+    console.log('body ===========>' ,JSON.stringify(body , null ,2))
+    setIsLoading(true);
+    const response = await Post(url , body , apiHeader(token))
+    setIsLoading(false)
+    if(response != undefined){
+      console.log( 'Product =================> ', response?.data)
+       Platform.OS == 'android'
+                    ? ToastAndroid.show(
+                        'Order Booked',
+                        ToastAndroid.SHORT,
+                      )
+                    : alert('Order Booked');
+                    dispatch(setWholeCart([]));
+                    navigationService.navigate('Category');
+    }
+  };
+
+  useEffect(() => {
+    setProdctsForCart([])
+    cartData.map((item, index) => {
+      return setProdctsForCart(prev => [
+        ...prev,
+        {
+          product_id: item?.id,
+          selectedColor: item?.selectedColor,
+          selectedSize: item?.selectedSize,
+          selectedQuantity: item?.selectedQuantity,
+        },
+      ]);
+    });
+    getShippingTypes()
+  }, []);
 
   return (
     <ScreenBoiler
@@ -102,8 +168,9 @@ const Checkout = ({route}) => {
                 <View
                   style={{
                     width: windowWidth * 0.6,
+                    // backgroundColor : 'red'
                   }}>
-                  {ShippingArray.map((x, index) => {
+                  {shippingArray.length > 0 && shippingArray.map((x, index) => {
                     return (
                       <TouchableOpacity
                         onPress={() => {
@@ -118,7 +185,7 @@ const Checkout = ({route}) => {
                         }}>
                         <Icon
                           name={
-                            x?.name != shipping?.name
+                            x?.type != shipping?.type
                               ? 'circle'
                               : 'raft-with-circle'
                           }
@@ -135,9 +202,9 @@ const Checkout = ({route}) => {
                             // textAlign : 'center'
                           }}>
                           {' '}
-                          {x?.name}
+                          {x?.type}
                         </CustomText>
-                        <CustomText style={{}}>{x?.duration}</CustomText>
+                        <CustomText style={{}}>{x?.days}</CustomText>
                         <CustomText>
                           {numeral(x?.price).format('$0,0.0')}
                         </CustomText>
@@ -154,67 +221,69 @@ const Checkout = ({route}) => {
                   {numeral(subTotal + shipping?.price).format('$0,0.0')}
                 </CustomText>
               </View>
+              {user?.wallet?.amount > 0 && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    width: windowWidth * 0.9,
+                  }}>
+                  <CustomText
+                    isBold
+                    style={[
+                      styles.subHeading,
+                      {marginTop: moderateScale(20, 0.3)},
+                    ]}>
+                    Payment Method :{' '}
+                  </CustomText>
 
-              <View
-                style={{
-                  flexDirection: 'row',
-                  width: windowWidth * 0.9,
-                }}>
-                <CustomText
-                  isBold
-                  style={[
-                    styles.subHeading,
-                    {marginTop: moderateScale(20, 0.3)},
-                  ]}>
-                  Payment Method :{' '}
-                </CustomText>
-                <View style={styles.userTypeContainer}>
-                  <View style={styles.innerContainer}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setPaymentType('card');
-                      }}
-                      activeOpacity={0.9}
-                      style={[
-                        styles.circle,
-                        paymentType == 'card' && {
-                          backgroundColor: Color.green,
-                          borderColor: Color.green,
-                        },
-                      ]}></TouchableOpacity>
-                    <CustomText
-                      onPress={() => {
-                        setPaymentType('card');
-                      }}
-                      isBold={paymentType == 'card'}
-                      style={styles.txt2}>
-                      {'   '}Card Attached
-                    </CustomText>
-                  </View>
-                  <View style={styles.innerContainer}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setPaymentType('wallet');
-                      }}
-                      activeOpacity={0.9}
-                      style={[
-                        styles.circle,
-                        paymentType == 'wallet' && {
-                          backgroundColor: Color.green,
-                          borderColor: Color.green,
-                        },
-                      ]}></TouchableOpacity>
-                    <CustomText
-                      onPress={() => {
-                        setPaymentType('wallet');
-                      }}
-                      isBold={paymentType == 'wallet'}
-                      style={styles.txt2}>
-                      {'   '}Wallet
-                    </CustomText>
+                  <View style={styles.userTypeContainer}>
+                    <View style={styles.innerContainer}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setPaymentType('card');
+                        }}
+                        activeOpacity={0.9}
+                        style={[
+                          styles.circle,
+                          paymentType == 'card' && {
+                            backgroundColor: Color.green,
+                            borderColor: Color.green,
+                          },
+                        ]}></TouchableOpacity>
+                      <CustomText
+                        onPress={() => {
+                          setPaymentType('card');
+                        }}
+                        isBold={paymentType == 'card'}
+                        style={styles.txt2}>
+                        {'   '}Card Attached
+                      </CustomText>
+                    </View>
+                    <View style={styles.innerContainer}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setPaymentType('wallet');
+                        }}
+                        activeOpacity={0.9}
+                        style={[
+                          styles.circle,
+                          paymentType == 'wallet' && {
+                            backgroundColor: Color.green,
+                            borderColor: Color.green,
+                          },
+                        ]}></TouchableOpacity>
+                      <CustomText
+                        onPress={() => {
+                          setPaymentType('wallet');
+                        }}
+                        isBold={paymentType == 'wallet'}
+                        style={styles.txt2}>
+                        {'   '}Wallet
+                      </CustomText>
+                    </View>
                   </View>
                 </View>
-              </View>
+              )}
               <CustomButton
                 text={
                   isLoading ? (
@@ -230,14 +299,8 @@ const Checkout = ({route}) => {
                 marginTop={moderateScale(20, 0.3)}
                 onPress={() => {
                   if (Object.keys(shipping).length > 0) {
-                    Platform.OS == 'android'
-                    ? ToastAndroid.show(
-                        'Order Booked',
-                        ToastAndroid.SHORT,
-                      )
-                    : alert('Order Booked');
-                    dispatch(setWholeCart([]));
-                    navigationService.navigate('Category');
+                    BookOrder();
+                   
                   } else {
                     Platform.OS == 'android'
                       ? ToastAndroid.show(

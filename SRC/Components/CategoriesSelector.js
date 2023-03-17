@@ -22,7 +22,7 @@ const CategoriesSelector = ({ item , onPress }) => {
       <CustomImage
           onPress={onPress}
         resizeMode={"stretch"}
-      source={item?.image}
+      source={item?.photo ? {uri : item?.photo} : require('../Assets/Images/shoesCover.jpg')}
         style={{
           width : windowWidth * 0.86,
           height : windowHeight * 0.2

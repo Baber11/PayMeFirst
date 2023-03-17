@@ -29,7 +29,7 @@ const MyAccounts = props => {
   const dispatch = useDispatch();
   
   const user = useSelector(state => state.commonReducer.userData);
-  console.log(user?.photo);
+  console.log( 'fsadasd',user);
   const token = useSelector(state => state.authReducer.token);
   const [showModal, setShowModal] = useState(false);
   const [imageObject, setImageObject] = useState({});

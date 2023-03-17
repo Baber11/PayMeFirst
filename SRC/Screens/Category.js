@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import {FlatList, Icon} from 'native-base';
@@ -14,9 +14,11 @@ import { ScrollView } from 'react-native';
 import SearchContainer from '../Components/SearchContainer';
 import navigationService from '../navigationService';
 import { useDispatch, useSelector } from 'react-redux';
+import { Get } from '../Axios/AxiosInterceptorFunction';
 
 var categoryData = [
   {
+    id : 1,
     image: require('../Assets/Images/shoesCover.jpg'),
     title: 'New Collection',
   },
@@ -36,20 +38,38 @@ var categoryData = [
 const Category = () => {
   const dispatch = useDispatch();
   const cartData = useSelector(state => state.commonReducer.cartData);
+  const token = useSelector(state=>state.authReducer.token)
     const [searchData , setSearchData] = useState('');
     const [showSearch , setShowSearch] = useState(false);
-    const [flatListData , setFlatListData] = useState([])
+    const [flatListData , setFlatListData] = useState([]);
+    const [isLoading , setIsLoading] = useState(false)
     console.log("🚀 ~ file: Category.js:36 ~ Category ~ flatListData", flatListData)
 
-  useEffect(() => {
-    if(searchData == ''){
-        setFlatListData(categoryData)
+    const getCategory = async()=>{
+      const url = 'auth/brand';
+      setIsLoading(true)
+      const response = await Get(url , token);
+      setIsLoading(false)
+      if(response != undefined){
+        console.log(response?.data)
+        setFlatListData(response?.data?.data)
+      }
     }
-   if(searchData != ''){
 
-       setFlatListData(categoryData.filter((x)=>x?.title == searchData))
-    }
-  }, [searchData])
+  // useEffect(() => {
+  //   if(searchData == ''){
+  //       setFlatListData(categoryData)
+  //   }
+  //  if(searchData != ''){
+
+  //      setFlatListData(categoryData.filter((x)=>x?.title == searchData))
+  //   }
+  // }, [searchData])
+
+  useEffect(() => {
+    getCategory()
+  }, [])
+  
   
 
   return (
@@ -62,6 +82,18 @@ const Category = () => {
       // headerColor={Color.white}
       headerType={1}
       showBack={true}>
+        {
+          isLoading ?
+          <View style={{
+            width : windowWidth ,
+            height : windowHeight * 0.8 ,
+            alignItems : 'center',
+            justifyContent : 'center'
+          }}>
+              <ActivityIndicator color={Color.green} size={'large'} />
+          </View>
+          :
+        
         <ScrollView
         showsVerticalScrollIndicator={false}
          style={{
@@ -162,7 +194,7 @@ const Category = () => {
             <CategoriesSelector
               item={item}
               onPress={() => {
-                navigationService.navigate('SelectedCategory',{categoryName : item?.title})
+                navigationService.navigate('SelectedCategory',{_id : item?.id})
               }}
             />
           );
@@ -171,6 +203,7 @@ const Category = () => {
       />
 
 </ScrollView>
+}
 
     </ScreenBoiler>
   );

@@ -284,6 +284,11 @@ const Wallet = () => {
               width={windowWidth * 0.3}
               height={windowHeight * 0.05}
               onPress={() => {
+                if(user?.current_role == 'Child'){
+                  return  Platform.OS === 'android'
+                  ? ToastAndroid.show('Access Denied', ToastAndroid.SHORT)
+                  : Alert.alert("Access Denied");
+                }
                 setShowModal(true);
               }}
               marginTop={moderateScale(20, 0.3)}

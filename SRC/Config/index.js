@@ -1,5 +1,5 @@
-export const baseUrl = "https://paymefirst.ad-wize.com";
-// export const baseUrl = "https://851f-113-203-241-37.in.ngrok.io";
+// export const baseUrl = "https://paymefirst.ad-wize.com";
+export const baseUrl = "https://983c-103-125-71-58.in.ngrok.io";
 
 export const imageUrl = `${baseUrl}/api/images/`;
 export const profilePicUrl = `${baseUrl}/uploads`;

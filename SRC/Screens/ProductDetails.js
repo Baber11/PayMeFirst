@@ -42,16 +42,16 @@ const ProductDetails = props => {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedIndex, setIndex] = useState();
-  console.log("🚀 ~ file: ProductDetails.js:41 ~ ProductDetails ~ detail", {...detail , selectedSize  : selectedSize , selectedColor : selectedColor})
+  // console.log("🚀 ~ file: ProductDetails.js:41 ~ ProductDetails ~ detail", { selectedSize  : selectedSize , selectedColor : selectedColor})
 
-  // console.log(
-  //   '🚀 ~ file: SelectedCategory.js:50 ~ SelectedCategory ~ cartData',
-  //   JSON.stringify(cartData,null ,2),
-  // );
   console.log(
-    '🚀 ~ file: ProductDetails.js:35 ~ ProductDetails ~ index',
-    selectedIndex,
+    '🚀 ~ file: SelectedCategory.js:50 ~ SelectedCategory ~ cartData',
+    JSON.stringify(cartData,null ,2),
   );
+  // console.log(
+  //   '🚀 ~ file: ProductDetails.js:35 ~ ProductDetails ~ index',
+  //   selectedIndex,
+  // );
   // console.log("🚀 ~ file: ProductDetails.js:31 ~ ProductDetails ~ detail", detail?.id)
 
   useEffect(() => {
@@ -134,7 +134,7 @@ const ProductDetails = props => {
         </View>
         <FlatList
           style={styles.bannerView}
-          data={detail?.array}
+          data={JSON.parse(detail?.photo)}
           horizontal
           pagingEnabled
           renderItem={({item, index}) => {
@@ -177,7 +177,7 @@ const ProductDetails = props => {
                       marginTop: moderateScale(10, 0.3),
                       alignItems: 'center',
                     }}>
-                    {detail?.array.map((x, index1) => {
+                    {JSON.parse(detail?.photo).map((x, index1) => {
                       return (
                         <View
                           style={{
@@ -289,7 +289,7 @@ const ProductDetails = props => {
               flexWrap: 'wrap',
               width: windowWidth * 0.45,
             }}>
-            {detail?.availbleSizes.map((item, index) => {
+            {JSON.parse(detail?.availbleSizes).map((item, index) => {
               return (
                 <TouchableOpacity
                   activeOpacity={0.9}
@@ -365,7 +365,7 @@ const ProductDetails = props => {
               flexWrap: 'wrap',
               width: windowWidth * 0.45,
             }}>
-            {detail?.availbleColor.map((item, index) => {
+            {JSON.parse(detail?.availbleColor).map((item, index) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
@@ -416,13 +416,13 @@ const ProductDetails = props => {
           }}>
           Satisfied Customers
         </CustomText>
-        {detail?.Reviews.slice(
+        {detail?.Reviews && detail?.Reviews.slice(
           0,
           showMore == false ? 3 : detail?.Reviews.length,
         ).map((x, index) => {
           return <ReviewCard item={x} />;
         })}
-        {detail?.Reviews?.length > 3 && (
+        {detail?.Reviews && detail?.Reviews?.length > 3 && (
           <CustomButton
             text={showMore ? 'Show less' : 'Show More'}
             isBold

@@ -1,5 +1,5 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, { useEffect } from 'react';
 import CustomText from '../Components/CustomText';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import {useSelector} from 'react-redux';
@@ -16,17 +16,42 @@ import Modal from 'react-native-modal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
+import { Get } from '../Axios/AxiosInterceptorFunction';
+import CustomImage from '../Components/CustomImage';
 
-const OrderHistory = () => {
-  const orderHistory = useSelector(state => state.commonReducer.cartData);
+const OrderHistory = (props) => {
+
+const forApproval = props?.route?.params?.forApproval ;
+  console.log("🚀 ~ file: OrderHistory.js:25 ~ OrderHistory ~ forApproval:", forApproval)
+  const token = useSelector((state)=>state.authReducer.token)
+  // const orderHistory = useSelector(state => state.commonReducer.cartData);
    const [filterArray, setFilterArray] = useState([]);
-  console.log("🚀 ~ file: OrderHistory.js:27 ~ OrderHistory ~ filterArray", filterArray)
+  // console.log("🚀 ~ file: OrderHistory.js:27 ~ OrderHistory ~ filterArray", filterArray)
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [filter, setFilter] = useState('');
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
+  const [isLoading , setIsLoading] = useState(false);
+   const [orderHistory , setOrderHistory] = useState([])
 
   const dummyFilter = ['delivered', 'ongoing', 'cancelled'];
+
+  const getOrderHistory = async()=>{
+    const url = `auth/orders/${forApproval ? 'pending' : 'approved'}`;
+    setIsLoading(true);
+    const response = await Get(url , token)
+    setIsLoading(false);
+    if(response != undefined){
+      console.log('data =========>' , response?.data)
+      setOrderHistory(response?.data?.data)
+    }
+  }
+
+  useEffect(() => {
+    getOrderHistory()
+  }, [])
+  
+
 
   return (
     <ScreenBoiler
@@ -37,6 +62,22 @@ const OrderHistory = () => {
       // headerColor={Color.white}
       headerType={1}
       showBack={true}>
+          {
+          isLoading ?
+          <View style={{
+            width : windowWidth ,
+            height : windowHeight * 0.8 ,
+            alignItems : 'center',
+            justifyContent : 'center'
+          }}>
+              <ActivityIndicator color={Color.green} size={'large'} />
+          </View>
+          :
+          
+            <>
+            {
+              !forApproval &&
+            
       <ScrollView
         horizontal
         style={styles.filter}
@@ -124,7 +165,7 @@ const OrderHistory = () => {
             </View>
         }
       </ScrollView>
-
+}
       <FlatList
         data={orderHistory}
         contentContainerStyle={{
@@ -132,9 +173,41 @@ const OrderHistory = () => {
           paddingTop: moderateScale(10, 0.3),
         }}
         renderItem={({item, index}) => {
-          return <OrderHistoryCard item={item} />;
+          return <OrderHistoryCard item={item} forApproval={forApproval}/>;
+        }}
+        ListEmptyComponent={()=>{
+          return(
+
+            <View style={{
+              width : windowWidth ,
+              height : windowHeight * 0.5 ,
+              // justifyContent : 'center',
+              alignItems : 'center',
+              justifyContent : 'center'
+              // backgroundColor : 'green'
+            }}>
+               <CustomImage
+              resizeMode={'contain'}
+              source={require('../Assets/Images/notfound.png')}
+              style={{
+                width: windowWidth * 0.5,
+                height: windowHeight * 0.2,
+                // backgroundColor : 'red',
+                alignSelf: 'center',
+              }}
+              />
+              <CustomText style={{
+                fontSize : moderateScale(16,0.3),
+                color : Color.black
+                
+                // backgroundColor : 'yellow'
+            }}>No Order Found</CustomText>
+          </View>
+            )
         }}
       />
+      </>
+          }
       <Modal
         isVisible={isModalVisible}
         swipeDirection="up"
