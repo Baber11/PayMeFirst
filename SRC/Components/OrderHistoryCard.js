@@ -16,7 +16,7 @@ import {TouchableOpacity} from 'react-native';
 import {Post} from '../Axios/AxiosInterceptorFunction';
 import CustomButton from './CustomButton';
 
-const OrderHistoryCard = ({item, onPress, forApproval}) => {
+const OrderHistoryCard = ({item, onPress, forApproval , setData , data , index}) => {
   console.log(
     '🚀 ~ file: OrderHistoryCard.js:19 ~ OrderHistoryCard ~ item:',
     item,
@@ -35,7 +35,10 @@ const OrderHistoryCard = ({item, onPress, forApproval}) => {
     const response = await Post(url, body, apiHeader(token));
     setIsLoading(false);
     if (response != undefined) {
-      console.log(response?.data);
+      let newData = [...data]
+      newData.splice(index , 1)
+      setData(newData)
+      console.log( 'data here -----------,,,,,,,,,,,,,,,,,,,,,,,', response?.data);
     }
   };
 
@@ -173,7 +176,9 @@ const OrderHistoryCard = ({item, onPress, forApproval}) => {
             />
             <CustomText style={styles.text1}>{item?.address}</CustomText>
           </View>
-          <View
+          {!['parent-approval' , 'admin-approval' , 'ongoing' , 'rejected'].includes(item?.status) &&
+
+            <View
             style={{
               width: moderateScale(50, 0.3),
               height: moderateScale(50, 0.3),
@@ -190,6 +195,7 @@ const OrderHistoryCard = ({item, onPress, forApproval}) => {
               }}
             />
           </View>
+              }
 
           <View
             style={{
@@ -211,12 +217,12 @@ const OrderHistoryCard = ({item, onPress, forApproval}) => {
                 width: moderateScale(19, 0.3),
               }}
             />
-            {orderHistory.map((item1, index) => {
+            {item?.order_detail?.product.map((item1, index) => {
               return (
                 <CustomText style={styles.text1}>{`${item1?.name}(${
-                  item?.quantity
+                  item1?.quantity
                 }) ${
-                  index == orderHistory?.length - 1 ? '.' : ','
+                  index == item?.order_detail?.product?.length ? '.' : ','
                 }`}</CustomText>
               );
             })}
@@ -233,7 +239,17 @@ const OrderHistoryCard = ({item, onPress, forApproval}) => {
               }}>
               {item?.order_number}
             </CustomText>
-            <StarRating
+            <CustomText
+              isBold
+              style={{
+                fontSize: moderateScale(10, 0.3),
+                color: Color.green,
+                textTransform: 'uppercase',
+              }}>
+              {item?.status}
+            </CustomText>
+
+            {/* <StarRating
               disabled={true}
               maxStars={5}
               rating={4}
@@ -249,7 +265,7 @@ const OrderHistoryCard = ({item, onPress, forApproval}) => {
                 }
               }
               // selectedStar={(rating) => this.onStarRatingPress(rating)}
-            />
+            /> */}
           </View>
         </View>
       </TouchableOpacity>
@@ -259,28 +275,30 @@ const OrderHistoryCard = ({item, onPress, forApproval}) => {
             text={'Approve'}
             isBold
             textColor={Color.white}
-            width={windowWidth * 0.4}
-            height={windowHeight * 0.07}
+            width={windowWidth * 0.34}
+            height={windowHeight * 0.06}
             marginTop={moderateScale(20, 0.3)}
-            onPress={()=>{approveOrder('Approved')}}
+            onPress={()=>{approveOrder('approved')}}
             bgColor={Color.green}
             //  borderColor={Color.white}
             borderWidth={0}
             borderRadius={moderateScale(20, 0.3)}
+            marginBottom={moderateScale(20,0.6)}
           />
 
           <CustomButton
             text={'Reject'}
             isBold
             textColor={Color.white}
-            width={windowWidth * 0.4}
-            height={windowHeight * 0.07}
+            width={windowWidth * 0.34}
+            height={windowHeight * 0.06}
             marginTop={moderateScale(20, 0.3)}
-            onPress={()=>{approveOrder('Rejected')}}
+            onPress={()=>{approveOrder('rejected')}}
             bgColor={Color.green}
             //  borderColor={Color.white}
             borderWidth={0}
             borderRadius={moderateScale(20, 0.3)}
+            marginBottom={moderateScale(20,0.6)}
           />
         </View>
       )}
@@ -325,7 +343,7 @@ const styles = ScaledSheet.create({
     borderColor: Color.lightGrey,
   },
   text1: {
-    fontSize: moderateScale(12, 0.3),
+    fontSize: moderateScale(11, 0.6),
     color: Color.themeLightGray,
     marginRight: moderateScale(4, 0.3),
   },

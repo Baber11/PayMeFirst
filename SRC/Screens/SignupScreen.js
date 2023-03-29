@@ -418,24 +418,7 @@ const SignupScreen = () => {
           color={Color.green}
           placeholderColor={Color.themeLightGray}
         />
-         {/* <TextInputWithTitle
-          iconName="user"
-          iconType={FontAwesome}
-          titleText={'Child Gender'}
-          secureText={false}
-          placeholder={'Child Gender'}
-          setText={setChildName}
-          value={childName}
-          viewHeight={0.07}
-          viewWidth={0.9}
-          inputWidth={0.88}
-          border={1}
-          borderColor={Color.themeLightGray}
-          backgroundColor={'transparent'}
-          marginTop={moderateScale(15, 0.3)}
-          color={Color.green}
-          placeholderColor={Color.themeLightGray}
-        /> */}
+         
           <DropDownSingleSelect
             array={['Male' , 'Female']}
             item={childGender}

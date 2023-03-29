@@ -32,6 +32,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import ImageView from 'react-native-image-viewing';
 import { profilePicUrl } from '../Config';
 import { Alert } from 'react-native';
+import { setUserLogOut } from '../Store/slices/common';
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -71,6 +72,8 @@ const Profile = () => {
             <TouchableOpacity
               onPress={() => {
                 dispatch(setUserLogout());
+                dispatch(setUserLogOut());
+
               }}
               activeOpacity={0.8}
               style={{flexDirection: 'row', alignSelf: 'flex-end'}}

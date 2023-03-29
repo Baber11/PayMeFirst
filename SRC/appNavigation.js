@@ -38,6 +38,7 @@ import GoalHistory from './Screens/GoalHistory';
 import ViewCart from './Screens/ViewCart';
 import Checkout from './Screens/Checkout';
 import OrderHistory from './Screens/OrderHistory';
+import VerifyPasscode from './Screens/VerifyPasscode';
 
 const AppNavigator = () => {
   const user = useSelector(state => state.commonReducer.userData);
@@ -59,8 +60,11 @@ const AppNavigator = () => {
         'AddCard' 
         : token != null && isGoalCreated == false && user?.wallet?.amount == 0
         ? 'SetGoals'
+        :
+        token != null && (isGoalCreated == true ||  user?.wallet?.amount != 0) && user?.current_role == 'Child' ?
+        'TabNavigation'
         : token != null && (isGoalCreated == true ||  user?.wallet?.amount != 0)
-        ? 'TabNavigation'
+        ? 'VerifyPasscode'
         : 'LoginScreen';
 
     return (
@@ -91,6 +95,7 @@ const AppNavigator = () => {
           <RootNav.Screen name="ViewCart" component={ViewCart} />
           <RootNav.Screen name="Checkout" component={Checkout} />
           <RootNav.Screen name="OrderHistory" component={OrderHistory} />
+          <RootNav.Screen name="VerifyPasscode" component={VerifyPasscode} />
 
 
 

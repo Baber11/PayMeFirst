@@ -24,6 +24,7 @@ import {Patch, Post} from '../Axios/AxiosInterceptorFunction';
 import ImagePickerModal from '../Components/ImagePickerModal';
 import {formRegEx, formRegExReplacer, imageUrl} from '../Config';
 import CustomButton from '../Components/CustomButton';
+import DropDownSingleSelect from '../Components/DropDownSingleSelect';
 
 const MyAccounts = props => {
   const dispatch = useDispatch();
@@ -38,6 +39,11 @@ const MyAccounts = props => {
   const [phone, setPhone] = useState(user?.phone);
   const [email, setEmail] = useState(user?.email);
   const [country, setCountry] = useState(user?.country);
+  const [passCode, setPassCode] = useState(`${user?.passcode}`);
+  console.log("🚀 ~ file: MyAccounts.js:43 ~ MyAccounts ~ passCode:", passCode)
+  const [childName , setChildName] = useState(user?.child?.name);
+  const [childAge , setChildAge] = useState(user?.child?.age);
+  const [childGender , setChildGender] = useState(user?.child?.gander ? user?.child?.gander : 'Select your gender');
   // const [description, setDescription] = useState(user?.description);
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible , setIsVisible] = useState(false);
@@ -48,7 +54,7 @@ const MyAccounts = props => {
   }]
   :
   [{
-    uri : `${user?.photo}`
+    uri : user?.current_role == 'Child' ? user?.child?.photo : `${user?.photo}`
   }]
 
 
@@ -59,6 +65,11 @@ const MyAccounts = props => {
       phone : phone ,
       email: email,
       country: country,
+      passcode : passCode ,
+child_name : childName ,
+child_age : childAge ,
+child_gander : childGender ,
+
      
     };
     const formdata = new FormData();
@@ -76,9 +87,15 @@ const MyAccounts = props => {
       formdata.append(key, params[key]);
     }
     if (Object.keys(imageObject).length > 0) {
-      formdata.append('photo', imageObject);
+      user?.current_role == 'Child' ? formdata.append('child_image' , imageObject) : formdata.append('photo', imageObject);
     }
-    console.log(formdata);
+    console.log('data =================>'  ,formdata);
+    if(passCode.length > 4){
+      return Platform.OS == 'android' ?
+      ToastAndroid.show('Passcode should be of 4 digits' , ToastAndroid.SHORT)
+      :
+      alert('Passcode should be of 4 digits')
+    }
 
     const url = 'auth/profile';
     setIsLoading(true);
@@ -129,7 +146,7 @@ const MyAccounts = props => {
               style={[styles.image]}
               source={
                 user?.photo
-                  ? {uri: `${user?.photo}`}
+                  ? {uri: user?.current_role == 'Child' ? user?.child?.photo : `${user?.photo}`}
                   : require('../Assets/Images/user2.png')
               }
             />
@@ -159,6 +176,67 @@ const MyAccounts = props => {
             />
           </TouchableOpacity>
         </View>
+        {
+          user?.current_role == 'Child' ?
+          <>
+            <TextInputWithTitle
+          iconName="user"
+          iconType={FontAwesome}
+          titleText={'Child Name'}
+          secureText={false}
+          placeholder={'Child Name'}
+          setText={setChildName}
+          value={childName}
+          viewHeight={0.07}
+          viewWidth={0.8}
+          inputWidth={0.76}
+          border={1}
+          borderColor={Color.themeLightGray}
+          backgroundColor={'transparent'}
+          marginTop={moderateScale(15, 0.3)}
+          color={Color.green}
+          placeholderColor={Color.themeLightGray}
+        />
+         <TextInputWithTitle
+          iconName="calendar"
+          iconType={FontAwesome}
+          titleText={'Child Age'}
+          secureText={false}
+          placeholder={'Child Age'}
+          setText={setChildAge}
+          value={childAge}
+          viewHeight={0.07}
+          viewWidth={0.8}
+          inputWidth={0.76}
+          border={1}
+          borderColor={Color.themeLightGray}
+          backgroundColor={'transparent'}
+          marginTop={moderateScale(15, 0.3)}
+          color={Color.green}
+          placeholderColor={Color.themeLightGray}
+        />
+          <DropDownSingleSelect
+            array={['Male' , 'Female']}
+            item={childGender}
+            setItem={setChildGender}
+            placeholder={childGender}
+            width={windowWidth * 0.8}
+            dropDownHeight={windowHeight * 0.07}
+            dropdownStyle={{
+              width: windowWidth * 0.8,
+              // borderBottomWidth: 0,
+              marginTop: moderateScale(15, 0.3),
+              borderColor : Color.themeLightGray,
+              borderWidth : 1 ,
+              borderRadius : moderateScale(10,0.6),
+              height : windowHeight * 0.07,
+            }}
+          />
+          
+          </>
+          :
+          <>
+          
         <TextInputWithTitle
           iconName={'user'}
           iconType={FontAwesome}
@@ -246,7 +324,6 @@ const MyAccounts = props => {
           viewWidth={0.8}
           inputWidth={0.76}
           border={1}
-          inputStyle={{}}
           borderColor={Color.themeLightGray}
           backgroundColor={'#F8F8F8'}
           marginTop={moderateScale(15, 0.3)}
@@ -254,28 +331,28 @@ const MyAccounts = props => {
        color={Color.green}
         
         />
-        {/* <TextInputWithTitle
-          titleText={'Description'}
-          secureText={false}
-          placeholder={'Description'}
-          setText={setDescription}
-          value={description}
-          viewHeight={0.13}
+       <TextInputWithTitle
+          iconName="lock"
+          iconType={FontAwesome}
+          titleText={'Enter 4 digit Passcode'}
+          secureText={true}
+          placeholder={'Enter 4 digit Passcode'}
+          setText={setPassCode}
+          value={passCode}
+          viewHeight={0.07}
           viewWidth={0.8}
           inputWidth={0.76}
-          inputHeight={0.1}
+          // marginTop={0.04}
           border={1}
           borderColor={Color.themeLightGray}
           backgroundColor={'#F8F8F8'}
-          marginTop={moderateScale(25, 0.3)}
-          multiline={true}
-          inputStyle={{
-            textAlign: 'vertical',
-          }}
-          borderRadius={moderateScale(10, 0.3)}
-          placeholderColor={Color.black}
-       color={Color.themeDarkGray}
-        /> */}
+          marginTop={moderateScale(15, 0.3)}
+          color={Color.green}
+          placeholderColor={Color.themeLightGray}
+        />
+      
+        </>
+        }
         <CustomButton
           // textTransform={"capitalize"}
           text={

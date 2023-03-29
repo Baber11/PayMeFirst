@@ -84,7 +84,7 @@ const Checkout = ({route}) => {
     const url = 'auth/checkout';
     const body = {
      product : productsForCard ,
-     total_amount : subTotal + shipping?.price ,
+     total_amount : subTotal + parseInt(shipping?.price) ,
      address : 'xyz road' ,
      method : paymentType ,
      shipping_id : shipping?.id ,
@@ -218,7 +218,7 @@ const Checkout = ({route}) => {
                   Total
                 </CustomText>
                 <CustomText style={styles.subHeading}>
-                  {numeral(subTotal + shipping?.price).format('$0,0.0')}
+                  {numeral(subTotal + parseInt(shipping?.price)).format('$0,0.0')}
                 </CustomText>
               </View>
               {user?.wallet?.amount > 0 && (

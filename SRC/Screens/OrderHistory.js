@@ -36,8 +36,28 @@ const forApproval = props?.route?.params?.forApproval ;
 
   const dummyFilter = ['delivered', 'ongoing', 'cancelled'];
 
+  // const getOrderHistory = async()=>{
+  //   const url = `auth/orders/${forApproval ? 'pending' : 'approved'}`;
+  //   setIsLoading(true);
+  //   const response = await Get(url , token)
+  //   setIsLoading(false);
+  //   if(response != undefined){
+  //     console.log('data =========>' , response?.data)
+  //     setOrderHistory(response?.data?.data)
+  //   }
+  // }
   const getOrderHistory = async()=>{
-    const url = `auth/orders/${forApproval ? 'pending' : 'approved'}`;
+    const url = `auth/orders`;
+    setIsLoading(true);
+    const response = await Get(url , token)
+    setIsLoading(false);
+    if(response != undefined){
+      console.log('data =========>' , response?.data)
+      setOrderHistory(response?.data?.data)
+    }
+  }
+  const getChildOrderHistory = async()=>{
+    const url = `auth/children_orders`;
     setIsLoading(true);
     const response = await Get(url , token)
     setIsLoading(false);
@@ -48,7 +68,7 @@ const forApproval = props?.route?.params?.forApproval ;
   }
 
   useEffect(() => {
-    getOrderHistory()
+    forApproval ? getChildOrderHistory() : getOrderHistory()
   }, [])
   
 
@@ -173,7 +193,7 @@ const forApproval = props?.route?.params?.forApproval ;
           paddingTop: moderateScale(10, 0.3),
         }}
         renderItem={({item, index}) => {
-          return <OrderHistoryCard item={item} forApproval={forApproval}/>;
+          return <OrderHistoryCard item={item} forApproval={forApproval} setData={setOrderHistory} data={orderHistory} index={index}/>;
         }}
         ListEmptyComponent={()=>{
           return(
