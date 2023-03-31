@@ -23,11 +23,11 @@ import {LineChart} from 'react-native-chart-kit';
 import moment from 'moment';
 import * as Progress from 'react-native-progress';
 import {ExpenditureComponent} from '../Components/ExpenditureComponent';
-
+import Entypo from 'react-native-vector-icons/Entypo'
 import numeral from 'numeral';
 import {ActivityIndicator} from 'react-native';
 import {Get} from '../Axios/AxiosInterceptorFunction';
-import {setUserData} from '../Store/slices/common';
+import {setLevel, setUserData} from '../Store/slices/common';
 import CustomButton from '../Components/CustomButton';
 import navigationService from '../navigationService';
 import { useIsFocused } from '@react-navigation/native';
@@ -37,10 +37,12 @@ import CustomImage from '../Components/CustomImage';
 
 
 const HomeScreen = ({valueFormatter, data}) => {
+  const level = useSelector((state)=>state.commonReducer.level)
+
   const focused = useIsFocused()
   const token = useSelector(state => state.authReducer.token);
   const user = useSelector(state => state.commonReducer.userData);
-  console.log('🚀 ~ file: HomeScreen.js:54 ~ HomeScreen ~ user', JSON.stringify(user , null ,2));
+  // console.log('🚀 ~ file: HomeScreen.js:54 ~ HomeScreen ~ user', JSON.stringify(user , null ,2));
   const dispatch = useDispatch();
 
 
@@ -50,10 +52,32 @@ const HomeScreen = ({valueFormatter, data}) => {
   const [cashPaid, setCashPaid] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [ pageNumber , setPageNumber] = useState(1);
-  console.log('🚀 ~ file: HomeScreen.js:63 ~ HomeScreen ~ cashPaid', cashPaid);
+  // console.log('🚀 ~ file: HomeScreen.js:63 ~ HomeScreen ~ cashPaid', cashPaid);
 
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(5);
+  const LevelsArray = [
+    {min: 1.1, max: 100, text: 'Trainee', color: ['rgba(255,0,0 , 0.9)','rgba(115,0,0 , 0.9)']},
+    {min: 100.1, max: 200, text: 'Amateur', color: ['rgba(0,0,255 , 0.9)','rgba(0,0,155 , 0.9)']},
+    {min: 200.1, max: 300, text: 'Hustler', color: ['rgba(250,125,0 , 0.9)','rgba(110,25,0 , 0.9)']},
+    {
+      min: 300.1,
+      max: 400,
+      text: 'Professional',
+      color: ['rgba(97,179,59 , 0.9)','rgba(97,119,9 , 0.9)'],
+    },
+    {min: 400.1, max: 500, text: 'Virtuoso', color: ['rgba(15,206,235 , 0.9)','rgba(215,106,135 , 0.9)']},
+    {min: 500.1, max: 600, text: 'Expert', color: ['rgba(148,65,52 , 0.9)','rgba(48,25,52 , 0.9)']},
+    {min: 600.1, max: 700, text: 'Veteran', color: ['rgba(155,165,0, 0.9)','rgba(255,165,0, 0.9)']},
+    {
+      min: 700.1,
+      max: 800,
+      text: 'Grand Master',
+      color: ['rgba(255,192,143, 0.9)','rgba(255,192,203, 0.9)'],
+    },
+    {min: 800.1, max: 900, text: 'Ace', color: ['rgba(195,215,0, 0.9)','rgba(255,215,0, 0.9)']},
+    {min: 900.1, max: 1000, text: 'Super star', color: ['rgba(135,26,235 , 0.9)','rgba(105,26,235, 0.9)']},
+  ];
  
 
   const breakArray = array => {
@@ -71,8 +95,9 @@ const HomeScreen = ({valueFormatter, data}) => {
     setIsLoading(false);
 
     if (response != undefined) {
-      console.log('This is the response ', response?.data);
+      // console.log('This is the response ', response?.data);
       dispatch(setUserData(response?.data?.user_info));
+    
     }
   };
 
@@ -82,13 +107,18 @@ const HomeScreen = ({valueFormatter, data}) => {
     const response = await Get(url, token);
     setIsLoading(false);
     if (response != undefined) {
-      console.log('dasdasdasdasdasdasdasdasdasdasda' ,response?.data?.date?.data);
+      // console.log('dasdasdasdasdasdasdasdasdasdasda' ,response?.data?.date?.data);
       setTableData(response?.data?.date?.data);
     }
   };
 
   useEffect(() => {
     getData();
+    const data = LevelsArray.filter(
+      (x, index) => user?.points >= x?.min && user?.points <= x?.max,
+    );
+    dispatch(setLevel(data[0]?.text))
+    console.log('here is the data   =>',data)
   }, [focused]);
 
   useEffect(() => {
@@ -159,6 +189,25 @@ const HomeScreen = ({valueFormatter, data}) => {
             )}{' '}
           </CustomText>
         </TouchableOpacity>
+          <View style={{
+            flexDirection : 'row',
+            marginTop : moderateScale(5,0.3),
+            alignItems : 'center'
+          }}>
+            <Icon
+            name={'trophy'}
+            as={Entypo}
+            size={moderateScale(17,0.3)}
+            color={'#FFD700'}
+            />
+            <CustomText isBold style={
+              {
+                marginLeft : moderateScale(5,0.3),
+                color : 'rgba(25,215,0, 0.9)' ,
+                fontSize : moderateScale(16,0.3)
+              }
+            }> {level?.payload} </CustomText>
+          </View>
          {user?.is_goal ? (
           <>
         <CustomText
@@ -623,7 +672,7 @@ const tooltipDecorators = (state, data, valueFormatter) => () => {
 
   const {index, value, x, y} = state;
   const textX = data?.labels[index];
-  console.log(data?.labels);
+  // console.log(data?.labels);
   const position = data?.labels.length === index + 1 ? 'left' : 'right';
 
   return (

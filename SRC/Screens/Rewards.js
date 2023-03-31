@@ -41,6 +41,8 @@ const height = Dimensions.get('window').height;
 
 const Rewards = () => {
   const token = useSelector(state => state.authReducer.token);
+  const points = useSelector((state)=>state.commonReducer.userData?.points)
+  console.log("🚀 ~ file: Rewards.js:45 ~ Rewards ~ points:", points)
   const level = useSelector((state)=>state.commonReducer.level)
   console.log("🚀 ~ file: Rewards.js:44 ~ Rewards ~ level:", level)
   const navigation = useNavigation();
@@ -71,7 +73,7 @@ const Rewards = () => {
     {min: 800.1, max: 900, text: 'Ace', color: ['rgba(195,215,0, 0.9)','rgba(255,215,0, 0.9)']},
     {min: 900.1, max: 1000, text: 'Super star', color: ['rgba(135,26,235 , 0.9)','rgba(105,26,235, 0.9)']},
   ];
-  const points = 543;
+  // const points = 543;
 
   // const getTrophies = async () => {
   //   const url = 'auth/trophy';

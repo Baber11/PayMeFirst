@@ -38,6 +38,7 @@ const Profile = () => {
   const dispatch = useDispatch();
   const user = useSelector((state)=>state.commonReducer.userData);
   const points = useSelector((state)=>state.commonReducer.points);
+  const level = useSelector((state)=>state.commonReducer.level)
   console.log("🚀 ~ file: Profile.js:38 ~ Profile ~ points", points)
 
   const [isVisible , setIsVisible] = useState(false);
@@ -145,10 +146,10 @@ const Profile = () => {
             <CustomText isBold style={
               {
                 marginLeft : moderateScale(5,0.3),
-                color : Color.white ,
-                fontSize : moderateScale(11,0.3)
+                color : 'rgba(25,215,0, 0.9)' ,
+                fontSize : moderateScale(16,0.3)
               }
-            }>{points} points</CustomText>
+            }> {level?.payload} </CustomText>
           </View>
         </View>
       </View>
