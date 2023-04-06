@@ -51,9 +51,9 @@ const LoginScreen = () => {
   const dispatch = useDispatch();
   const {fcmToken} = useSelector(state => state.commonReducer);
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('a@g.com');
   const [role, setRole] = useState('Parent');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState('12345678');
   const [loading, setLoading] = useState(false);
 
   const [alertText, setAlertText] = useState(null);

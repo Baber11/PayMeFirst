@@ -43,7 +43,7 @@ const VerifyPasscode = props => {
   const dispatch = useDispatch();
     const user = useSelector((state)=>state.commonReducer.userData) ;
     console.log("🚀 ~ file: VerifyPasscode.js:45 ~ VerifyPasscode ~ user:", user)
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState('2345');
   const [isLoading, setIsLoading] = useState(false);
   const CELL_COUNT = 4;
   const ref = useBlurOnFulfill({code, cellCount: CELL_COUNT});

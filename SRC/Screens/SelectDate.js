@@ -26,7 +26,7 @@ import {setGoalCreated, setIsVerified, setUserLogin, setUserLogout, setUserToken
 import {validateEmail} from '../Config';
 import {ActivityIndicator} from 'react-native';
 import {Post} from '../Axios/AxiosInterceptorFunction';
-import {setUserData} from '../Store/slices/common';
+import {setUserData, showGoalCompleted} from '../Store/slices/common';
 import {Icon, ScrollView, Toast} from 'native-base';
 import CardContainer from '../Components/CardContainer';
 import {Calendar} from 'react-native-calendars';
@@ -100,6 +100,7 @@ const SelectDate = props => {
             // dispatch(setIsVerified(response?.data?.data?.user?.isActive));
             dispatch(setUserData(response?.data?.data));
             dispatch(setGoalCreated(response.data?.data?.is_goal))
+            dispatch(showGoalCompleted(true))
             // dispatch(setUserToken(response?.data));
           }
         };

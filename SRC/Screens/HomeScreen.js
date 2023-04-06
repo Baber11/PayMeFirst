@@ -32,12 +32,17 @@ import CustomButton from '../Components/CustomButton';
 import navigationService from '../navigationService';
 import { useIsFocused } from '@react-navigation/native';
 import CustomImage from '../Components/CustomImage';
+import GoalCompleteModal from '../Components/GoalCompleteModal';
 
 
 
 
 const HomeScreen = ({valueFormatter, data}) => {
   const level = useSelector((state)=>state.commonReducer.level)
+  const GoalCompleted = useSelector((state)=>state.commonReducer.GoalCompleted)
+  console.log("🚀 ~ file: HomeScreen.js:42 ~ HomeScreen ~ GoalCompleted:", GoalCompleted)
+
+
 
   const focused = useIsFocused()
   const token = useSelector(state => state.authReducer.token);
@@ -56,6 +61,7 @@ const HomeScreen = ({valueFormatter, data}) => {
 
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(5);
+  const [accomplistModal,setAccomplistModal] = useState(false)
   const LevelsArray = [
     {min: 1.1, max: 100, text: 'Trainee', color: ['rgba(255,0,0 , 0.9)','rgba(115,0,0 , 0.9)']},
     {min: 100.1, max: 200, text: 'Amateur', color: ['rgba(0,0,255 , 0.9)','rgba(0,0,155 , 0.9)']},
@@ -119,6 +125,9 @@ const HomeScreen = ({valueFormatter, data}) => {
     );
     dispatch(setLevel(data[0]?.text))
     console.log('here is the data   =>',data)
+    if(!user?.is_goal && GoalCompleted){
+      setAccomplistModal(true)
+    }
   }, [focused]);
 
   useEffect(() => {
@@ -156,8 +165,8 @@ const HomeScreen = ({valueFormatter, data}) => {
               paddingHorizontal : moderateScale(5,0.3)
 
             }}>
-              <CustomText style={{
-                fontSize : moderateScale(11,0.3),
+              <CustomText isBold style={{
+                fontSize : moderateScale(10,0.3),
                 color : Color.white,
                 textAlign : 'center'
 
@@ -435,6 +444,10 @@ const HomeScreen = ({valueFormatter, data}) => {
             />
           </ScrollView> 
          </View>
+         <GoalCompleteModal
+         modalVisible={accomplistModal}
+         setModalVisible={setAccomplistModal}
+         />
       </View>
     </ScreenBoiler>
     // <View></View>

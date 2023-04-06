@@ -9,7 +9,8 @@ const initialState = {
   notification : false,
   cartData : [],
   points : 0 ,
-  level : null
+  level : null,
+  GoalCompleted : true
 
 };
 
@@ -89,8 +90,11 @@ const CommonSlice = createSlice({
     },
     setLevel(state,action){
       state.level = action
+    },
+    showGoalCompleted(state,action){
+      state.GoalCompleted = action.payload
     }
-  
+    ,
   },
 });
 
@@ -109,7 +113,8 @@ export const {
   subQuantity,
   addQuantity,
   setPoints,
-  setLevel
+  setLevel,
+  showGoalCompleted
   
 } = CommonSlice.actions;
 

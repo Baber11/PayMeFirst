@@ -46,7 +46,7 @@ const SetGoals = () => {
   const [price1, setPrice1] = useState(0);
   const [price2, setPrice2] = useState(2000);
   const [plan, setPlan] = useState('');
-  const [name, setName] = useState('');
+  const [name, setName] = useState('test goal 2');
 
   // const cardImage = user?.
 
