@@ -83,7 +83,7 @@ const MainContainer = () => {
   //        }
   //      );
   //    });
-
+console.log('baber')
   //    // app opened from background
   //    messaging().onNotificationOpenedApp((remoteMessage) => {
   //      if (remoteMessage?.data?.flag == "Chat") {
